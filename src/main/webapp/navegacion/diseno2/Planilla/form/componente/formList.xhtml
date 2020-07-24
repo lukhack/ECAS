@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"          
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://java.sun.com/jsf/core"          
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
+        
+        <p:outputLabel value="#{ncodPreg}. #{pregunta}" /> 
+        <h:panelGroup> 
+            <p:selectOneMenu  id="#{codPreg}"  widgetVar="#{codPreg}"   required="#{obligatorio}" requiredMessage="valor requerido en #{pregunta}"   filter="true" autoWidth="false" style="width: 100%" >
+                <f:selectItem  itemLabel="Seleccione..." itemValue="#{null}" noSelectionOption="true" /> 
+                <f:selectItems value="#{uiListaManager.getListKey(opcResp)}" var="selet" itemValue="#{selet.codigo}" itemLabel="#{selet.descripcion}" /> 
+                <p:ajax  global="false" update="#{tieneValidacion eq 'true'?panel.idSub.concat(' ').concat('sub-').concat(codPreg):''}"   process="#{panel.idSub} #{codPreg}"  listener="#{uiFormularioProcessManager.onSelectList}" />
+                <f:attribute  name="codPreg" value="#{codPreg}"/>
+            </p:selectOneMenu>
+            <p:message for="#{codPreg}" />  
+            
+            <p:outputPanel id="sub-#{codPreg}">
+                <c:forEach items="#{uiFormularioProcessManager.getListFormularioDetalle(panel.dtformularioCollection,codPreg)}" var="componentdetS">
+                    <c:choose>
+                        <c:when  test="#{componentdetS.tipo eq 'Text'}">
+                            <h:panelGroup  rendered='#{componentdetS.visible?"true":"false"}' styleClass="md-inputfield"> 
+                                <p:inputText  id="#{componentdetS.codPreg}" required="#{componentdetS.obligatorio}" requiredMessage="valor requerido en #{componentdetS.pregunta}"   maxlength="#{componentdetS.vlrMaximo}"    />
+                                <label>#{componentdetS.pregunta}</label>
+                                <p:message for="#{componentdetS.codPreg}" />  
+                            </h:panelGroup>
+                        </c:when>
+                    </c:choose>
+                </c:forEach>
+            </p:outputPanel>
+            
+        </h:panelGroup>
+</ui:composition>
+

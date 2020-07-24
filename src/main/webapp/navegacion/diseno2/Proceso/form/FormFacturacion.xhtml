@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"          
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://java.sun.com/jsf/core"          
+      xmlns:ui="http://java.sun.com/jsf/facelets"       
+      xmlns:h="http://xmlns.jcp.org/jsf/html">
+    
+    <p:remoteCommand  name="rc" process="@this" actionListener="#{dtMaFacturacionCotroller.lectorQR}" update="@form:tercero formsg:msgs"/>
+    <div class="task-list">
+        <p:outputPanel styleClass="detalle" id="pnFacturaDetalle" class="detalle" style="position: relative">
+            <p:commandButton id="tasksButton" type="button" icon="ui-icon-menu" styleClass="secondary-btn" style="position: absolute;top:5px;right:5px"/>
+            <p:menu overlay="true" trigger="tasksButton" my="left top" at="left bottom">
+                <p:menuitem title="Lector de codigo QR" value="Lector de codigo QR"  onclick="PF('dgQR').show()" process="@this" update="@form:dgQR" icon="ui-icon-camera-alt" url="#" />
+            </p:menu>
+            <p:panelGrid  id="pnForm" columns="3"   styleClass="ui-panelgrid-blank"   layout="grid" style="width:100%" columnClasses="columna30, columna40, columna30">
+                <p:panelGrid   columns="2" id="pnTercero"  styleClass="ui-panelgrid-blank"  style="width:100%;" columnClasses="columna45, columna50, columna5">
+                    <p:outputLabel  value="Tercero*" style="font-weight: bold"/>
+                    <p:outputPanel>
+                      <table>
+                            <tr>
+                                <td style="width:50%">
+                                    <p:outputPanel id="pnTerceroSelec">
+                                        <p:selectOneMenu id="tercero" widgetVar="slTercero" autoWidth="false" style="width:200px !important;width:100%"   required="true" requiredMessage="Se requiere un valor en tercero"    
+                                                var="tcrj" value="#{dtMaFacturacionCotroller.obj.tercero}" 
+                                                converter="terceroConvert"    filter="true" filterMatchMode="contains">
+                                                <f:selectItem itemLabel="Seleccione tercero" itemValue="#{null}" />
+                                                <f:selectItems value="#{dtMaFacturacionCotroller.terceroNatural.listTerceros()}"  var="tcS" itemValue="#{tcr}" itemLabel="#{tcS.dtmatipodocumentoId.tipoDocumento} #{tcS.documento} #{tcS.dtterceronatural.nombres.toUpperCase()} #{tcS.dtterceronatural.apellidos.toUpperCase()}" />
+                                                <f:selectItems value="#{dtTerceroJuridicoController.listTerceros()}"  var="tcS" itemValue="#{tcr}" itemLabel="#{tcS.dtmatipodocumentoId.tipoDocumento} #{tcS.documento} #{tcS.dtterceronatural.nombres.toUpperCase()} #{tcS.dtterceronatural.apellidos.toUpperCase()}" />
+                                                <p:column width="100" headerText="TD">
+                                                    <h:outputText value="#{tcrj.dtmatipodocumentoId.tipoDocumento}" />
+                                                </p:column>
+                                                <p:column width="100" headerText="Documento">
+                                                    <h:outputText value="#{tcrj.documento.toUpperCase()}" />
+                                                </p:column>
+                                                <p:column headerText="Nombres y Apellidos">
+                                                    <h:outputText value="#{tcrj.dtterceronatural.nombres.toUpperCase()} #{tcrj.dtterceronatural.apellidos.toUpperCase()} #{tcrj.dttercerojuridico.razonSocial.toUpperCase()}" />
+                                                </p:column>
+                                                <ui:include src="../../param/param_one.xhtml"/>
+                                                <p:ajax update="pnRuta @form:slmedioTransporte @form:pnlabelvehiculo @form:pntxtvehiculo" process="@this" listener="#{dtMaFacturacionCotroller.obj.setDttransporte_id(dtMaFacturacionCotroller.obj.tercero.dtmamediotransporteId)}"/>
+                                        </p:selectOneMenu>
+                                    </p:outputPanel>
+                                </td>
+                                <td style="width: 40%"><p:commandButton icon="fa fa-user-plus" title="Añadir un tercero" process="@this" oncomplete="PF('dgTercero').show()" update="@form:dgTercero"><ui:include src="../../param/param_one.xhtml"/></p:commandButton></td>
+                            </tr>
+                        </table>
+                    </p:outputPanel>
+                    
+                    <p:outputLabel  value="Medio Transporte*" style="font-weight: bold"/>
+                    <p:selectOneMenu value="#{dtMaFacturacionCotroller.obj.dttransporte_id}" autoWidth="false" style="width:100%" id="slmedioTransporte" converter="medioTransporteConver">
+                        <f:selectItems value="#{dtMaMedioTransporte.findList()}" var="mt" itemValue="#{mt}" itemLabel="#{mt.mediotransporte}"/>
+                        <p:ajax process="@this @form:slmedioTransporte" update="@form:pnlabelvehiculo @form:pntxtvehiculo"></p:ajax>
+                        <ui:include src="../../param/param_one.xhtml"/>
+                    </p:selectOneMenu>
+                    <p:outputPanel id="pnlabelvehiculo"><p:outputLabel rendered="#{dtMaFacturacionCotroller.obj.dttransporte_id.placavehiculo}" value="Placas vehículo" style="font-weight: bold"/></p:outputPanel>
+                    <p:outputPanel id="pntxtvehiculo"><p:inputText  required="true" requiredMessage="Se requiere valor en placas del vehículo" value="#{dtMaFacturacionCotroller.obj.placavehiculo}"  rendered="#{dtMaFacturacionCotroller.obj.dttransporte_id.placavehiculo}" style="font-weight: bold" maxlength="7" /></p:outputPanel>
+                </p:panelGrid>
+                <p:panelGrid   columns="2" id="pnMaterial"  styleClass="ui-panelgrid-blank"  style="width:100%" columnClasses="columna30,columna70">
+                    <p:outputLabel  value="Material" style="font-weight: bold"/>
+                    <p:selectOneMenu id="materiales" var="mts" value="#{dtMaFacturacionCotroller.facturaDetalle.obj.materialid}" required="true" requiredMessage="Se requiere un valor en el material"  converter="materialConvert"    filter="true" filterMatchMode="contains">
+                        <f:selectItem itemLabel="Material ..." itemValue="#{null}" />
+                        <f:selectItems value="#{dtMaMaterialesController.list.stream().filter(x-> x.ecaSucursal.id eq usuarioB.tbUiUsuario.dtecassucursal.id).toList()}"  var="mt" itemValue="#{mts}" itemLabel="#{mt.material.codReferencia} #{mt.material.material.toUpperCase()}" />
+                        <p:column width="100" headerText="Referencia" style="width: 100px">
+                            <h:outputText value="#{mts.material.codReferencia}" />
+                        </p:column>
+                        <p:column headerText="Material">
+                            <h:outputText value="#{mts.material.material.toUpperCase()}" />
+                        </p:column>
+                        <p:ajax listener="#{dtMaFacturacionCotroller.onSelectMaterialCompra}" process="@this"  update="@form:pnValor @form:dtcantidad"/>
+                        <ui:include src="../../param/param_one.xhtml"/>
+                    </p:selectOneMenu>
+                    <p:outputLabel  value="Cantidad" style="font-weight: bold"/>
+                    <p:outputPanel id="dtcantidad">
+                        <table>
+                            <tr>
+                                <td style="width:60%">
+                                    <h:panelGroup styleClass="md-inputfield">
+                                        <p:inputNumber style="width:100%" id="txtCantidad" readonly="#{usuarioB.tbUiUsuario.dtecassucursal.basculamanual?'false':'true'}"   decimalPlaces="2"   value="#{dtMaFacturacionCotroller.facturaDetalle.obj.cantidad}" required="true" requiredMessage="Valor requerido en cantidad"   maxlength="45"></p:inputNumber>
+                                    </h:panelGroup>  
+                                </td>
+                                <p:outputPanel rendered="#{usuarioB.tbUiUsuario.dtecassucursal.basculamanual?'false':'true'}">
+                                <td >
+                                    <p:commandButton icon="fa fa-balance-scale" title="Añadir cantidad" process="@this" style="border-radius:0px;width: 50px" ><ui:include src="../../param/param_one.xhtml"/></p:commandButton>
+                                </td>
+                                </p:outputPanel>
+                                <td style="width:40%">
+                                    <p:outputLabel value="#{dtMaFacturacionCotroller.facturaDetalle.obj.materialid.material.unidadMedida.unidadMedida} (#{dtMaFacturacionCotroller.facturaDetalle.obj.materialid.material.pesokg}Kg)"/>
+                                </td>
+                            </tr>
+                        </table>    
+                    </p:outputPanel>
+                    <p:outputLabel  value="Costo" style="font-weight: bold"/>
+                    <h:panelGroup  id="pnValor" styleClass="md-inputfield">
+                        <p:inputNumber id="txtValor"  decimalPlaces="2" value="#{dtMaFacturacionCotroller.facturaDetalle.obj.valor}" required="true"   requiredMessage="Valor requerido en valor"  maxlength="45"/>
+                    </h:panelGroup>
+                </p:panelGrid>
+                <h:panelGrid   cellspacing="0" columns="2" id="pnMaterial2"  styleClass="ui-panelgrid-blank"  style="width:100%" columnClasses="columna30,columna70">
+                    <p:outputLabel  value="Horario" style="font-weight: bold"/>
+                    <p:outputPanel>
+                       <p:selectOneRadio id="console" value="#{dtMaFacturacionCotroller.obj.horario}" >
+                           <f:selectItem itemLabel="Día" itemValue="D" />
+                           <f:selectItem itemLabel="Noche" itemValue="N" />
+                       </p:selectOneRadio>
+                    </p:outputPanel>
+                    
+                    <p:outputLabel  value="Convenio" style="font-weight: bold"/>
+                    <p:outputPanel>
+                        <p:selectBooleanCheckbox value="#{dtMaFacturacionCotroller.facturaDetalle.obj.convenio}" >
+                            <ui:include src="../../param/param_one.xhtml"/>
+                            <p:ajax process="@this" update="@form:pnconvenio"/>
+                       </p:selectBooleanCheckbox>
+                    </p:outputPanel>
+                    
+                    
+                    
+                    <p:outputLabel  value="Descripción" style="font-weight: bold"/>
+                    <h:panelGroup styleClass="md-inputfield">
+                        <p:inputTextarea id="txtdescripcionDetalle" rows="2" style="background-color: white" value="#{dtMaFacturacionCotroller.facturaDetalle.obj.descripcion}" />
+                    </h:panelGroup> 
+                    <p:outputLabel  value="" style="font-weight: bold"/>
+                    <p:outputPanel id="pnconvenio">
+                        <p:outputPanel rendered="#{dtMaFacturacionCotroller.facturaDetalle.obj.convenio}">
+                            <table>
+                                <tr>
+                                    <td style="width:50%">
+                                        <p:outputPanel id="pnTerceroJuridicoSelec">
+                                            <p:selectOneMenu id="terceroJulidico" widgetVar="slTerceroJuridico" autoWidth="false" style="width:200px !important;width:100%"   required="true" requiredMessage="Se requiere un valor en tercero"    
+                                                             var="tcr" value="#{dtMaFacturacionCotroller.facturaDetalle.obj.terceroconvenio_id}"  
+                                                    converter="terceroConvert"    filter="true" filterMatchMode="contains">
+                                                    <f:selectItem itemLabel="Seleccione convenio" itemValue="#{null}" />
+                                                    <f:selectItems value="#{dtMaFacturacionCotroller.terceroJuridico.listTerceros()}"  var="tcJ" itemValue="#{tcJ}" itemLabel="#{tcJ.dtmatipodocumentoId.tipoDocumento} #{tcJ.documento} #{tcJ.dtterceronatural.nombres} #{tcJ.dtterceronatural.apellidos}" />
+                                                    <p:column width="100" headerText="TD">
+                                                        <h:outputText value="#{tcr.dtmatipodocumentoId.tipoDocumento}" />
+                                                    </p:column>
+                                                    <p:column width="100" headerText="Documento">
+                                                        <h:outputText value="#{tcr.documento}" />
+                                                    </p:column>
+                                                    <p:column headerText="Nombres y Apellidos">
+                                                        <h:outputText value="#{tcr.dtterceronatural.nombres} #{tcr.dtterceronatural.apellidos} #{tcr.dttercerojuridico.razonSocial}" />
+                                                    </p:column>
+                                                    <ui:include src="../../param/param_one.xhtml"/>
+                                                    <p:ajax update="pnRuta"/>
+                                            </p:selectOneMenu>
+                                        </p:outputPanel>
+                                    </td>
+                                    <td style="width: 40%"><p:commandButton icon="fa fa-user-plus" title="Añadir un convenio" process="@this" oncomplete="PF('dgTerceroJuridico').show()" update="@form:dgTerceroJuridico"><ui:include src="../../param/param_one.xhtml"/></p:commandButton></td>
+                                </tr>
+                            </table>
+                        </p:outputPanel>
+                    </p:outputPanel>
+                </h:panelGrid> 
+                 
+                    
+                <p:outputPanel id="pnRuta" >
+                    <p:panelGrid columns="1" rendered="#{dtMaFacturacionCotroller.obj.tercero.dttercerorutaList.size() > 0}"  styleClass="ui-panelgrid-blank"   layout="grid" style="width:100%;margin-top: 10px" >
+                        <p:outputLabel for="tercero" value="Ruta:"  style="color: red;font-weight: bold"/>
+                        <p:selectOneMenu id="ruta" widgetVar="slRuta"  converter="terceroRutaConvert" required="true" value="#{dtMaFacturacionCotroller.obj.terceroRuta}" requiredMessage="Se requiere un valor en la ruta"     
+                               filter="true" filterMatchMode="contains">
+                            <f:selectItem itemLabel="Select tercero" itemValue="#{null}" />
+                            <f:selectItems value="#{dtMaFacturacionCotroller.obj.tercero.dttercerorutaList}"  var="rut" itemValue="#{rut}" itemLabel="#{rut.ruta}" />
+                            <ui:include src="../../param/param_one.xhtml"/>
+                        </p:selectOneMenu>
+                    </p:panelGrid>
+                </p:outputPanel>
+            </p:panelGrid> 
+        </p:outputPanel> 
+    </div>    
+    
+    <p:dialog header="Añadir Tercero"   modal="true" id="dgTercero" widgetVar="dgTercero" width="700">
+        <p:panel header="Datos Reciclador" style="position: relative">
+                <p:commandLink process="@form:pnFormTercero @this"  action="#{dtMaFacturacionCotroller.anadirTercero(dtMaFacturacionCotroller.terceroNatural.obj)}" 
+                               id="btnAnadirTerceroJuridico" style="position: absolute;right: 5px;top:0px"  
+                               update="@form:pnFormTercero frmApp:pnTerceroSelec formsg:msgs"    title="Añadir">
+                    <i style="font-size:2.8em;color: #607D8B" class="material-icons">playlist_add</i>
+                   <ui:include src="../../param/param_one.xhtml"/>
+                </p:commandLink>
+            <p:panelGrid  id="pnFormTercero" columns="1"   styleClass="ui-panelgrid-blank"   layout="grid" style="width:100%" columnClasses="columna100">
+                <p:panelGrid  columns="3"  styleClass="ui-panelgrid-blank" style="width:100%" layout="grid"  columnClasses="columna50, columna50">
+                    <p:selectOneMenu required="true" autoWidth="false" style="width:300px" requiredMessage="Valor requerido en Municipio" id="sdTipoDocumento"  
+                                     filter="true" filterMatchMode="contains" 
+                                     converter="tipoDocumentoConvert" value="#{dtMaFacturacionCotroller.terceroNatural.obj.dttercero.dtmatipodocumentoId}" >
+                        <f:selectItem itemLabel="Selección Tipo documento ..."  itemValue="#{null}" noSelectionOption="true"/>
+                        <f:selectItems  value="#{dtMaTipodocumento.list.stream().filter(x->x.tipoDocumento ne 'NIT').toList()}" var="tpc" itemLabel="#{tpc.tipoDocumento} - #{tpc.descripcion}" itemValue="#{tpc}" />
+                    </p:selectOneMenu>
+                    <h:panelGroup styleClass="md-inputfield">
+                        <p:inputText value="#{dtMaFacturacionCotroller.terceroNatural.obj.dttercero.documento}" maxlength="15" required="true"  requiredMessage="Valor requerido en Nit"/>
+                        <label>Cc</label>
+                    </h:panelGroup>   
+                </p:panelGrid>
+                
+                <p:separator/>
+                <p:panelGrid  columns="3"  styleClass="ui-panelgrid-blank" layout="grid" style="width: 100%" columnClasses="columna35,columna30,columna35">
+
+                    <h:panelGroup styleClass="md-inputfield" >
+                        <p:inputText required="true" maxlength="45" value="#{dtMaFacturacionCotroller.terceroNatural.obj.nombres}"  requiredMessage="Valor requerido en Nombre o Razon social"/>
+                        <label>Nombres</label>
+                    </h:panelGroup>
+                    
+                     <h:panelGroup styleClass="md-inputfield" >
+                        <p:inputText required="true" maxlength="45" value="#{dtMaFacturacionCotroller.terceroNatural.obj.apellidos}"  requiredMessage="Valor requerido en Nombre o Razon social"/>
+                        <label>Apellidos</label>
+                    </h:panelGroup>
+                    <h:panelGroup styleClass="md-inputfield" >
+                        <p:inputText value="#{dtMaFacturacionCotroller.terceroNatural.obj.dttercero.telefono}" maxlength="10"/>
+                        <label>Telefono 1</label>
+                    </h:panelGroup>
+                    <h:panelGroup styleClass="md-inputfield">
+                        <p:inputText value="#{dtMaFacturacionCotroller.terceroNatural.obj.dttercero.direccion}" maxlength="100"/>
+                        <label>Direccion</label>
+                    </h:panelGroup>
+                    <h:panelGroup styleClass="md-inputfield">
+                        <p:inputText value="#{dtMaFacturacionCotroller.terceroNatural.obj.dttercero.correo}" maxlength="100"/>
+                        <label>Correo</label>
+                    </h:panelGroup> 
+                    <p:selectOneMenu required="true" autoWidth="false" style="width:200px" requiredMessage="Valor requerido en Municipio" id="slMunicipio"  
+                                     filter="true" filterMatchMode="contains"
+                                     converter="municipioConvert" value="#{dtMaFacturacionCotroller.terceroNatural.obj.dttercero.idmunicipio}" >
+                        <f:selectItem itemLabel="Selección Municipio ..."  itemValue="#{null}" noSelectionOption="true"/>
+                        <f:selectItems  value="#{maMunicipioManager.list}" var="mup" itemLabel="#{mup.municipio} (#{mup.idDepartamento.departamento})" />
+                    </p:selectOneMenu>
+                    <p:selectOneMenu required="true" autoWidth="false" style="width:200px" requiredMessage="Valor requerido en Medio transporte" id="slMedioTransporte"  
+                                     filter="true" filterMatchMode="contains"
+                                     converter="medioTransporteConver" value="#{dtMaFacturacionCotroller.terceroNatural.obj.dttercero.dtmamediotransporteId}" >
+                        <f:selectItem itemLabel="Selección Medio Transporte..."  itemValue="#{null}" noSelectionOption="true"/>
+                        <f:selectItems  value="#{dtMaMedioTransporte.list}" var="mt" itemLabel="#{mt.mediotransporte}" />
+                    </p:selectOneMenu>
+                    <p:selectOneMenu required="true" autoWidth="false" style="width:200px" requiredMessage="Valor requerido en condición social" id="slCondicionSocial"  
+                                     filter="true" filterMatchMode="contains"
+                                     converter="condicionSocialConvert" value="#{dtMaFacturacionCotroller.terceroNatural.obj.dtmacondicionsocialId}" >
+                        <f:selectItem itemLabel="Selección Condición social..."  itemValue="#{null}" noSelectionOption="true"/>
+                        <f:selectItems  value="#{dtMaCodicionSocial.list}" var="cs" itemLabel="#{cs.condicionSocial}" />
+                    </p:selectOneMenu>
+                    <p:selectOneMenu required="true" autoWidth="false" style="width:200px" requiredMessage="Valor requerido en condición Reciclador" id="slCondicionTercero"  
+                                     filter="true" filterMatchMode="contains"
+                                     converter="condicionTerceroConvert" value="#{dtMaFacturacionCotroller.terceroNatural.obj.dtmacondicionrecicladorId}" >
+                        <f:selectItem itemLabel="Selección Condición Reciclador..."  itemValue="#{null}" noSelectionOption="true"/>
+                        <f:selectItems  value="#{dtMaCodicionTercero.list}" var="ct" itemLabel="#{ct.condicion}" />
+                    </p:selectOneMenu>
+                    <p:selectOneMenu required="true" autoWidth="false" style="width:200px" requiredMessage="Valor requerido en estado civil" id="slEstadocivil"  
+                                     filter="true" filterMatchMode="contains"
+                                     converter="estadoCivilConvert" value="#{dtMaFacturacionCotroller.terceroNatural.obj.dtmaestadocivilId}" >
+                        <f:selectItem itemLabel="Selección Estado civil..."  itemValue="#{null}" noSelectionOption="true"/>
+                        <f:selectItems  value="#{dtMaEstadoCivil.list}" var="ec" itemLabel="#{ec.estadocivil}" />
+                    </p:selectOneMenu>
+                    <p:selectOneMenu  autoWidth="false" style="width:200px" requiredMessage="Valor requerido en estrato" id="slEstrato"  
+                                     filter="true" filterMatchMode="contains"
+                                     converter="estratoConvert" value="#{dtMaFacturacionCotroller.terceroNatural.obj.dtmaestratoId}" >
+                        <f:selectItem itemLabel="Selección estrato..."  itemValue="#{null}" noSelectionOption="true"/>
+                        <f:selectItems  value="#{dtMaEstrato.list}" var="es" itemLabel="#{es.estrato}" />
+                    </p:selectOneMenu>
+                   
+                </p:panelGrid>
+                <h:inputHidden converter="terceroTipoConvert" value="#{dtTerceroNaturalController.obj.dttercerotipo}"  />
+            </p:panelGrid> 
+        </p:panel>
+    </p:dialog>
+    
+    
+    <p:dialog header="Añadir Tercero"   modal="true" id="dgTerceroJuridico" widgetVar="dgTerceroJuridico" width="700">
+        <p:panel header="Datos Reciclador" style="position: relative">
+            <p:commandLink process="@form:pnFormTerceroJuridico @this"  action="#{dtMaFacturacionCotroller.anadirTerceroJuridico(dtMaFacturacionCotroller.terceroJuridico.obj)}" 
+                               id="btnAnadirTercero" style="position: absolute;right: 5px;top:0px"  
+                               update="@form:pnFormTercero frmApp:pnTerceroSelec formsg:msgs"    title="Añadir">
+                    <i style="font-size:2.8em;color: #607D8B" class="material-icons">playlist_add</i>
+                   <ui:include src="../../param/param_one.xhtml"/>
+                </p:commandLink>
+            <p:panelGrid  id="pnFormTerceroJuridico" columns="1"  styleClass="ui-panelgrid-blank"   layout="grid" style="width:100%" columnClasses="columna100">
+                <p:panelGrid  columns="3"  styleClass="ui-panelgrid-blank form-group" style="width:100%"  columnClasses="columna25, columna25, columna5, columna40">
+                    <p:selectOneMenu required="true" autoWidth="false" requiredMessage="Valor requerido en Municipio" id="sdTipoDocumentoJ"  
+                                     filter="true" filterMatchMode="contains" 
+                                     converter="tipoDocumentoConvert" value="#{dtMaFacturacionCotroller.terceroJuridico.obj.dttercero.dtmatipodocumentoId}" >
+                        <f:selectItem itemLabel="Selección Tipo documento ..."  itemValue="#{null}" noSelectionOption="true"/>
+                        <f:selectItems  value="#{dtMaTipodocumento.list}" var="tpc" itemLabel="#{tpc.tipoDocumento} - #{tpc.descripcion}" itemValue="#{tpc}" />
+                    </p:selectOneMenu>
+                    <h:panelGroup styleClass="md-inputfield">
+                        <p:inputText value="#{dtMaFacturacionCotroller.terceroJuridico.obj.dttercero.documento}" maxlength="15" required="true"  requiredMessage="Valor requerido en Nit"/>
+                        <label>Nit o Cc</label>
+                    </h:panelGroup>   
+                    <h:panelGroup styleClass="md-inputfield">
+                        <p:inputNumber value="#{dtMaFacturacionCotroller.terceroJuridico.obj.dv}" decimalPlaces="0" maxlength="1"/>
+                        <label>DV</label>
+                    </h:panelGroup>   
+                </p:panelGrid>
+                <p:panelGrid  columns="3"  styleClass="ui-panelgrid-blank form-group" style="width: 100%" columnClasses="columna25,columna15,columna25,columna35">
+                    <h:panelGroup styleClass="md-inputfield" >
+                        <p:inputText required="true" maxlength="45" value="#{dtMaFacturacionCotroller.terceroJuridico.obj.razonSocial}"  requiredMessage="Valor requerido en Nombre o Razon social"/>
+                        <label>Nombre o Razon Social</label>
+                    </h:panelGroup>
+                    <h:panelGroup styleClass="md-inputfield">
+                        <p:inputText value="#{dtMaFacturacionCotroller.terceroJuridico.obj.dttercero.direccion}" maxlength="100"/>
+                        <label>Direccion</label>
+                    </h:panelGroup>
+                    <h:panelGroup styleClass="md-inputfield" >
+                        <p:inputText value="#{dtMaFacturacionCotroller.terceroJuridico.obj.dttercero.telefono}" maxlength="10"/>
+                        <label>Telefono 1</label>
+                    </h:panelGroup>
+                    <h:panelGroup styleClass="md-inputfield">
+                        <p:inputText value="#{dtMaFacturacionCotroller.terceroJuridico.obj.dttercero.correo}" maxlength="100"/>
+                        <label>Correo</label>
+                    </h:panelGroup> 
+
+                    <p:selectOneMenu required="true" autoWidth="false" requiredMessage="Valor requerido en Municipio" id="slMunicipioJ"  
+                                     filter="true" filterMatchMode="contains"
+                                     converter="municipioConvert" value="#{dtMaFacturacionCotroller.terceroJuridico.obj.dttercero.idmunicipio}" >
+                        <f:selectItem itemLabel="Selección Municipio ..."  itemValue="#{null}" noSelectionOption="true"/>
+                        <f:selectItems  value="#{maMunicipioManager.list}" var="mup" itemLabel="#{mup.municipio} (#{mup.idDepartamento.departamento})" />
+                    </p:selectOneMenu>
+
+                    <p:selectOneMenu required="true" autoWidth="false" requiredMessage="Valor requerido en Municipio" id="slMedioJ"  
+                                     filter="true" filterMatchMode="contains"
+                                     converter="medioTransporteConver" value="#{dtMaFacturacionCotroller.terceroJuridico.obj.dttercero.dtmamediotransporteId}" >
+                        <f:selectItem itemLabel="Selección Medio Transporte..."  itemValue="#{null}" noSelectionOption="true"/>
+                        <f:selectItems  value="#{dtMaMedioTransporte.list}" var="mt" itemLabel="#{mt.mediotransporte}" />
+                    </p:selectOneMenu>
+
+
+
+                </p:panelGrid>
+            </p:panelGrid>
+        </p:panel>
+    </p:dialog>
+</ui:composition>
+

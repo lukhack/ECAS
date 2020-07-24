@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"          
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://java.sun.com/jsf/core"          
+      xmlns:ui="http://java.sun.com/jsf/facelets"   
+      xmlns:pt="http://xmlns.jcp.org/jsf/passthrough"    
+      xmlns:pm="http://primefaces.org/mobile"
+      xmlns:pe="http://primefaces.org/ui/extensions">
+    <div class="ui-g form-group" style="margin-bottom: 16px;">
+        <p:panelGrid columns="1" id="tcostos" styleClass="ui-panelgrid-blank" layout="grid" style="width:100%">
+            <p:toolbar style="background-color: transparent;border:none;box-shadow: none">
+                <f:facet name="left">
+                    <p:commandButton title="Guardar" icon="ui-icon-save"  global="false"
+                                     update="formsg:msgs pn" process="pn @this"  action='#{uiReferenciaCostoManager.addObject(uiReferenciaCostoManager.obj,["update;frmCosto"])}' />
+                                
+                </f:facet>
+            </p:toolbar>
+            <p:panelGrid  columns="4" id="pn" style="padding:0px !important;margin:0px !important;width:100%" styleClass="ui-panelgrid-blank" columnClasses="columna25,columna25,columna25,columna25" layout="grid" >
+                <h:panelGroup styleClass="md-inputfield" style="padding:0px !important;margin:0px !important">
+                    <p:inputText id="descripcion" value="#{uiReferenciaCostoManager.obj.descripcion}" maxlength="100" required="true" requiredMessage="Valor requerido en descripcion" style="width: 100% !important"/>
+                    <label>Descripción</label>
+                </h:panelGroup>
+                <h:panelGroup styleClass="md-inputfield" >
+                    <p:inputNumber id="cantida" maxlength="10" required="true" 
+                                   value="#{uiReferenciaCostoManager.obj.cantidad}" 
+                                   requiredMessage="Valor requerido en Cantidad" maxValue="9999999999" 
+                                     decimalPlaces="2" style="width: 100% !important" ></p:inputNumber>
+                    <label>Cantidad</label>
+                </h:panelGroup>
+                <h:panelGroup styleClass="md-inputfield">
+                    <p:inputNumber id="valor" maxlength="10" required="true" 
+                                   value="#{uiReferenciaCostoManager.obj.valor}" 
+                                   requiredMessage="Valor requerido en Valor" maxValue="9999999999" 
+                                     decimalPlaces="2" style="width: 100% !important" ></p:inputNumber>
+                    <label>Costo Valor</label>
+                </h:panelGroup>
+                <p:selectOneMenu value="#{uiReferenciaCostoManager.obj.uiUnidadMedidaid}" 
+                                      converter="tipoTallaConvert" required="true" requiredMessage="Valor requerido en unidad medida">
+                    <f:selectItems value="#{appUnidadMedida.list}" var="un" itemValue="#{un}" itemLabel="#{un.unidad}"/>
+                </p:selectOneMenu>
+            </p:panelGrid>      
+            <p:panelGrid columns="1" styleClass="ui-panelgrid-blank" layout="grid" style="width:100%">
+                <p:dataTable var="obj" id="tbCostos" 
+                    paginator="true"
+                    scrollable="true"
+                    scrollHeight="230"
+                    paginatorPosition="bottom"
+                    paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                    scrollWidth="true"
+                    rows="20"
+                    rowIndexVar="rowIndex"
+                    value="#{uiReferenciaManager.obj.uirefernciacostoCollection}">
+                    <f:facet name="header" >
+                       Materiales
+                    </f:facet>
+                    <p:column headerText="No" width="30" >
+                       <h:outputText  value="#{rowIndex+1}" />
+                    </p:column>
+                    <p:column headerText="Descripcion" width="250">
+                        <h:outputText value="#{obj.descripcion}" />
+                    </p:column> 
+                    <p:column headerText="Cantidad" width="50">
+                        <h:outputText value="#{obj.valor}" >
+                            <f:convertNumber groupingUsed="true" type="number"  minFractionDigits="0"  />
+                        </h:outputText>
+                    </p:column> 
+                    <p:column headerText="Unid. Medida" width="50">
+                        <h:outputText value="#{obj.uiUnidadMedidaid.unidad}" />
+                    </p:column>   
+                    <p:column headerText="Valor Costo" width="100">
+                       <h:outputText value="#{obj.valor}" >
+                           <f:convertNumber groupingUsed="true" type="number"  minFractionDigits="0"  />
+                       </h:outputText>
+                    </p:column>
+                    <p:column style="width:25px;padding:0 !important" colspan="2"  selectRow="false" >
+                        <p:commandButton style="width:100%;margin:0px !important;border-radius:0 !important;"  process="@this" update="frmCosto:pn" action="#{uiReferenciaCostoManager.selectObjec(obj)}"  icon="ui-icon-edit" title="editar costo">
+                            <f:param name="params"  value="1"/>
+                        </p:commandButton>
+                    </p:column>
+                    <p:column style="width:25px;padding:0 !important" selectRow="false"  >
+                        <p:commandButton style="width:100%;margin:0px !important;border-radius:0 !important;"  process="@this"  update="tbCostos" icon="ui-icon-delete" title="Eliminar costos"></p:commandButton>
+                    </p:column>
+                </p:dataTable>
+            </p:panelGrid>
+        </p:panelGrid>
+    </div>   
+</ui:composition>
+
+

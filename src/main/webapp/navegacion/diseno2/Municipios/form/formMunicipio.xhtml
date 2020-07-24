@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"          
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://java.sun.com/jsf/core"          
+      xmlns:ui="http://java.sun.com/jsf/facelets"   
+      xmlns:pt="http://xmlns.jcp.org/jsf/passthrough"    
+      xmlns:pm="http://primefaces.org/mobile"
+      xmlns:pe="http://primefaces.org/ui/extensions"
+      xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
+        
+    <p:panelGrid  id="pnForm" columns="1"  styleClass="ui-panelgrid-blank"   layout="grid" style="width:100%" columnClasses="columna100">
+        
+        <p:panelGrid  columns="3"  styleClass="ui-panelgrid-blank form-group" style="width: 100%" columnClasses="columna35, columna35, columna30">
+            <p:selectOneMenu required="true" autoWidth="false" requiredMessage="Valor requerido en departamento" id="slMunicipio"  
+                             filter="true" filterMatchMode="contains"
+                             converter="departamentoConvert" value="#{maMunicipioManager.obj.idDepartamento}" >
+                <f:selectItem itemLabel="Seleccione departamento....."  itemValue="#{null}" noSelectionOption="true"/>
+                <f:selectItems  value="#{maDepartamentoManager.list}" var="dp" itemLabel="#{dp.departamento}" />
+            </p:selectOneMenu>
+             <h:panelGroup styleClass="md-inputfield" >
+                 <p:inputText required="true" maxlength="45" value="#{maMunicipioManager.obj.municipio}"  requiredMessage="Valor requerido en Nombre o Razon social"/>
+                <label>Nombre o Razon Social</label>
+            </h:panelGroup>
+            
+        </p:panelGrid>
+            <p:panelGrid columns="1" styleClass="ui-panelgrid-blank" layout="grid" style="width:100%">
+                    <p:dataTable var="dt" id="tbtipolayers" 
+                     paginator="true"
+                     scrollable="true"
+                     scrollHeight="230"
+                     paginatorPosition="bottom"
+                     paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                     rowsPerPageTemplate="5,10,20,50,100"
+                     scrollWidth="true"
+                     rows="20"
+                     rowIndexVar="rowIndex"
+                     value="#{maMunicipioManager.list}"   >
+                      <f:facet name="header" >
+                         Municipios
+                      </f:facet>
+
+                      <p:column headerText="No" width="30" >
+                          <h:outputText  value="#{rowIndex+1}" />
+                      </p:column>
+                      <p:column headerText="Nombre" width="200">
+                          <h:outputText value="#{dt.municipio}" />
+                      </p:column> 
+                      <p:column headerText="Departamento" width="200">
+                          <h:outputText value="#{dt.idDepartamento.departamento}" />
+                      </p:column> 
+                      <p:column style="width:25px;padding:0 !important" colspan="2"  selectRow="false" >
+                          <p:commandButton global="false" style="width:100%;margin:0px !important;border-radius:0 !important;"  process="@this" update="@form:pnForm"  action="#{maMunicipioManager.selectObjec(dt)}"  icon="ui-icon-edit" title="editar costo">
+                          </p:commandButton>
+                      </p:column>
+
+                  </p:dataTable>
+              </p:panelGrid>
+    </p:panelGrid> 
+                      
+</ui:composition>
+

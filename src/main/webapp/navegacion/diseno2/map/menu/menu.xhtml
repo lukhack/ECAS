@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"          
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://java.sun.com/jsf/core"          
+      xmlns:ui="http://java.sun.com/jsf/facelets"   
+      xmlns:pt="http://xmlns.jcp.org/jsf/passthrough"    
+      xmlns:pm="http://primefaces.org/mobile"
+      xmlns:pe="http://primefaces.org/ui/extensions"
+      xmlns:xlink="http://www.w3.org/1999/xlink">
+
+    
+    <link rel="stylesheet" type="text/css" href="css/normalize.css" />
+    <link rel="stylesheet" type="text/css" href="css/menu/demo.css" />
+    <link rel="stylesheet" type="text/css" href="css/menu/component2.css" />
+    
+    <script>
+        $(function(){
+
+        $( "#navMenu" ).draggable();
+        });
+    </script>
+    
+    <div style="position: absolute;bottom:150px;left:50px" id="navMenu">
+        <div style="position: relative">
+            <img src="images/logo.png" style="width:80px;position: absolute;top:0;left:60px"  />
+            <!--<img src="images/manu.png" style="width:200px"/>-->
+            <h:form>
+            <!--    <div columns="1"  layout="grid"     class="contenTools" >
+                    <p:commandButton ajax="false"  styleClass="borrarBtn"   style="position: absolute;top:15px;left:50px;padding:3px;background-size: cover;"  value=""  action="#{mapBean.newMapModel()}" />
+                    <p:commandButton id="PaintPoli" styleClass="PaintPoli" value=""  style="position: absolute;top:56px;left:15px;padding:3px" onclick="PF('diagloDrawing').show();"  title="Dibujar" />  
+                    <p:commandButton update="mensajetxt" styleClass="ruleBtn"  value=""  style="position: absolute;top:120px;left:15px;padding:3px" onclick="activarMedir(true)"  actionListener="#{mapBean}"  title="Medir Distancias" />
+                    <p:commandButton id="chart" styleClass="chartBtn" value="" update="mensajetxt formEncuestaGeneral" style="position: absolute;bottom:15px;left:50px;padding:3px" title="Total Acumulados"   action="#{mapEncuestaController.consolidarInforme()}"/>
+                    <p:commandButton update="mensajetxt formEncuestaBarrio"  oncomplete="PF('dialogInformeEncuBarrio').show()" styleClass="streetBtn" value=""  style="position: absolute;bottom:15px;right:50px;padding:3px"    title="Plan de Trabajo" />
+                    <p:commandButton id="capasBtn" update="formoverlay mensajetxt"  styleClass="capasBtn" action="#{mapBean.showDialog('imagePanel')}"    value="" style="position: absolute;top:120px;right:15px;padding:3px"  title="Áreas" />
+                    <p:commandButton id="printBtn" styleClass="imprimirBtn" type="buttom"   title="imprimir" value="" style="position: absolute;top:56px;right:15px;padding:3px" onclick="window.print();return false;" />
+                    <p:commandButton update="mensajetxt" onclick="mapZoomIn(3,undefined)" styleClass="cursorBtn" value="" style="position: absolute;top:15px;right:50px;padding:3px"  process="@this"   title="Cursor" disabled='#{!maDatosMaestroBean.rederMap?"true":"false"}'/>
+                </div> -->   
+            </h:form>
+         </div>   
+    </div>
+    
+    
+   
+    
+</ui:composition>
+

@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"          
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://java.sun.com/jsf/core"          
+      xmlns:ui="http://java.sun.com/jsf/facelets"       >
+    
+     <p:dataTable var="dt" id="dtDatos3" 
+            paginator="true"
+            style="width: 100% !important"
+            paginatorPosition="bottom"
+            paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+            rowsPerPageTemplate="5,10,20,50,100"
+            rows="20"
+            rowIndexVar="rowIndex"
+            value='#{dtClienteController.obj.ecaSucural}'
+            filteredValue='#{dtECASucursalController.listFilter}'>
+             <f:facet name="header" >
+                #{uiNavegacionBean.title}
+             </f:facet>
+           <p:ajax event="filter"  process="@this" global="true" ignoreAutoUpdate="true">
+               <f:param name="name" value="#{param.name}" /><f:param name="path" value="#{param.path}" />
+          </p:ajax>
+            <p:column headerText="Eca" width="10%" filterBy="#{dt.dtEcaid.nombre}" filterMatchMode="Activo">
+                <h:outputText value='#{dt.dtEcaid.nombre}' />
+            </p:column> 
+            <p:column headerText="Sucursal" width="10%" filterBy="#{dt.filial}" filterMatchMode="Activo">
+                <h:outputText value='#{dt.filial}' />
+            </p:column> 
+            <p:column headerText="" width="10%" filterBy="#{dt.telefono}" filterMatchMode="Activo">
+                <h:outputText value='#{dt.telefono}' />
+            </p:column> 
+            <p:column headerText="Editar" width="5%">
+                <p:commandButton title="Editar" action="#{dtParameterController.selectObjec(dt)}"   icon="ui-icon-edit" update="@form:pnForm" process="@this">
+                  <f:param name="name" value="#{param.name}" /><f:param name="path" value="#{param.path}" />
+                </p:commandButton>
+            </p:column>
+    </p:dataTable>
+    
+</ui:composition>
+
+

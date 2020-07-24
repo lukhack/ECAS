@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"          
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://java.sun.com/jsf/core"          
+      xmlns:ui="http://java.sun.com/jsf/facelets"       >
+    
+    
+    <p:outputPanel style="width:100%;text-align:right;position: relative">
+        <p:commandLink process="@form:pnForm @this" id="btnAnadir" style="position: absolute;right: 0;top:0"  update="@form:dtDatos @form:pnForm formsg:msgs"     title="Añadir" action="#{dtMaMaterialesController.reinit}"><i style="font-size:2.8em;color: #607D8B" class="material-icons">playlist_add</i>
+            <p:collector value="#{dtMaMaterialesController.addObjs(dtMaMaterialesController.obj)}" addTo="#{dtMaMaterialesController.list}"   unique="true" />
+            <ui:include src="../../param/param_one.xhtml"/>
+        </p:commandLink> 
+        <p:messages  id="messagesDialog3"    for="btnAnadir" />
+    </p:outputPanel>
+    <p:defaultCommand target="btnAnadir" />
+    
+</ui:composition>
+
+

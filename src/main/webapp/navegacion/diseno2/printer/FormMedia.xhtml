@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"          
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://java.sun.com/jsf/core"          
+      xmlns:ui="http://java.sun.com/jsf/facelets"   
+      xmlns:pt="http://xmlns.jcp.org/jsf/passthrough"    
+      xmlns:pm="http://primefaces.org/mobile"
+      xmlns:pe="http://primefaces.org/ui/extensions"
+      xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
+     
+    
+    <p:outputPanel id="PnPrinterMedia" style="width:100%;text-align:right;position: relative">
+            <p:commandLink update="@this"  style="position: absolute;left: 0px;top:0px"   title="Imprimir" action="#{dtMaFacturacionCotroller.reinitDetalle()}"><i style="font-size:2.8em;color: #607D8B" class="material-icons">print</i>
+                <p:printer target="pnPrinterMedia" />
+            </p:commandLink>
+        </p:outputPanel>
+        <p:outputPanel  id="pnPrinterMedia">
+            <style  type="text/css">
+                    .columna100,.columna50{padding:0px !important}
+                    .borderRound{
+                        border: 2px solid #cccccc !important;
+                         border-radius: 25px;
+                    }
+                    
+                    .header-factura{
+                        background-color: #cccccc !important;
+                    }
+
+            </style>
+            <p:outputPanel  style="width:100%;text-align:right;">
+                <p:outputPanel  style="position: absolute;right: 30px;top:50px;width:200px; ">
+                    <p:panelGrid  columns="2"  styleClass="ui-panelgrid-blank"   layout="grid" style="width:200px;padding:0px !important;font-weight:bold" columnClasses="columna50, columna50">
+                        <p:outputLabel value="FACTURA N"  style="color: black;font-size:14px" />
+                        <p:outputLabel style="color: red;font-size:14px" value=" #{dtMaFacturacionCotroller.obj.consecutivo.toUpperCase()}" />
+                    </p:panelGrid>
+                </p:outputPanel>
+            </p:outputPanel>
+            <p:panelGrid  columns="2"  styleClass="ui-panelgrid-blank"   layout="grid" style="width:100%;margin-top:50px !important;text-align: left" columnClasses="columna70, columna30">
+                    <p:outputPanel styleClass="borderRound" style="text-align: left;padding:15px">
+                        <p:panelGrid  columns="1"    styleClass="ui-panelgrid-blank "   layout="grid" style="width:100%;" columnClasses="columna100">
+                            <p:outputPanel style="font-weight:bold">Cliente</p:outputPanel>
+                            <p:outputPanel>#{dtMaFacturacionCotroller.obj.tercero.dtterceronatural.nombres} #{dtMaFacturacionCotroller.obj.tercero.dtterceronatural.apellidos}</p:outputPanel>
+                            <p:outputPanel><b>Dirección</b> #{dtMaFacturacionCotroller.obj.tercero.direccion}</p:outputPanel>
+                            <p:outputPanel><b>Télefono</b> #{dtMaFacturacionCotroller.obj.tercero.telefono}</p:outputPanel>
+                            <p:outputPanel>#{dtMaFacturacionCotroller.obj.tercero.correo}</p:outputPanel>
+                        </p:panelGrid>
+                    </p:outputPanel>
+                    <p:outputLabel>
+                        <img width="130px" src="#{usuarioB.tbUiUsuario.dtecassucursal.logo eq null?'images/alcaldia.png':'data:image/jpeg;base64,'.concat(usuarioB.tbUiUsuario.dtecassucursal.logo)}"/> 
+                    </p:outputLabel>
+            </p:panelGrid>
+    
+            <table style="width: 100%">
+                <tr style="border: 1px solid black">
+                    <th style="width:40px !important;border: 1px solid black" class="td4">REF</th>
+                    <th style="width:30%;border: 1px solid black" class="td4">ARTICULO</th>
+                    <th style="width:15%;border: 1px solid black" class="td4">CANT.</th>
+                    <th style="width:25%;border: 1px solid black" class="td4">VR. UNITARIO</th>
+                    <th style="width:25%;border: 1px solid black" class="td4">VALOR TOTAL</th>
+                </tr>
+                    <c:forEach items="#{dtMaFacturacionCotroller.obj.dtfacturadetalleList}" var="dts">
+                        <tr style="border: 1px solid black">
+                            <td style="border: 1px solid black" class="td4"> <h:outputText  value="#{dts.materialid.material.codReferencia}"/></td>
+                            <td style="border: 1px solid black" class="td4"><h:outputText  value="#{dts.materialid.material.material}" ><f:convertNumber integerOnly="true"/></h:outputText></td>
+                            <td style="border: 1px solid black;text-align: right !important" class="td4"> <h:outputText  value="#{dts.cantidad}" ><f:convertNumber  minFractionDigits="2" groupingUsed="true"/></h:outputText></td>
+                            <td style="border: 1px solid black;text-align: right !important" class="td4"><h:outputText  value="#{dts.valor}" ><f:convertNumber integerOnly="true"/></h:outputText></td>
+                            <td style="border: 1px solid black;text-align: right !important" class="td4"><h:outputText  value="#{(dts.cantidad * dts.valor)}"><f:convertNumber integerOnly="true"/></h:outputText></td>
+                        </tr>
+                    </c:forEach> 
+                    <c:forEach begin="#{dtMaFacturacionCotroller.obj.dtfacturadetalleList.size()}" end="12" var="dts">
+                        <tr style="border: 1px solid black">
+                            <td style="border: 1px solid black;height:1.5em !important" class="td4"> <h:outputText  value=""/></td>
+                            <td style="border: 1px solid black;text-align: right !important" class="td4"> <h:outputText  value="" /></td>
+                            <td style="border: 1px solid black" class="td4"><h:outputText  value="" /></td>
+                            <td style="border: 1px solid black;text-align: right !important" class="td4"><h:outputText  value="" /></td>
+                            <td style="border: 1px solid black;text-align: right !important" class="td4"><h:outputText  value=""/> </td>
+                        </tr>
+                    </c:forEach>
+                    <tr>
+                        <th colspan="3" style="text-align:left;size:2em;">Obervaciones:</th>
+                        <th style="text-align:right;border: 1px solid black;size:2em;font-weight:bold" ><h:outputText  value="Peso Total(kg)"/></th>
+                        <td class="td5" style="text-align:right;border: 1px solid black"><h:outputText  value="#{dtMaFacturacionCotroller.obj.dtfacturadetalleList.stream().map(item->(item.cantidad)).sum()}"><f:convertNumber integerOnly="true"/></h:outputText></td>
+                    </tr>
+                    <tr>
+                        <td class="td5" style="border: 1px solid black" rowspan="3" colspan="3"><h:outputText  value="#{dtMaFacturacionCotroller.obj.descripcion}"/></td>
+                        <th  style="text-align:right;border: 1px solid black;size:2em;font-weight:bold" footerText="" ><h:outputText  value="SubTotal"/></th>
+                        <td class="td5" style="text-align:right;border: 1px solid black;size:2em;"><h:outputText  value="#{dtMaFacturacionCotroller.obj.subTotal}"><f:convertNumber integerOnly="true"/></h:outputText></td>
+                    </tr>
+                    <tr>
+                        <th style="text-align:right;border: 1px solid black;size:2em;font-weight:bold" ><h:outputText  value="Descuento"/></th>
+                        <td class="td5" style="text-align:right;border: 1px solid black"><h:outputText  value="#{dtMaFacturacionCotroller.obj.descuento}"><f:convertNumber integerOnly="true"/></h:outputText></td>
+                    </tr>
+                    <tr>
+                        <th  style="text-align:right;size:2em;border: 1px solid black;font-weight:bold"><h:outputText  value="Total"/></th>
+                        <td class="td5" style="text-align:right;border: 1px solid black"><h:outputText  value="#{dtMaFacturacionCotroller.obj.total}"><f:convertNumber integerOnly="true"/></h:outputText></td>
+                    </tr>
+                    <tr>
+                        <td colspan="4" style="text-align: left !important">
+                            <span style="font-size:12px"><b style="font-weight: bold;font-style: oblique">#{dtMaFacturacionCotroller.obj.dtEcassucursalid.dtEcaid.nombre}</b></span><br/>
+                        </td>
+                        <td rowspan="4">
+                            <p:outputLabel rendered="#{usuarioB.tbUiUsuario.dtecassucursal.logo ne null}">
+                                <img width="130px" src="images/alcaldia.png"/> 
+                            </p:outputLabel>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan="2" style="text-align: left !important">
+                            <span style="font-size:12px"><b style="font-weight: bold;font-style: oblique">Dirección</b> #{dtMaFacturacionCotroller.obj.dtEcassucursalid.direccion}</span><br/>
+                        </td>    
+                        <td colspan="2" style="text-align: left !important">    
+                            <span style="font-size:12px"><b style="font-weight: bold;font-style: oblique">Tel:</b> #{dtMaFacturacionCotroller.obj.dtEcassucursalid.telefono}</span><br/>
+                        </td>   
+                    </tr>
+                    <tr>
+                        <td colspan="4" style="text-align: left !important">
+                            <span style="font-size:12px"><b style="font-weight: bold;font-style: oblique">#{dtMaFacturacionCotroller.obj.dtEcassucursalid.correo}</b></span><br/>
+                            <span style="font-size:12px"><b style="font-weight: bold;font-style: oblique">Compra realizada por</b> #{dtMaFacturacionCotroller.obj.usuario.nombre}</span><br/>
+                            <span style="font-size:12px"><b style="font-weight: bold;font-style: oblique">Factura ded compra</b></span>
+                        </td>
+                    </tr>
+            </table>
+        </p:outputPanel>
+                     
+</ui:composition>
+

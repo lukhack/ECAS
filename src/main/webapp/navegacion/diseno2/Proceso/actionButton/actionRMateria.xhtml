@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"          
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://java.sun.com/jsf/core"          
+      xmlns:ui="http://java.sun.com/jsf/facelets"       >
+    
+    
+    
+    <div class="layout-breadcrumb-options" style="position: fixed;z-index:999998;top:110px;right:15px "  >
+        <p:commandLink process="@form:PnAnadir @this" update="@form panelReferencia formsg:msgs"  action='#{uiMateriaRecoleccionManager.saveList(uiMateriaRecoleccionManager.list)}'  style="margin:0px;padding: 0px"  title="Guardar"><i style="font-size:2.8em;color: #607D8B" class="material-icons">&#xE161;</i>
+            <ui:include src="../../param/param_one.xhtml"/>
+        </p:commandLink>
+        <p:commandLink update="@form"  process="@this" style="margin:0px;padding: 0px" title="Nuevo" action="#{uiMateriaRecoleccionManager.newObejc(uiMateriaRecoleccionManager.obj)}"><i style="font-size:2.8em;color: #607D8B" class="material-icons">insert_drive_file</i>
+            <ui:include src="../../param/param_one.xhtml"/>
+        </p:commandLink>
+    </div>
+    <p:outputPanel style="width:100%;text-align:right;position: relative;z-index:1111111;top:-50px">
+        <p:commandLink process="@this"  style="position: absolute;right: 0;top:0" oncomplete="PF('dglForm').show()"  update="@form:pnForm formsg:msgs"    title="Añadir" ><i style="font-size:2.8em;color: #607D8B" class="material-icons">playlist_add</i>
+           <ui:include src="../../param/param_one.xhtml"/>
+        </p:commandLink>
+    </p:outputPanel>
+    
+</ui:composition>
+
+

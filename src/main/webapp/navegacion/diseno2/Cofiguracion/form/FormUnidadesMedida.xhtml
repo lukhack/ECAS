@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"          
+      xmlns:p="http://primefaces.org/ui"          
+      xmlns:ui="http://java.sun.com/jsf/facelets"       >
+     
+    
+    <p:panelGrid  id="pnForm" columns="2"  styleClass="ui-panelgrid-blank"   layout="grid" style="width:100%" columnClasses="columna25, columna75">
+        <h:panelGroup styleClass="md-inputfield">
+            <p:inputText id="txtunidad"  value="#{dtMaUnidadMedidaController.obj.unidadMedida}" required="true"   maxlength="5"/>
+            <p:outputLabel for="txtunidad" value="Unidad"/>
+        </h:panelGroup>
+        <h:panelGroup styleClass="md-inputfield">
+            <p:inputText id="txtDes"  value="#{dtMaUnidadMedidaController.obj.descripcion}" required="true"   maxlength="100"/>
+            <p:outputLabel for="txtDes" value="Descripción"/>
+        </h:panelGroup>   
+        
+    </p:panelGrid> 
+                     
+</ui:composition>
+

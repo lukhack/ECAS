@@ -1,0 +1,25 @@
+<ui:composition
+    xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:p="http://primefaces.org/ui"
+    xmlns:pm="http://primefaces.org/serenity">
+    <div class='layout-sidebar layout-sidebar-dark' style="z-index: 99999 !important">
+        <div class="sidebar-logo" style="background-color: #00a65a !important;height:50px !important;z-index: 999 !important">
+            <a href="Admon.xhtml">
+                <span class="app-name" style="font-size:20px;margin-left:15px;margin-top:0px !important"><b>ECAS</b> Control</span>
+            </a>
+            <a href="#" class="sidebar-anchor" title="Toggle Menu"></a>
+        </div>
+        <div class="nano" style="position: absolute;top:-40px;z-index:9999 !important">
+            <div class="nano-content sidebar-scroll-content">
+                <div class="layout-menu-container">
+                    <h:form id="menuform">
+                        <pm:menu model="#{menuSession.menu}"  />
+                    </h:form>
+                </div>
+            </div>
+        </div>
+    </div>
+</ui:composition>

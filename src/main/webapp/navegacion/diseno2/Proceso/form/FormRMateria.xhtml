@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"          
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://java.sun.com/jsf/core"          
+      xmlns:ui="http://java.sun.com/jsf/facelets"       
+      xmlns:h="http://xmlns.jcp.org/jsf/html">
+    
+    
+    <p:outputPanel id="PnAnadir" style="width:100%;text-align:right;position: relative">
+        <p:commandLink process="@form:pnForm @this" id="btnAnadir" style="position: absolute;right: 0;top:-10px" oncomplete="PF('dglForm').hide()"  update="@form:dtDatos formsg:msgs"    title="Añadir" action="#{uiMateriaRecoleccionManager.reinit()}"><i style="font-size:2.8em;color: #607D8B" class="material-icons">playlist_add</i>
+            <p:collector value="#{uiMateriaRecoleccionManager.obj}" addTo="#{uiMateriaRecoleccionManager.list}"  unique="true" />
+           <ui:include src="../../param/param_one.xhtml"/>
+       </p:commandLink>
+    </p:outputPanel>
+    
+    <p:defaultCommand target="btnAnadir" />
+     <p:panelGrid  id="pnForm" columns="1"  styleClass="ui-panelgrid-blank"   layout="grid" style="width:100%" columnClasses="columna100">
+        <p:panelGrid    columns="2"  styleClass="ui-panelgrid-blank"   layout="grid" style="width:100%" columnClasses="columna50, columna50">
+             <p:selectOneMenu id="tercero" widgetVar="slTercero"  required="true" requiredMessage="Se requiere un valor en tercero"    var="tcr" value="#{uiMateriaRecoleccionManager.obj.dttercero}"  
+                converter="terceroConvert"    filter="true" filterMatchMode="contains">
+                <f:selectItem itemLabel="Select tercero" itemValue="#{null}" />
+                <f:selectItems value="#{dtTerceroNaturalController.findList()}"  var="tcS" itemValue="#{tcS.dttercero}" itemLabel="#{tcS.dttercero.documento} #{tcS.nombres} #{tcS.apellidos}" />
+                <p:column width="100" headerText="Documento">
+                    <h:outputText value="#{tcr.documento}" />
+                </p:column>
+                <p:column headerText="Nombres y Apellidos">
+                    <h:outputText value="#{tcr.dtterceronatural.nombres} #{tcr.dtterceronatural.apellidos}" />
+                </p:column>
+                <ui:include src="../../param/param_one.xhtml"/>
+                <p:ajax update="pnRuta"/>
+            </p:selectOneMenu>
+            <p:outputPanel id="pnRuta">
+                <p:selectOneMenu id="ruta" rendered="#{uiMateriaRecoleccionManager.obj.dttercero.dttercerorutaList.size() > 0}" widgetVar="slRuta" converter="terceroRutaConvert"  required="true" value="#{uiMateriaRecoleccionManager.obj.dtterceroruta}" requiredMessage="Se requiere un valor en la ruta"    
+                        filter="true" filterMatchMode="contains">
+                     <f:selectItem itemLabel="Seleccion de ruta" itemValue="#{null}" />
+                     <f:selectItems value="#{uiMateriaRecoleccionManager.obj.dttercero.dttercerorutaList}"  var="rut" itemValue="#{rut}" itemLabel="#{rut.ruta}" />
+                     <ui:include src="../../param/param_one.xhtml"/>
+                </p:selectOneMenu>
+           </p:outputPanel> 
+        </p:panelGrid>
+         
+        
+        <p:panelGrid  columns="3"  styleClass="ui-panelgrid-blank"   layout="grid" style="width:100%" columnClasses="columna50, columna50, columna25">
+            <h:panelGroup styleClass="md-inputfield">
+                <p:inputNumber id="txtPeso" decimalPlaces="2"   value="#{uiMateriaRecoleccionManager.obj.peso}" required="true"   maxlength="45"></p:inputNumber>
+                <p:outputLabel for="txtPeso" value="Cantidad (Kg)"/>
+            </h:panelGroup>  
+            <h:panelGroup styleClass="md-inputfield">
+                <p:inputNumber id="txtSacos" decimalPlaces="2"   value="#{uiMateriaRecoleccionManager.obj.cantidadSacos}" required="true"   maxlength="45"></p:inputNumber>
+                <p:outputLabel for="txtSacos" value="Cantidad de Sacos"/>
+            </h:panelGroup>  
+            
+            <h:panelGroup  id="pnValor" styleClass="md-inputfield">
+                <p:inputTextarea rows="2" id="txtDescripcion"  value="#{uiMateriaRecoleccionManager.obj.descripcion}" />
+                <p:outputLabel for="txtDescripcion" value="Descripción"/>
+            </h:panelGroup> 
+        </p:panelGrid> 
+        
+    </p:panelGrid> 
+                     
+</ui:composition>
+

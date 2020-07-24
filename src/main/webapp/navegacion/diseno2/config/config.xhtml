@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"          
+      xmlns:f="http://java.sun.com/jsf/core"          
+      xmlns:ui="http://java.sun.com/jsf/facelets"   
+      xmlns:pt="http://xmlns.jcp.org/jsf/passthrough"    
+      xmlns:pm="http://primefaces.org/mobile"
+      xmlns:pe="http://primefaces.org/ui/extensions"
+      xmlns:c="http://xmlns.jcp.org/jsp/jstl/core"
+      xmlns:p="http://primefaces.org/ui">
+      
+       
+    <h:form id="formapp">
+        <div class="ui-g">
+            <div class="ui-g-12">
+                <div class="card">
+                    <h1>Configuración de #{uiNavegacionBean.title}</h1>
+                    <p:tooltip />
+
+                    <p:panelGrid columns="#{uiNavegacionBean.obj.numColum}" id="grid" layout="grid" style="border:0px !important; background:none;margin-top:20px;width:100% "  styleClass="ui-panelgrid-blank form-group">
+                        <c:forEach items="#{uiNavegacionBean.obj.IUConfigForm}" var="conf">
+                            <c:choose>
+                                <c:when test="#{conf.tipoCampo.id eq config.CAMP_STRING}">
+                                    <p:outputLabel value="#{conf.labelNombre}" for="#{conf.nameId}" />  
+                                    <h:panelGroup styleClass="md-inputfield"> 
+                                        <p:inputText  id="#{conf.nameId}" maxlength="#{conf.maxValue}"  required='#{conf.requerido eq "1"?"true":"false"}' value="#{conf.valor}"  requiredMessage="#{conf.messageError}"/>
+                                        <label>#{conf.labelNombre}</label>
+                                        <p:message for="#{conf.nameId}" />
+                                    </h:panelGroup>
+                                </c:when>
+                                <c:when test="#{conf.tipoCampo.id eq config.CAMP_INTEGER}">
+                                    <p:outputLabel value="#{conf.labelNombre}" for="#{conf.nameId}"/>  
+                                    <h:panelGroup styleClass="md-inputfield"> 
+                                        <p:inputMask mask="#{conf.mask}"  maxlength="#{conf.maxValue}" slotChar=" " id="#{conf.nameId}" required='#{conf.requerido eq "1"?"true":"false"}' value="#{conf.valor}" requiredMessage="#{conf.messageError}"/>
+                                        <label>#{conf.labelNombre}</label>
+                                        <p:message for="#{conf.nameId}" />
+                                    </h:panelGroup>    
+                                </c:when>
+                                <c:when test="#{conf.tipoCampo.id eq config.CAMP_BOOLEAN}">
+                                    <p:outputLabel value="#{conf.labelNombre} " for="#{conf.nameId}"/>  
+                                    <h:selectBooleanCheckbox id="#{conf.nameId}"   styleClass="ui-chkbox-icon ui-icon ui-icon-check ui-c"
+                                    title="Classe hospitalar"   
+                                    value="#{conf.valor}"   
+                                    converter="javax.faces.Boolean" />  
+                                </c:when>
+                            </c:choose>
+                        </c:forEach>
+                        <p:outputPanel style="width: 100%;text-align:right">
+                            <p:commandButton process="@form" update="formsg:msgs grid"  actionListener="#{confController.save(obj)}" style="max-width:100px" value="Guardar" icon="fa fa-save"/>
+                        </p:outputPanel>
+                    </p:panelGrid> 
+                </div>
+            </div>
+        </div>
+    </h:form> 
+                      
+</ui:composition>
+

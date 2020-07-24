@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"          
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://java.sun.com/jsf/core"          
+      xmlns:ui="http://java.sun.com/jsf/facelets">
+    
+    <style>
+       .accion .ui-panelgrid-cell{
+            margin:0px !important;
+            padding:0px !important;
+        }
+    </style>
+    
+    <p:dataTable var="dt" id="dtDatos" 
+            paginator="true"
+            scrollable="true"
+            scrollHeight="300"
+            paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+            rowsPerPageTemplate="5,10,20,50,100"
+            scrollWidth="true"
+            rows="20"
+            rowIndexVar="rowIndex"
+            filteredValue='#{dtTerceroNaturalController.listFilter}'
+            value='#{dtTerceroNaturalController.getList(usuarioB.tbUiUsuario.dtecassucursal)}'>
+             <p:ajax event="filter"  process="@this" global="true" ignoreAutoUpdate="true"/>
+             <ui:include src="../../param/param_one.xhtml"/>
+             <p:column headerText="No" width="30" >
+                 <h:outputText  value="#{rowIndex+1}" />
+             </p:column>
+             <p:column headerText="Tipo de Documento" width="50">
+                 <h:outputText value='#{dt.dttercero.dtmatipodocumentoId.tipoDocumento}' />
+             </p:column>
+             <p:column headerText="No. Documento" width="80">
+                 <h:outputText value='#{dt.dttercero.documento}' />
+             </p:column>    
+             <p:column headerText="Nombre" width="200">
+                 <h:outputText value='#{dt.nombres} #{dt.apellidos}' />
+             </p:column>    
+             <p:column headerText="Dirección" width="100">
+                 <h:outputText value='#{dt.dttercero.direccion}' />
+             </p:column>    
+             <p:column headerText="Condicion social" width="100">
+                 <h:outputText value='#{dt.dtmacondicionsocialId.condicionSocial}' />
+             </p:column>
+             <p:column headerText="" width="100">
+                <p:commandButton title="Remove" rendered="#{dt.id eq null}" style="width:30px"   icon="ui-icon-delete" update="dtDatos" process="@this">
+                    <p:collector value="#{dt}" removeFrom="#{dtTerceroNaturalController.list}" unique="true"/>
+                    <ui:include src="../../param/param_one.xhtml"/>
+                </p:commandButton>
+            </p:column>
+             <p:column headerText="" width="100">
+                <p:commandButton title="Editar" oncomplete="PF('dglForm').show()" action="#{dtTerceroNaturalController.selectObjec(dt)}"   icon="ui-icon-edit" update="@form:pnForm" process="@this">
+                    <ui:include src="../../param/param_one.xhtml"/>
+                </p:commandButton>
+             </p:column>
+             <p:column headerText="" width="100">
+                <p:commandButton title="Añadir Ruta" oncomplete="PF('dtPersonan').show()" action="#{dtTerceroNaturalController.selectObjec(dt)}"   icon="ui-icon-swap-calls" update="@form:dtPersonan" process="@this">
+                    <ui:include src="../../param/param_one.xhtml"/>
+                </p:commandButton>
+             </p:column>
+    </p:dataTable>
+    
+    
+    <p:dialog widgetVar="dtPersonan" width="900" header="Rutas" modal="true" id="dtPersonan">
+        <p:outputPanel style="padding:10px">
+                <p:panelGrid  columns="2"  styleClass="ui-panelgrid-blank form-group" style="width:100%"  columnClasses="columna90, columna10">
+                    <h:panelGroup styleClass="md-inputfield" id="textNombreRuta" >
+                        <p:inputText required="true"  maxlength="45" value="#{uiTerceroRutaManager.obj.ruta}"  requiredMessage="Valor requerido en Nombre de la ruta"/>
+                        <label>Nombre ruta</label>
+                    </h:panelGroup>
+                    <p:commandLink process="textNombreRuta @this" id="btnAnadirRura" style="position: absolute;right: 0;top:0"  update="textNombreRuta @form:dtRutas formsg:msgs"    title="Añadir" action="#{uiTerceroRutaManager.reinit(dtTerceroNaturalController.obj.dttercero)}"><i style="font-size:2.8em;color: #607D8B" class="material-icons">playlist_add</i>
+                        <p:collector value="#{uiTerceroRutaManager.obj}" addTo="#{dtTerceroNaturalController.obj.dttercero.dttercerorutaList}"  unique="true" />
+                        <ui:include src="../../param/param_one.xhtml"/>
+                    </p:commandLink>
+                </p:panelGrid>
+                <p:dataTable var="rt" id="dtRutas" 
+                    paginator="true"
+                    scrollable="true"
+                    scrollHeight="230"
+                    paginatorPosition="bottom"
+                    paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                    rowsPerPageTemplate="5,10,20,50,100"
+                    scrollWidth="true"
+                    rows="20"
+                    rowIndexVar="rowIndex"
+                    filteredValue='#{dtTerceroNaturalController.listRuta}'
+                    value='#{dtTerceroNaturalController.obj.dttercero.dttercerorutaList}'>
+                     <f:facet name="header" >
+                        Rutas
+                     </f:facet>
+                     <p:ajax event="filter"  process="@this" global="true" ignoreAutoUpdate="true"/>
+                     <ui:include src="../../param/param_one.xhtml"/>
+                    <p:column headerText="Nombre" width="200">
+                        <h:outputText value='#{rt.ruta}' />
+                    </p:column>    
+                    <p:column headerText="Acción" width="10%">
+                        <p:column headerText="Action" width="5%">
+                           <p:commandButton title="Remove" rendered="#{rt.id eq null}"  style="width: 30px" icon="ui-icon-delete" update="dtRutas" process="@this">
+                               <p:collector value="#{rt}" removeFrom="#{dtTerceroNaturalController.obj.dttercero.dttercerorutaList}" unique="true"/>
+                                <ui:include src="../../param/param_one.xhtml"/>
+                           </p:commandButton>
+                        </p:column>
+                         <p:commandButton title="Añadir coordenadas" oncomplete="PF('dgCoordenadas').show()" action="#{uiTerceroRutaManager.selectObjec(rt)}"   icon="ui-icon-location-on" update="@form:dgCoordenadas" process="@this">
+                        <ui:include src="../../param/param_one.xhtml"/>
+                    </p:commandButton>
+                    </p:column>
+                    
+            </p:dataTable>
+        </p:outputPanel>
+    </p:dialog>
+    
+    
+    <p:dialog widgetVar="dgCoordenadas" width="900" header="Coordenadas" modal="true" id="dgCoordenadas">
+        <p:outputPanel style="padding:10px">
+            <p:panelGrid  columns="2" styleClass="ui-panelgrid-blank form-group" style="width:100%"  columnClasses="columna90, columna10">
+                <h:panelGroup styleClass="md-inputfield" id="txtDireccioncoor" >
+                    <p:inputText required="true"  maxlength="45" value="#{uiTerceroRutaCoordenadaManager.obj.direccion}"  requiredMessage="Valor requerido en dirección"/>
+                    <label>Dirección</label>
+                </h:panelGroup>
+                <p:commandLink process="txtDireccioncoor @this" id="btnAnadirCoordenada" style="position: absolute;right: 0;top:0"  update="@form:dtCoordenadas  formsg:msgs"    title="Añadir" action="#{uiTerceroRutaCoordenadaManager.reinit(uiTerceroRutaManager.obj)}"><i style="font-size:2.8em;color: #607D8B" class="material-icons">playlist_add</i>
+                    <p:collector value="#{uiTerceroRutaCoordenadaManager.obj}" addTo="#{uiTerceroRutaManager.obj.dttercerorutacoordenada}"  unique="true" />
+                    <ui:include src="../../param/param_one.xhtml"/>
+                </p:commandLink>
+            </p:panelGrid>
+            <p:dataTable var="cd" id="dtCoordenadas" 
+                paginator="true"
+                scrollable="true"
+                scrollHeight="230"
+                paginatorPosition="bottom"
+                paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                rowsPerPageTemplate="5,10,20,50,100"
+                scrollWidth="true"
+                rows="20"
+                rowIndexVar="rowIndex"
+                filteredValue='#{uiTerceroRutaManager.listFilter}'
+                value='#{uiTerceroRutaManager.obj.dttercerorutacoordenada}'>
+                <f:facet name="header" >Coordenadas</f:facet>
+                <p:ajax event="filter"  process="@this" global="true" ignoreAutoUpdate="true"/>
+                <ui:include src="../../param/param_one.xhtml"/>
+                <p:column headerText="Nombre" width="200">
+                    <h:outputText value='#{cd.direccion}' />
+                </p:column>    
+                <p:column headerText="Acción" width="5%">
+                    <p:column headerText="Action" width="5%">
+                       <p:commandButton title="Remove" rendered="#{cd.id eq null}"  style="width: 30px" icon="ui-icon-delete" update="dtCoordenadas" process="@this">
+                            <p:collector value="#{cd}" removeFrom="#{uiTerceroRutaManager.obj.dttercerorutacoordenada}" unique="true"/>
+                            <ui:include src="../../param/param_one.xhtml"/>
+                       </p:commandButton>
+                    </p:column>
+                </p:column>
+            </p:dataTable>
+        </p:outputPanel>
+    </p:dialog>
+    
+</ui:composition>
+
+

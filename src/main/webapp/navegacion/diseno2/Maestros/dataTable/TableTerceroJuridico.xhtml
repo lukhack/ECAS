@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"          
+      xmlns:p="http://primefaces.org/ui"         
+      xmlns:ui="http://java.sun.com/jsf/facelets">
+    
+     <p:dataTable var="dt" id="dtDatos" 
+            paginator="true"
+            scrollable="true"
+            scrollHeight="230"
+            paginatorPosition="bottom"
+            paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+            rowsPerPageTemplate="5,10,20,50,100"
+            scrollWidth="true"
+            rows="20"
+            rowIndexVar="rowIndex"
+            filteredValue='#{dtTerceroJuridicoController.listFilter}'
+            value='#{dtTerceroJuridicoController.getList(usuarioB.tbUiUsuario.dtecassucursal)}'>
+             <p:ajax event="filter"  process="@this" global="true" ignoreAutoUpdate="true"/>
+             <ui:include src="../../param/param_one.xhtml"/>
+             <p:column headerText="No" width="30" >
+                 <h:outputText  value="#{rowIndex+1}" />
+             </p:column>
+             <p:column headerText="Tipo de Documento" width="80">
+                 <h:outputText value='#{dt.dttercero.dtmatipodocumentoId.tipoDocumento}' />
+             </p:column>
+             <p:column headerText="No. Documento" width="100">
+                 <h:outputText value='#{dt.dttercero.documento}' />
+             </p:column>    
+             <p:column headerText="Razon Social" width="100">
+                 <h:outputText value='#{dt.razonSocial}' />
+             </p:column>    
+             <p:column headerText="Dirección" width="100">
+                 <h:outputText value='#{dt.dttercero.direccion}' />
+             </p:column>    
+             <p:column headerText="Correo" width="100">
+                 <h:outputText value="#{dt.dttercero.correo}" />
+             </p:column>
+             
+             <p:column headerText="Acción" width="30">
+                <p:commandButton title="Remove" rendered="#{dt.dtterceroId eq null}"  style="width: 30px" icon="ui-icon-delete" update="dtDatos" process="@this">
+                    <p:collector value="#{dt}" removeFrom="#{dtTerceroJuridicoController.list}" unique="true"/>
+                    <ui:include src="../../param/param_one.xhtml"/>
+                </p:commandButton>
+            </p:column>
+            <p:column headerText="Acción" width="30">
+                <p:commandButton title="Editar" oncomplete="PF('dglForm').show()" action="#{dtTerceroJuridicoController.selectObjec(dt)}"   icon="ui-icon-edit" update="@form:pnForm" process="@this">
+                    <ui:include src="../../param/param_one.xhtml"/>
+                </p:commandButton>
+            </p:column>
+             
+    </p:dataTable>
+    
+</ui:composition>
+
+

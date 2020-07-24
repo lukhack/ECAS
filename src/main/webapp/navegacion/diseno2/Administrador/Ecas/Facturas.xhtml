@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"          
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://java.sun.com/jsf/core"          
+      xmlns:ui="http://java.sun.com/jsf/facelets"   
+      xmlns:pt="http://xmlns.jcp.org/jsf/passthrough"    
+      xmlns:pm="http://primefaces.org/mobile" 
+      xmlns:o="http://omnifaces.org/ui"
+      xmlns:of="http://omnifaces.org/functions"
+      xmlns:pe="http://primefaces.org/ui/extensions"
+      xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
+     
+     <style>
+        .ui-selectonemenu-panel, .ui-dialog{
+            z-index:999999999 !important;
+        }
+        
+        .black-button{
+           border-radius: 0px 0px 0px 0px !important;
+            -moz-border-radius: 0px 0px 0px 0px !important;
+            -webkit-border-radius: 0px 0px 0px 0px !important;
+            border: 0px none #ffffff !important;
+            background-color: transparent !important;
+            color: #000 !important;
+            -webkit-box-shadow: 0px 0px 0px 0px rgba(0,0,0,0.75)  !important;
+            -moz-box-shadow: 0px 0px 0px 0px rgba(0,0,0,0.75)  !important;
+            box-shadow: 0px 0px 0px 0px rgba(0,0,0,0.75)  !important;
+        }
+        
+        .ui-selectonemenu-panel{
+            z-index: 999999999 !important;
+        }
+        
+        
+        .rcorners1 {
+            text-align: center;
+            vertical-align:middle;
+            border-radius: 100px;
+            background: #73AD21;
+            width: 80px;
+            height: 80px;
+            height: 80px;
+            line-height: 80px;
+            color: #ffffff;
+        }
+          
+        .rcorners1:hover{
+          background: #cccccc !important;
+        }
+        
+        
+        .pnlist2{
+           background: #cccccc !important;
+           color: white
+        }
+        
+        .pnlist2:hover, .pnlist:hover{
+           background: #00ccff !important;
+           color: white;
+        }
+        
+        .ui-button{
+             border-radius: 0px 0px 0px 0px !important;
+        }
+        
+        span {
+            
+          display: inline-block;
+          vertical-align: middle;
+          line-height: normal;
+        }
+    </style>
+    <h:form  id="frmApp"  >
+        <h:messages/>
+        <div class="ui-g dashboard">
+            
+            <p:panelGrid style="width:100%;border: 1px solid #cccccc;"  styleClass="ui-panelgrid-blank" layout="grid" columns="1" >
+                <p:panelGrid style="width:100%;border: 1px solid #cccccc;background: white !important"  styleClass="ui-panelgrid-blank" layout="grid" columns="1" >
+                    <p:panel header="Compras por sucursal"  style="overflow-y: scroll;max-height:600px">
+                        <h:panelGrid cellpadding="0" columns="3" >
+                            <p:selectOneMenu value="#{dtECASucursalController.obj}" id="slEcasucursal" converter="sucursalConvert" 
+                                             required="true" requiredMessage="Se requiere un valor en surusal" filter="true" filterMatchMode="contains">
+                                <f:selectItem itemValue="#{null}" itemLabel="Seleccione una sucursal .."/>
+                                <f:selectItems value="#{dtECASucursalController.findList()}" var="ec" itemValue="#{ec}" itemLabel="#{ec.filial} - #{ec.dtEcaid.nombre}"/>
+                            </p:selectOneMenu>
+                            <p:commandButton icon="fa fa-search"  process="@form:slEcasucursal @this" update="@form:dtfacturas formsg:msgs" />
+                            <p:commandButton icon="fa fa-plus " process="@form:slEcasucursal @this"  action="#{dtMaFacturacionCotroller.newObejc(dtMaFacturacionCotroller.obj)}" update="@form:dgDataCreateNew formsg:msgs" oncomplete="PF('dgDataCreateNew').show()"><ui:include src="../../param/param_one.xhtml"/></p:commandButton>
+                        </h:panelGrid>
+                        
+                        <p:dataTable selectionMode="single" var="cl" filteredValue="#{dtMaFacturacionCotroller.listFilter}"  rowKey="#{cl.id}"  id="dtfacturas"
+                                     value="#{dtECASucursalController.obj.dtfacturaList.stream().filter(item-> item.dtTipoFacturaid.id eq 1 or item.dtTipoFacturaid.id eq 5).toList()}" >
+                            <p:column headerText="Fecha"><p:outputLabel value="#{cl.fecha}"/></p:column>
+                            <p:column headerText="Factura No."><p:outputLabel value="#{cl.consecutivo}"/></p:column>
+                            <p:column headerText="Tercero"><p:outputLabel value="#{cl.tercero.dtterceronatural.nombres}"/></p:column>
+                            <p:column headerText="Total"><p:outputLabel value="#{cl.total}"/></p:column>
+                            <p:column width="30"><p:commandButton icon="fa fa-edit" process="@this" action="#{dtMaFacturacionCotroller.selectObjec(cl)}" update="@form:dgDataCreateNew" oncomplete="PF('dgDataCreateNew').show()"/> <ui:include src="../../param/param_one.xhtml"/></p:column>
+                            <p:column width="30"><p:commandButton icon="fa fa-print" process="@this" action="#{dtMaFacturacionCotroller.selectObjec(cl)}" update="@form:dgFactura" oncomplete="PF('dgFactura').show()" /> <ui:include src="../../param/param_one.xhtml"/></p:column>
+                            <p:column width="30"><p:commandButton icon="fa fa-file-text" process="@this" action="#{dtMaFacturacionCotroller.selectObjec(cl)}" update="@form:dgDialogDataConsolida" oncomplete="PF('dgDialogDataConsolida').show()"/> <ui:include src="../../param/param_one.xhtml"/></p:column>
+                       </p:dataTable>
+                    </p:panel>
+                </p:panelGrid>
+            </p:panelGrid>
+        </div>
+        
+        <p:dialog header="Detalle Factura" id="dgDialogDataConsolida" width="700" widgetVar="dgDialogDataConsolida"> 
+            <ui:include src="Detalle/DetalleFactura.xhtml"/>
+        </p:dialog>
+        
+        
+        
+        <p:dialog header="Editar factura" id="dgDataEdit" widgetVar="dgDataEdit">
+            
+        </p:dialog>
+        
+        
+        <ui:include src="Detalle/Factura.xhtml"/>
+        
+        
+        
+        
+        
+    </h:form>
+</ui:composition>
+
+

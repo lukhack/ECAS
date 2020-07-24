@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"          
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://java.sun.com/jsf/core"          
+      xmlns:ui="http://java.sun.com/jsf/facelets"   
+      xmlns:pt="http://xmlns.jcp.org/jsf/passthrough"    
+      xmlns:pm="http://primefaces.org/mobile"
+      xmlns:pe="http://primefaces.org/ui/extensions"
+      xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
+    <style>
+        /*.overlayDialog div.ui-dialog-titlebar{
+              all: initial;
+                * {
+                  all: unset;
+                }
+         }*/
+         
+        .ui-dialog{
+            padding:0px !important;
+            
+            
+        }
+        
+        </style>
+   
+    <ul class="animated">
+        <h:form id="formMensajesPendientes">
+            <c:forEach items="#{mensajeriaController.mensajesPendientes(usuarioB.tbUiUsuario)}"  var="usr">
+                <li role="menuitem">
+                    <p:commandLink process="@this" update="panelMensajes"  action="#{mensajeriaBean.setUsuario(usr.key)}" oncomplete="PF('dialogMensaje').show()">
+                
+                        <img id="avatar" style="profile-image-wrapper3"  width="40" src='#{usr.key.avatar==null?"images/avatar.png":usr.key.avatar}' alt="Avatar"  title="Avatar"/>
+                        <span>#{usr.key.nombre}</span>
+                        <span class="topbar-badge animated rubberBand">#{usr.value}</span>
+                    </p:commandLink>
+                </li>
+            </c:forEach>
+          
+        <p:separator/>
+        <li role="menuitem">
+            <a href="#" class="topbar-message">
+                <p:commandLink process="@this" update="panelMensajes" onclick="PF('dialogMensaje').show()" oncomplete="finScroll()">
+                    <i class="material-icons">send</i>
+                     <span>Enivar Mensaje</span>
+                </p:commandLink>
+            </a>
+        </li>
+        </h:form>
+    </ul>
+                  
+</ui:composition>
+

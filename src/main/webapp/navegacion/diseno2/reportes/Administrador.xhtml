@@ -1,0 +1,488 @@
+<!DOCTYPE html>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"          
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://java.sun.com/jsf/core"          
+      xmlns:ui="http://java.sun.com/jsf/facelets"   
+      xmlns:pt="http://xmlns.jcp.org/jsf/passthrough"    
+      xmlns:pm="http://primefaces.org/mobile" 
+      xmlns:o="http://omnifaces.org/ui"
+      xmlns:of="http://omnifaces.org/functions"
+      xmlns:pe="http://primefaces.org/ui/extensions"
+      xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
+     
+     <style>
+        .ui-selectonemenu-panel{
+            z-index:999999999 !important;
+        }
+        
+        .black-button{
+           border-radius: 0px 0px 0px 0px !important;
+            -moz-border-radius: 0px 0px 0px 0px !important;
+            -webkit-border-radius: 0px 0px 0px 0px !important;
+            border: 0px none #ffffff !important;
+            background-color: transparent !important;
+            color: #000 !important;
+            -webkit-box-shadow: 0px 0px 0px 0px rgba(0,0,0,0.75)  !important;
+            -moz-box-shadow: 0px 0px 0px 0px rgba(0,0,0,0.75)  !important;
+            box-shadow: 0px 0px 0px 0px rgba(0,0,0,0.75)  !important;
+        }
+        
+        .ui-selectonemenu-panel{
+            z-index: 999999999 !important;
+        }
+        
+        
+        .rcorners1 {
+            text-align: center;
+            vertical-align:middle;
+            border-radius: 100px;
+            background: #73AD21;
+            width: 80px;
+            height: 80px;
+            height: 80px;
+            line-height: 80px;
+            color: #ffffff;
+        }
+          
+        .rcorners1:hover{
+          background: #cccccc !important;
+        }
+        
+        
+        .pnlist2{
+           background: #cccccc !important;
+           color: white
+        }
+        
+        .pnlist2:hover, .pnlist:hover{
+           background: #00ccff !important;
+           color: white;
+        }
+        
+        
+        
+        span {
+            
+          display: inline-block;
+          vertical-align: middle;
+          line-height: normal;
+        }
+    </style>
+    <h:form  id="frmApp"  >
+        <h:messages/>
+        <div class="ui-g dashboard">
+            <p:panelGrid style="width:100%;border: 1px solid #cccccc;"  styleClass="ui-panelgrid-blank" layout="grid" columns="1" >
+                <p:panelGrid style="width:100%;border: 1px solid #cccccc;background: white !important"  styleClass="ui-panelgrid-blank" layout="grid" columns="1" >
+                    <p:panel header="Compras por sucursal" style="overflow-y: scroll;max-height:600px">
+                        <p:dataTable selectionMode="single" rowKey="#{cl.id}" value="#{dtECASucursalController.getListAllECAId()}" var="cl">
+                            <p:ajax event="rowSelect" listener="#{prReporteController.setEcasucursal(cl)}"   />
+                            
+                            <p:column headerText="Sucursal Principal" sortBy="#{cl.dtEcaid.nombre}" width="130" >
+                                <p:outputLabel value="#{cl.dtEcaid.nombre}"></p:outputLabel>
+                            </p:column>
+                            <p:column headerText="Susursal" width="130" >
+                                <p:outputLabel value="#{cl.filial.toUpperCase()}"></p:outputLabel>
+                            </p:column>
+                            <p:column headerText="Telefono" width="100" style="text-align: right">
+                                <p:outputLabel value="#{cl.telefono.toUpperCase()}"></p:outputLabel>
+                            </p:column>
+                            <p:column headerText="Dirección" width="100" style="text-align: right">
+                                <p:outputLabel value="#{cl.direccion.toUpperCase()}"></p:outputLabel>
+                            </p:column>
+                            <p:column headerText="Municipio" width="100" style="text-align: right">
+                                <p:outputLabel value="#{cl.mamunicipioId.municipio.toUpperCase()}"></p:outputLabel>
+                            </p:column>
+                            <p:column headerText="Historico Total Peso(Kg)" width="75" style="text-align: right">
+                                <p:outputLabel value="#{cl.v_ecasconsolidado.totalkg eq null?0:cl.v_ecasconsolidado.totalkg}">
+                                    <f:convertNumber     currencySymbol=""  maxFractionDigits="0" type="currency" locale="es"  />
+                                </p:outputLabel>
+                            </p:column>
+                            <p:column headerText="Historico Total compras($)" width="75" style="text-align: right">
+                                <p:outputLabel value="#{cl.v_ecasconsolidado.totalPesos eq null?0:cl.v_ecasconsolidado.totalPesos}">
+                                    <f:convertNumber     currencySymbol=""  maxFractionDigits="0" type="currency" locale="es"  />
+                                </p:outputLabel>
+                            </p:column>
+
+                        </p:dataTable>   
+                    </p:panel>
+                </p:panelGrid>
+            </p:panelGrid>
+        </div>
+        <p:dialog header="Reportes" id="dgDialogDataConsolida"  widgetVar="dgDialogDataConsolida"  dynamic="true" width="1200" height="650" modal="true">
+             <p:dataTable var="dt" id="dtDatosConsolida" 
+                                 rowIndexVar="rowIndex"  scrollable="true"  scrollHeight="250"
+                                 value='#{dtMaFacturacionDetalleController.findListDetalleEca(usuarioB.tbUiUsuario.dtEcaPadre)}'
+                           filteredValue='#{dtMaFacturacionDetalleController.listFilter}' 
+                           paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink}  {LastPageLink} {RowsPerPageDropdown} {Exporters}"
+                            paginator="true" >
+                           <p:ajax event="filter"  process="@this" global="false" ignoreAutoUpdate="true"/>
+                           <ui:include src="../param/param_one.xhtml"/>
+                           <f:facet name="{Exporters}">
+                               <div style="text-align:right;padding-top: 5px;">
+                                   <h:commandLink>
+                                       <img src="images/excel.png" width="24"/>
+                                       <p:dataExporter type="xls" target="dtDatosConsolida" fileName="Datos_" />
+                                        <ui:include src="../param/param_one.xhtml"/>
+                                   </h:commandLink>
+                               </div>
+                           </f:facet>
+                           <p:column headerText="No" width="50"  filterBy="#{dt.id eq null?rowIndex+1:dt.id}">
+                               <h:outputText  value="#{rowIndex+1}" />
+                           </p:column>
+                           <p:column headerText="Sucursal" width="150" filterBy="#{dt.dtFacturaVentaid.dtEcassucursalid.filial}" filterMatchMode="contains">
+                               <h:outputText value='#{dt.dtFacturaVentaid.dtEcassucursalid.filial}' />
+                           </p:column>
+                           <p:column headerText="Fecha" width="80" filterBy="#{dt.dtFacturaVentaid.fecha}" filterMatchMode="contains">
+                               <h:outputText value='#{dt.dtFacturaVentaid.fecha}' />
+                           </p:column> 
+                           <p:column headerText="Nombre" width="150" filterBy="#{dt.dtFacturaVentaid.tercero.dtterceronatural.nombres} #{dt.dtFacturaVentaid.tercero.dtterceronatural.apellidos}" filterMatchMode="contains">
+                               <h:outputText value='#{dt.dtFacturaVentaid.tercero.dtterceronatural.nombres} #{dt.dtFacturaVentaid.tercero.dtterceronatural.apellidos}' />
+                           </p:column>  
+                           <p:column headerText="Identificacion" width="100" filterBy="#{dt.dtFacturaVentaid.tercero.documento}" filterMatchMode="contains">
+                               <h:outputText value='#{dt.dtFacturaVentaid.tercero.documento}' />
+                           </p:column> 
+                           <p:column headerText="Factura de compra" width="90" filterBy="#{dt.dtFacturaVentaid.consecutivo.toUpperCase()}" filterMatchMode="contains">
+                               <h:outputText value='#{dt.dtFacturaVentaid.consecutivo.toUpperCase()}' />
+                           </p:column> 
+                           
+                           <p:column headerText="Material Id" width="80" filterBy="#{dt.materialid.material.dtmagrupomaterial.id}" filterMatchMode="contains">
+                               <h:outputText value='#{dt.materialid.material.dtmagrupomaterial.id}' />
+                           </p:column>
+                           
+                           <p:column headerText="Material Grupo" width="80" filterBy="#{dt.materialid.material.dtmagrupomaterial.nombre.toUpperCase()}" filterMatchMode="contains">
+                               <h:outputText value='#{dt.materialid.material.dtmagrupomaterial.nombre.toUpperCase()}' />
+                           </p:column>
+                           
+                           <p:column headerText="Material" width="80" filterBy="#{dt.materialid.material.material.toUpperCase()}" filterMatchMode="contains">
+                               <h:outputText value='#{dt.materialid.material.material.toUpperCase()}' />
+                           </p:column>
+                           
+                           <p:column headerText="Convenio del Material" width="80" filterBy="#{dt.terceroconvenio_id.dttercerojuridico.razonSocial}" filterMatchMode="contains">
+                               <h:outputText value='#{dt.terceroconvenio_id.dttercerojuridico.razonSocial}' />
+                           </p:column>
+                           <p:column headerText="Cantidad" width="80" filterBy="#{dt.cantidad}" filterMatchMode="contains">
+                               <h:outputText value='#{dt.cantidad}'><f:convertNumber/></h:outputText>
+                           </p:column> 
+                           <p:column headerText="Valor de compra" width="80" filterBy="#{dt.cantidad * dt.valor}" filterMatchMode="contains">
+                               <h:outputText value='#{dt.cantidad * dt.valor}' ><f:convertNumber/></h:outputText>
+                           </p:column> 
+                           <p:column headerText="Donación" width="80" filterBy='#{dt.dtFacturaVentaid.dtTipoFacturaid.id eq 6? "Si":"No"}' filterMatchMode="contains">
+                               <h:outputText value='#{dt.dtFacturaVentaid.dtTipoFacturaid.id eq 6? "Si":"No"}' ><f:convertNumber/></h:outputText>
+                           </p:column>
+                        <p:column headerText="Medio Transporte" width="80" filterBy="#{dt.dtFacturaVentaid.dttransporte_id.mediotransporte}" filterMatchMode="contains" >
+                            <p:outputLabel value="#{dt.dtFacturaVentaid.dttransporte_id.mediotransporte}"/>
+                        </p:column>
+                        <p:column headerText="Vehiculo Placas" width="80" filterBy="#{dt.dtFacturaVentaid.placavehiculo}" filterMatchMode="contains" >
+                            <p:outputLabel value="#{dt.dtFacturaVentaid.placavehiculo}"/>
+                        </p:column> 
+                           <p:column headerText="Observaciones Material" width="150" filterBy="#{dt.descripcion}" filterMatchMode="contains">
+                               <h:outputText value='#{dt.descripcion}' ><f:convertNumber/></h:outputText>
+                           </p:column> 
+                           <p:column headerText="Observaciones Factura" width="150" filterBy="#{dt.dtFacturaVentaid.descripcion}" filterMatchMode="contains">
+                               <h:outputText value='#{dt.dtFacturaVentaid.descripcion}' ><f:convertNumber/></h:outputText>
+                           </p:column> 
+                           
+                           <p:columnGroup type="footer">
+                                <p:row>
+                                    <p:column style="font-weight: bold !important;font-size:24px;"  colspan="13" footerText="Total (Kg)" />
+                                    <p:column  colspan="1" style="text-align: right" >
+                                        <f:facet name="footer">
+                                            <h:outputText style="font-size:24px;font-weight:bold" value="#{dtMaFacturacionDetalleController.listDetalle.stream().map(item->item.cantidad).sum()}">
+                                              <f:convertNumber pattern="##,###"  />
+                                          </h:outputText>
+                                        </f:facet>
+                                    </p:column>
+                                </p:row>
+                                <p:row>
+                                    <p:column style="font-weight: bold !important;font-size:24px;"  colspan="13" footerText="Total ($)" />
+                                    <p:column  colspan="1" style="text-align: right" >
+                                        <f:facet name="footer">
+                                            <h:outputText style="font-size:24px;font-weight:bold" value="#{dtMaFacturacionDetalleController.listDetalle.stream().map(item->item.cantidad * item.valor).sum()}">
+                                              <f:convertNumber pattern="##,###"  />
+                                          </h:outputText>
+                                        </f:facet>
+                                    </p:column>
+                                </p:row>
+                        </p:columnGroup>
+                           
+                    </p:dataTable>
+        </p:dialog>
+        
+        <p:dialog header="Reportes" id="dgDialogData" widgetVar="dgDialogData" dynamic="true" width="1200" height="650" modal="true">
+            <p:tabView id="tabData">
+                <p:tab title="Reporte por fecha">
+                    <p:panelGrid   columns="3" id="pnTercero"  styleClass="ui-panelgrid-blank"  style="width:100%;background-color: white" columnClasses="columna35, columna30, columna35, columna35">
+                        <p:outputLabel value="Fecha Inicio" style="font-weight:bold;font-size:16px" />
+                        <p:outputLabel value="Fecha Fin" style="font-weight:bold;font-size:16px"/>
+                        <p:commandButton value="Buscar" icon="fa fa-filter" process="@form:tabData:pnTercero" update="@form:tabData:dtDatos formsg:msgs" action="#{prReporteController.reporteEca()}"/>
+                        
+                        <p:calendar  showOn="button" value="#{prReporteController.fechaInicio}"  pattern="dd-MM-yyyy" mask="true" locale="es"/>
+                        <p:calendar  showOn="button"  value="#{prReporteController.fechafin}" pattern="dd-MM-yyyy" mask="true" locale="es"/>
+                    </p:panelGrid>
+                    
+                    <p:dataTable var="dt" id="dtDatos" 
+                                 rowIndexVar="rowIndex"  scrollable="true"  scrollHeight="250"
+                                value='#{prReporteController.facturasDetalle}'
+                           filteredValue='#{dtMaFacturacionDetalleController.listFilter}' 
+                           paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink}  {LastPageLink} {RowsPerPageDropdown} {Exporters}"
+                            paginator="true" rows="100" rowsPerPageTemplate="100,200,500,1000,2000,5000,1000,#{prReporteController.facturasDetalle.size()}">
+                           <p:ajax event="filter"  process="@this" global="false" ignoreAutoUpdate="true"/>
+                           <ui:include src="../param/param_one.xhtml"/>
+                           <f:facet name="{Exporters}">
+                               <div style="text-align:right;padding-top: 5px;">
+                                   <h:commandLink>
+                                       <img src="images/excel.png" width="24"/>
+                                       <p:dataExporter type="xls" target="dtDatos" fileName="Datos_" />
+                                        <ui:include src="../param/param_one.xhtml"/>
+                                   </h:commandLink>
+                               </div>
+                           </f:facet>
+                           <p:column headerText="No" width="50"  filterBy="#{dt.id eq null?rowIndex+1:dt.id}">
+                               <h:outputText  value="#{rowIndex+1}" />
+                           </p:column>
+                           <p:column headerText="Fecha" width="80" filterBy="#{dt.dtFacturaVentaid.fecha}" filterMatchMode="contains">
+                               <h:outputText value='#{dt.dtFacturaVentaid.fecha}' />
+                           </p:column> 
+                           <p:column headerText="Nombre" width="150" filterBy="#{dt.dtFacturaVentaid.tercero.dtterceronatural.nombres} #{dt.dtFacturaVentaid.tercero.dtterceronatural.apellidos}" filterMatchMode="contains">
+                               <h:outputText value='#{dt.dtFacturaVentaid.tercero.dtterceronatural.nombres} #{dt.dtFacturaVentaid.tercero.dtterceronatural.apellidos}' />
+                           </p:column> 
+                           <p:column headerText="Tipo de Recolector" width="80" filterBy="#{dt.dtFacturaVentaid.tercero.dtterceronatural.dttercerotipo.tipo}" filterMatchMode="contains">
+                               <h:outputText value='#{dt.dtFacturaVentaid.tercero.dtterceronatural.dttercerotipo.tipo}' />
+                           </p:column> 
+                           <p:column headerText="Identificacion" width="80" filterBy="#{dt.dtFacturaVentaid.tercero.documento}" filterMatchMode="contains">
+                               <h:outputText value='#{dt.dtFacturaVentaid.tercero.documento}' />
+                           </p:column> 
+                           <p:column headerText="Factura de compra" width="90" filterBy="#{dt.dtFacturaVentaid.consecutivo.toUpperCase()}" filterMatchMode="contains">
+                               <h:outputText value='#{dt.dtFacturaVentaid.consecutivo.toUpperCase()}' />
+                           </p:column> 
+                           <p:column headerText="Material Id" width="80" filterBy="#{dt.materialid.material.dtmagrupomaterial.id}" filterMatchMode="contains">
+                               <h:outputText value='#{dt.materialid.material.dtmagrupomaterial.id}' />
+                           </p:column>
+                           
+                           <p:column headerText="Material Grupo" width="80" filterBy="#{dt.materialid.material.dtmagrupomaterial.nombre.toUpperCase()}" filterMatchMode="contains">
+                               <h:outputText value='#{dt.materialid.material.dtmagrupomaterial.nombre.toUpperCase()}' />
+                           </p:column>
+                           
+                           <p:column headerText="Material" width="80" filterBy="#{dt.materialid.material.material.toUpperCase()}" filterMatchMode="contains">
+                               <h:outputText value='#{dt.materialid.material.material.toUpperCase()}' />
+                           </p:column>
+                           
+                           <p:column headerText="Convenio del Material" width="80" filterBy="#{dt.terceroconvenio_id.dttercerojuridico.razonSocial}" filterMatchMode="contains">
+                               <h:outputText value='#{dt.terceroconvenio_id.dttercerojuridico.razonSocial}' />
+                           </p:column>
+                           
+                           <p:column headerText="Cantidad" width="80" filterBy="#{dt.cantidad}" filterMatchMode="contains">
+                               <h:outputText value='#{dt.cantidad}'><f:convertNumber/></h:outputText>
+                           </p:column> 
+                           <p:column headerText="Valor de compra" width="80" filterBy="#{dt.cantidad * dt.valor}" filterMatchMode="contains">
+                               <h:outputText value='#{dt.cantidad * dt.valor}' ><f:convertNumber/></h:outputText>
+                           </p:column> 
+                           <p:column headerText="Donación" width="80" filterBy='#{dt.dtFacturaVentaid.dtTipoFacturaid.id eq 6? "Si":"No"}' filterMatchMode="contains">
+                               <h:outputText value='#{dt.dtFacturaVentaid.dtTipoFacturaid.id eq 6? "Si":"No"}' ><f:convertNumber/></h:outputText>
+                           </p:column>
+                        <p:column headerText="Medio Transporte" width="80" filterBy="#{dt.dtFacturaVentaid.dttransporte_id.mediotransporte}" filterMatchMode="contains" >
+                            <p:outputLabel value="#{dt.dtFacturaVentaid.dttransporte_id.mediotransporte}"/>
+                        </p:column>
+                        <p:column headerText="Vehiculo Placas" width="80" filterBy="#{dt.dtFacturaVentaid.placavehiculo}" filterMatchMode="contains" >
+                            <p:outputLabel value="#{dt.dtFacturaVentaid.placavehiculo}"/>
+                        </p:column> 
+                           <p:column headerText="Observaciones Material" width="150" filterBy="#{dt.descripcion}" filterMatchMode="contains">
+                               <h:outputText value='#{dt.descripcion}' ><f:convertNumber/></h:outputText>
+                           </p:column> 
+                           <p:column headerText="Observaciones Factura" width="150" filterBy="#{dt.dtFacturaVentaid.descripcion}" filterMatchMode="contains">
+                               <h:outputText value='#{dt.dtFacturaVentaid.descripcion}' ><f:convertNumber/></h:outputText>
+                           </p:column> 
+                           
+                           <p:columnGroup type="footer">
+                                <p:row>
+                                    <p:column style="font-weight: bold !important;font-size:24px;"  colspan="13" footerText="Total (Kg)" />
+                                    <p:column  colspan="1" style="text-align: right" >
+                                        <f:facet name="footer">
+                                            <h:outputText style="font-size:24px;font-weight:bold" value="#{prReporteController.facturasDetalle.stream().map(item->item.cantidad).sum()}">
+                                              <f:convertNumber pattern="##,###"  />
+                                          </h:outputText>
+                                        </f:facet>
+                                    </p:column>
+                                </p:row>
+                                <p:row>
+                                    <p:column style="font-weight: bold !important;font-size:24px;"  colspan="13" footerText="Total ($)" />
+                                    <p:column  colspan="1" style="text-align: right" >
+                                        <f:facet name="footer">
+                                            <h:outputText style="font-size:24px;font-weight:bold" value="#{prReporteController.facturasDetalle.stream().map(item->item.cantidad * item.valor).sum()}">
+                                              <f:convertNumber pattern="##,###"  />
+                                          </h:outputText>
+                                        </f:facet>
+                                    </p:column>
+                                </p:row>
+                        </p:columnGroup>
+                           
+                    </p:dataTable>
+                </p:tab>
+                <p:tab title="Stock de Materiales">
+                    <p:dataTable var="dt" id="dtDatosStock" 
+                            paginator="true"
+                            rows="10"  liveScroll="true" scrollRows="15" 
+                            scrollable="true"
+                            style="min-height:500px !important"
+                            paginatorPosition="bottom"
+                            paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown} {Exporters}"
+                            rowsPerPageTemplate="5,10,20,50,100"
+                            rowIndexVar="rowIndex"  
+                            filteredValue="#{dtProcesoMaterialesController.filterProcesos}"
+                            value="#{dtProcesoMaterialesController.getListEca(prReporteController.ecasucursal.id)}">
+                             <f:facet name="{Exporters}">
+                                <div style="float:right;padding-top: 5px;">
+                                    <h:commandLink>
+                                        <img src="images/excel.png" width="24"/>
+                                        <p:dataExporter type="xls" target="dtDatosStock" fileName="Datos Stock" />
+                                        <ui:include src="../param/param_one.xhtml"/>
+                                    </h:commandLink>
+                                </div>
+                            </f:facet>
+                            <p:ajax event="filter"  process="@this" global="true" ignoreAutoUpdate="true"/>
+                            <ui:include src="../param/param_one.xhtml"/>
+                            <p:column headerText="No" width="50"  filterBy="#{rowIndex+1}">
+                                <h:outputText  value="#{rowIndex+1}" />
+                            </p:column>
+                            <p:column headerText="Ref." width="40" filterBy="#{dt.material.material.codReferencia}" filterMatchMode="contains">
+                                <h:outputText value='#{dt.material.material.codReferencia}' />
+                            </p:column> 
+                            <p:column headerText="Material" width="150" filterBy="#{dt.material.material.material}" filterMatchMode="contains">
+                                <h:outputText value='#{dt.material.material.material}' />
+                            </p:column> 
+                            <p:column headerText="Material Ingresado" width="130" filterBy="#{dt.materialIngresado}" filterMatchMode="contains">
+                                <h:outputText value='#{dt.materialIngresado}' />
+                            </p:column> 
+                            <p:column headerText="Material Procesado" width="130" filterBy="#{dt.materialProcesado}" filterMatchMode="contains">
+                                <h:outputText value='#{dt.materialProcesado}' />
+                            </p:column>
+                            <p:column headerText="Desperdicio Material" width="150" filterBy="#{dt.materialDesperdicio}" filterMatchMode="contains">
+                                <h:outputText value='#{dt.materialDesperdicio}' />
+                            </p:column>
+                            <p:column headerText="Pendiente por Procesar" width="150" filterBy="#{dt.materialIngresado - (dt.materialProcesado+dt.materialDesperdicio)}" filterMatchMode="contains">
+                                <h:outputText style='color:#{(dt.materialIngresado - (dt.materialProcesado+dt.materialDesperdicio)) lt 0?"red":"green"}' value='#{dt.materialIngresado - (dt.materialProcesado+dt.materialDesperdicio)}' >
+                                    <f:convertNumber maxFractionDigits="2"/>
+                                </h:outputText>
+                            </p:column>
+                            <p:column headerText="Material Venta(salida)" width="150" filterBy="#{dt.cantidadventa}" filterMatchMode="contains">
+                                <h:outputText  value='#{dt.cantidadventa}' >
+                                    <f:convertNumber maxFractionDigits="2"/>
+                                </h:outputText>
+                            </p:column>
+                            <p:column headerText="Stock para venta" width="150" filterBy="#{dt.materialProcesado-dt.cantidadventa}" filterMatchMode="contains">
+                                <h:outputText  style='color:#{(dt.materialProcesado - dt.cantidadventa) lt 0?"red":"green"}' value='#{dt.materialProcesado - dt.cantidadventa}' >
+                                    <f:convertNumber maxFractionDigits="2"/>
+                                </h:outputText>
+                            </p:column>
+                      </p:dataTable>
+                </p:tab>
+            </p:tabView>
+            
+            <h2></h2>
+            
+            
+        </p:dialog>
+        
+     
+        
+        <p:dialog header="Impresión de Recibo recolección"  dynamic="true" modal="true" id="dgFactura" widgetVar="dgFactura" width="396" height="650">
+            <p:outputPanel id="PnPrinter" style="width:100%;text-align:right;position: relative">
+                <p:commandLink update="@this" id="btnPrinter" style="position: absolute;left: 0px;top:0px"   title="Imprimir" action="#{dtMaFacturacionCotroller.reinitDetalle()}"><i style="font-size:2.8em;color: #607D8B" class="material-icons">print</i>
+                    <p:printer target="pnPrinter" />
+                </p:commandLink>
+            </p:outputPanel>
+            <p:outputPanel  id="pnPrinter">
+                <style  type="text/css">
+                        .columna100,.columna50{padding:0px !important}
+                        .borderRound{
+                            border: 2px solid #cccccc !important;
+                             border-radius: 25px;
+                        }
+
+                        .header-factura{
+                            background-color: #cccccc !important;
+                        }
+
+                </style>
+                <p:outputPanel  style="width:100%;text-align:right;">
+                    <p:outputPanel  style="position: absolute;right: 30px;top:0px;width:200px; ">
+                        <p:panelGrid  columns="2"  styleClass="ui-panelgrid-blank"   layout="grid" style="width:200px;padding:0px !important;font-weight:bold" columnClasses="columna50, columna50">
+                            <p:outputLabel value="FACTURA N"  style="color: black;font-size:14px" />
+                            <p:outputLabel style="color: red;font-size:14px" value=" #{dtMaFacturacionCotroller.obj.consecutivo.toUpperCase()}" />
+                        </p:panelGrid>
+                    </p:outputPanel>
+                </p:outputPanel>
+                <p:panelGrid  columns="2"  styleClass="ui-panelgrid-blank"   layout="grid" style="width:100%;margin-top:50px !important" columnClasses="columna50, columna50">
+                    <p:panelGrid  columns="1"  styleClass="ui-panelgrid-blank"   layout="grid" style="width:100%;margin:10px"  columnClasses="columna100">
+                        <p:outputPanel style="font-weight:bold">#{prRecoleccionController.obj.clientesucursal_id.nombre}</p:outputPanel>
+                        <p:outputPanel>#{prRecoleccionController.obj.clientesucursal_id.direccion}</p:outputPanel>
+                        <p:outputPanel>#{prRecoleccionController.obj.clientesucursal_id.telefono}</p:outputPanel>
+                        <p:outputPanel>#{prRecoleccionController.obj.clientesucursal_id.correo}</p:outputPanel>
+                    </p:panelGrid>
+                    <p:outputPanel styleClass="borderRound" style="height:85px;padding: 5px">
+                        <p:panelGrid  columns="1"    styleClass="ui-panelgrid-blank "   layout="grid" style="width:100%;margin:10px" columnClasses="columna100">
+                            <p:outputPanel style="font-weight:bold">Solicitud a:</p:outputPanel>
+                            <p:outputPanel>#{prRecoleccionController.obj.ecasucursal_id.filial}</p:outputPanel>
+                            <p:outputPanel>#{prRecoleccionController.obj.ecasucursal_id.direccion}</p:outputPanel>
+                            <p:outputPanel>#{prRecoleccionController.obj.ecasucursal_id.telefono}</p:outputPanel>
+                        </p:panelGrid>
+                    </p:outputPanel>
+                </p:panelGrid>
+
+                <table style="width: 100%">
+                    <tr style="border: 1px solid black">
+                        <th style="width:5%;border: 1px solid black" class="td4">REF</th>
+                        <th style="width:30%;border: 1px solid black" class="td4">ARTICULO</th>
+                        <th style="width:15%;border: 1px solid black" class="td4">CANT.</th>
+                        <th style="width:25%;border: 1px solid black" class="td4">VR. UNITARIO</th>
+                        <th style="width:25%;border: 1px solid black" class="td4">VALOR TOTAL</th>
+                    </tr>
+                        <c:forEach items="#{dtMaFacturacionCotroller.obj.dtfacturadetalleList}" var="dts">
+                            <tr style="border: 1px solid black">
+                                <td style="border: 1px solid black" class="td4"> <h:outputText  value="#{dts.materialid.material.codReferencia}"/></td>
+                                <td style="border: 1px solid black" class="td4"><h:outputText  value="#{dts.materialid.material.material}" ><f:convertNumber integerOnly="true"/></h:outputText></td>
+                                <td style="border: 1px solid black;text-align: right !important" class="td4"> <h:outputText  value="#{dts.cantidad}" /></td>
+                                <td style="border: 1px solid black;text-align: right !important" class="td4"><h:outputText  value="#{dts.valor}" ><f:convertNumber integerOnly="true"/></h:outputText></td>
+                                <td style="border: 1px solid black;text-align: right !important" class="td4"><h:outputText  value="#{(dts.cantidad * dts.valor)}"><f:convertNumber integerOnly="true"/></h:outputText> </td>
+                            </tr>
+                        </c:forEach> 
+                        <c:forEach begin="#{dtMaFacturacionCotroller.obj.dtfacturadetalleList.size()}" end="12" var="dts">
+                            <tr style="border: 1px solid black">
+                                <td style="border: 1px solid black;height:1.5em !important" class="td4"> <h:outputText  value=""/></td>
+                                <td style="border: 1px solid black;text-align: right !important" class="td4"> <h:outputText  value="" /></td>
+                                <td style="border: 1px solid black" class="td4"><h:outputText  value="" /></td>
+                                <td style="border: 1px solid black;text-align: right !important" class="td4"><h:outputText  value="" /></td>
+                                <td style="border: 1px solid black;text-align: right !important" class="td4"><h:outputText  value=""/> </td>
+                            </tr>
+                        </c:forEach>
+                        <tr>
+                            <th colspan="3" style="text-align:left;size:2em;">Obervaciones:</th>
+                            <th  style="text-align:right;border: 1px solid black;size:2em;font-weight:bold" footerText="" ><h:outputText  value="SubTotal:"/></th>
+                            <td class="td5" style="text-align:right;border: 1px solid black;size:2em;"><h:outputText  value="#{dtMaFacturacionCotroller.obj.subTotal}"><f:convertNumber integerOnly="true"/></h:outputText></td>
+                        </tr>
+                        <tr>
+                            <td class="td5" style="border: 1px solid black" rowspan="3" colspan="3"><h:outputText  value="#{dtMaFacturacionCotroller.obj.descripcion}"/></td>
+                            <th style="text-align:right;border: 1px solid black;size:2em;font-weight:bold" ><h:outputText  value="Descuento"/></th>
+                            <td class="td5" style="text-align:right;border: 1px solid black"><h:outputText  value="#{dtMaFacturacionCotroller.obj.descuento}"><f:convertNumber integerOnly="true"/></h:outputText></td>
+                        </tr>
+                        <tr>
+                            <th style="text-align:right;border: 1px solid black;size:2em;font-weight:bold" ><h:outputText  value="Total clasificado"/></th>
+                            <td class="td5" style="text-align:right;border: 1px solid black"><h:outputText  value="#{dtMaFacturacionCotroller.obj.totalClasificacino}"><f:convertNumber integerOnly="true"/></h:outputText></td>
+                        </tr>
+                        <tr>
+                            <th  style="text-align:right;size:2em;border: 1px solid black;font-weight:bold"><h:outputText  value="Total"/></th>
+                            <td class="td5" style="text-align:right;border: 1px solid black"><h:outputText  value="#{(dtMaFacturacionCotroller.obj.subTotal + dtMaFacturacionCotroller.obj.totalClasificacino) - dtMaFacturacionCotroller.obj.descuento}"><f:convertNumber integerOnly="true"/></h:outputText></td>
+                        </tr>
+                </table>
+                <span style="font-size:10px"><b style="font-weight: bold;font-style: oblique">Solicitud realizada por</b> #{dtMaFacturacionCotroller.obj.usuario.nombre}</span><br/>
+                <span style="font-size:10px"><b style="font-weight: bold;font-style: oblique">Recibo de recolección</b></span>
+
+            </p:outputPanel>
+        </p:dialog>
+        
+        
+    </h:form>
+</ui:composition>
+
+

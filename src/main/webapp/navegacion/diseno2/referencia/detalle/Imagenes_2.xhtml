@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"                    
+                xmlns:ui="http://java.sun.com/jsf/facelets"    
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
+    <style>
+        .ui-fileupload-content{
+            display: none;
+        }
+        
+        .fileUploadchange .ui-fileupload-content{
+            display: none;
+        }
+        
+        .fileUploadchange .ui-fileupload-buttonbar{
+            padding: 0px !important;
+            border:none;
+            content: "";
+            background-color: transparent;
+        }
+    </style>
+    <p:panelGrid columns="1" id="tcostos" styleClass="ui-panelgrid-blank" layout="grid"  >
+        <p:panelGrid  columns="3" id="pn" styleClass="ui-panelgrid-blank" columnClasses="columna20,columna70,columna10" layout="grid" style="width:100%">
+            <p:selectOneMenu  required="true" requiredMessage="Seleccione un color" value="#{uiReferenciaDetalleManager.obj}" id="selectColor" converter="referenciaDetalleConvert">
+                <f:selectItem  itemLabel="Seleccione ..." itemValue="#{null}" noSelectionOption="true"/>
+                <f:selectItems  value="#{uiReferenciaManager.obj.uireferenciadetallesCollection}" var="cl" itemLabel="#{cl.color.color}" itemValue="#{cl}"/>
+                <p:ajax update="panelImg"/>
+            </p:selectOneMenu>
+            <p:fileUpload auto="true" id="fileupload" class="uploadfile" allowTypes="/(\.|\/)(gif|jpe?g|png)$/" onstart="starts(this.id);" oncomplete="stops(this.id);"  label="Examiniar"  fileUploadListener="#{uiReferenciaFileManager.handleFileUpload}" mode="advanced"  style="width:100%">
+                <f:attribute name="tipeFile" value="1" />
+            </p:fileUpload>
+            <p:commandButton title="Añadir" update="panelImg formsg:msgs" process="selectColor @this" action="#{uiReferenciaFileManager.addImagen()}" icon="ui-icon-add"  global="false" />
+            
+        </p:panelGrid>
+        <p:separator/>
+        <p:panelGrid id="panelImg" columns="4"   styleClass="ui-panelgrid-blank" layout="grid" style="width:100%">
+            <c:forEach items="#{uiReferenciaDetalleManager.obj.uireferenciadetallefileCollection}" var="img" varStatus="loop">
+                <p:panelGrid  id="pnImg#{loop.index}" columns="1">
+                    <p:outputPanel  style="position: relative">
+                        <p:graphicImage width="110" height="200"  style="border: 1px solid #cccccc" value="#{images.getImage(img)}" stream="false"   alt="Imagen" />
+                        <p:fileUpload  label="Remplazar" update="pnImg#{loop.index}"  allowTypes="/(\.|\/)(gif|jpe?g|png)$/" styleClass="fileUploadchange" onstart="starts(this.id);" oncomplete="stops(this.id);"   
+                                       immediate="true"  auto="true" process="@this" fileUploadListener="#{uiReferenciaFileManager.handleFileUpload}" mode="advanced"  style="width:100%">
+                            <f:attribute name="tipeFile" value="2" />
+                            <f:attribute name="objs" value="#{img}" />
+                        </p:fileUpload>
+                    </p:outputPanel>
+                </p:panelGrid> 
+            </c:forEach>
+        </p:panelGrid>
+    </p:panelGrid>  
+    <script>
+        function starts(id){
+            var xs=document.getElementById(id).getElementsByClassName("ui-fileupload-content");
+            xs[0].style.display='block';
+        }
+        
+        function stops(id){
+           var xs=document.getElementById(id).getElementsByClassName("ui-fileupload-content");
+            xs[0].style.display='none';
+        }
+        
+         function start() {
+            PF('statusDialog2').show();//PF('statusDialog').show();
+        }
+
+        function stop() {
+            PF('statusDialog2').hide();
+        }
+    </script>
+</ui:composition>
+
+

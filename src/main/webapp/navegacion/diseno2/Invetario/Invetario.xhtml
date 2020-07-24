@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"          
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://java.sun.com/jsf/core"          
+      xmlns:ui="http://java.sun.com/jsf/facelets"   
+      xmlns:pt="http://xmlns.jcp.org/jsf/passthrough"    
+      xmlns:pm="http://primefaces.org/mobile"
+      xmlns:pe="http://primefaces.org/ui/extensions"
+      xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
+    
+     <style>
+        .ui-selectonemenu-panel{
+            z-index:999999999 !important;
+        }
+    </style>
+    
+    <h:form id="frmReferencia">
+        <p:outputPanel id="panelReferencia">
+            <div class="ui-g ui-fluid">
+                <div class="ui-g-12" >
+                  <div class="card" style="min-height:270px;">
+                    <p:panelGrid  columns="1"  styleClass="ui-panelgrid-blank" layout="grid" style="width:100%">
+                          <p:panelGrid columns="1" styleClass="ui-panelgrid-blank" layout="grid" style="width:100%">
+                              <p:dataTable var="dt" id="tbtipolayers" 
+                               paginator="true"
+                               scrollable="true"
+                               scrollHeight="230"
+                               paginatorPosition="bottom"
+                               paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                               rowsPerPageTemplate="5,10,20,50,100"
+                               scrollWidth="true"
+                               rows="20"
+                               rowIndexVar="rowIndex"
+                               value="#{uiReferenciaManager.findList()}">
+                                <f:facet name="header" >
+                                   Referencias
+                                </f:facet>
+                                <p:column headerText="No" width="30" >
+                                    <h:outputText  value="#{rowIndex+1}" />
+                                </p:column>
+                                <p:column headerText="Referncia" width="200">
+                                    <h:outputText value="#{dt.codReferncia}" />
+                                </p:column>    
+                                <p:column headerText="Stok" width="100">
+                                    <h:outputText value="#{dt.valor}" >
+                                        <f:convertNumber groupingUsed="true" type="number"  minFractionDigits="0"  />
+                                    </h:outputText>
+                                </p:column>  
+                                <p:column style="width:25px;padding:0 !important" selectRow="false"  >
+                                    <p:commandButton style="width:100%;margin:0px !important;border-radius:0 !important;"  process="@this"   action="#{uiReferenciaManager.selectObjec(dt)}" onclick="PF('dlgD').show()"  update="frmDetalle" icon="ui-icon-extension" title="Añadir Carasteristicas"></p:commandButton>
+                                </p:column>
+                                <p:ajax event="page">
+                                    <f:param name="params"  value="2"/> 
+                                </p:ajax>
+                              </p:dataTable>
+                        </p:panelGrid>
+                    </p:panelGrid>
+                  </div>
+                </div>
+            </div>
+        </p:outputPanel>  
+        
+    </h:form> 
+    
+   <p:dialog header="Detalle Inventario" modal="true" widgetVar="dlgD" resizable="false" onHide="" style="max-width:800px"  
+              draggable="false" responsive="true" hideEffect="scale">
+        <h:form id="frmDetalle">
+            <f:facet name="footer">
+                <p:commandButton value="Login" type="button" onclick="PF('dlg').hide()" style="width:auto" icon="ui-icon-person"/>
+            </f:facet> 
+            <ui:include src="referenciaDetalle.xhtml"/> 
+        </h:form>
+    </p:dialog>
+</ui:composition>
+
+

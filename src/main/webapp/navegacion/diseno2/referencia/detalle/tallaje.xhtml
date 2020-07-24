@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"                    
+      xmlns:ui="http://java.sun.com/jsf/facelets"       
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+    
+   
+       <p:outputPanel id="panelTallaje">
+            <div class="ui-g ui-fluid">
+                <div class="ui-g-12" >
+                    <div class="card" style="min-height:270px;">
+                        
+                        <p:panelGrid  columns="1"  styleClass="ui-panelgrid-blank" layout="grid" style="width:100%">
+                            <p:panelGrid  columns="1"  styleClass="ui-panelgrid-blank" layout="grid" style="width:100%">
+                                <p:panelGrid  columns="2" id="pn" styleClass="ui-panelgrid-blank" columnClasses="columna70,columna30" layout="grid" style="width:100%">
+                                    <p:panelGrid  columns="2"  styleClass="ui-panelgrid-blank" columnClasses="columna30,columna70" layout="grid" style="width:100%">
+                                        <p:outputLabel value="Grupos tallaje"/>
+                                        <p:selectOneMenu  value="#{uiReferenciagrupotallaManager.obj.iugrupotalla}" converter="tallajeGrupoConvert">
+                                            <f:selectItems value="#{uiTallajeGrupoManager.findList()}" var="tls" itemLabel="#{tls.descripcion}" itemValue="#{tls}"/>
+                                        </p:selectOneMenu>
+                                    </p:panelGrid>
+                                    <p:toolbar style="background-color: transparent;border:none;box-shadow: none; ">
+                                        <f:facet name="right">
+                                            <p:commandButton title="Guardar" icon="ui-icon-save"  global="false"
+                                                             update="formsg:msgs pn" process="pn @this"  action='#{uiReferenciagrupotallaManager.addObject(uiReferenciagrupotallaManager.obj,["update;tabDetalle:frmTallaje:panelTallaje"])}' />
+                                            <p:commandButton  title="Nuevo" global="false" icon="ui-icon-note-add" process="@this" update="pn" action="#{uiReferenciagrupotallaManager.newObejc(uiReferenciaDetalleManager.obj)}" />
+                                        </f:facet>
+                                    </p:toolbar>
+                                </p:panelGrid>    
+                                <p:panelGrid columns="1" styleClass="ui-panelgrid-blank" layout="grid" style="width:100%">
+                                    <p:dataTable var="rd" id="tbtipolayers" 
+                                     paginator="true"
+                                     scrollable="true"
+                                     scrollHeight="230"
+                                     paginatorPosition="bottom"
+                                     paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                                     rowsPerPageTemplate="5,10,20,50,100"
+                                     scrollWidth="true"
+                                     rows="20"
+                                     rowIndexVar="rowIndex"
+                                     value="#{uiReferenciaManager.obj.uireferenciagrupotallaCollection}">
+                                        <f:facet name="header" >
+                                           Tallaje x referencia
+                                        </f:facet>
+                                        <p:column style="width:16px">
+                                            <p:rowToggler  />
+                                        </p:column>
+                                        <p:column headerText="No." width="30" >
+                                            <h:outputText  value="#{rowIndex+1}" />
+                                        </p:column>
+                                        <p:column headerText="Descripción" width="100">
+                                            <h:outputText value="#{rd.iugrupotalla.descripcion}" />
+                                        </p:column>     
+                                        <p:column style="width:25px;padding:0 !important" colspan="3"  selectRow="false"  >
+                                            <p:commandButton style="width:100%;margin:0px !important;border-radius:0 !important;"  process="@this"  update="@form"  action="#{uiReferenciagrupotallaManager.selectObjec(rd)}"  icon="ui-icon-edit" title="editar referencia"></p:commandButton>
+                                        </p:column>
+                                        <p:rowExpansion>
+                                            <p:dataTable var="tl" rowIndexVar="rowIndex2"
+                                                         value="#{rd.iugrupotalla.grupoTallaDetalles}" >
+                                                <p:column headerText="Talla" width="50" >
+                                                    <h:outputText  value="#{tl.talla}" />
+                                                </p:column>
+                                            </p:dataTable>
+                                        </p:rowExpansion>
+                                    </p:dataTable>
+                              </p:panelGrid>
+                          </p:panelGrid>
+                        </p:panelGrid>
+                    </div>
+                </div>
+            </div>
+        </p:outputPanel>
+</ui:composition>
+
+

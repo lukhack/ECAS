@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"          
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://java.sun.com/jsf/core"          
+      xmlns:ui="http://java.sun.com/jsf/facelets"   
+      xmlns:pt="http://xmlns.jcp.org/jsf/passthrough"    
+      xmlns:pm="http://primefaces.org/mobile"
+      xmlns:pe="http://primefaces.org/ui/extensions"
+      xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
+     
+    
+    
+    <p:panelGrid  id="pnFormSub" columns="1"  styleClass="ui-panelgrid-blank"   layout="grid" style="width:100%" columnClasses="columna100">
+        <p:panelGrid  columns="3"  styleClass="ui-panelgrid-blank form-group" columnClasses="columna35, columna40, columna30">
+            <h:panelGroup styleClass="md-inputfield" >
+                <p:inputText required="true" maxlength="45" value="#{dtECASucursalController.obj.filial}"  />
+                <label>Nombre</label>
+            </h:panelGroup>
+            
+            <h:panelGroup styleClass="md-inputfield">
+                <p:inputText value="#{dtECASucursalController.obj.direccion}" maxlength="150" required="true"  />
+                <label>Dirección</label>
+            </h:panelGroup>  
+            
+            <h:panelGroup styleClass="md-inputfield">
+                 <p:inputText value="#{dtECASucursalController.obj.telefono}" maxlength="10" />
+                <label>Teléfono</label>
+            </h:panelGroup>
+            
+            
+            <h:panelGroup styleClass="md-inputfield">
+                    <p:inputText value="#{dtECASucursalController.obj.correo}" maxlength="200"  />
+                <label>correo</label>
+            </h:panelGroup>
+            
+            
+            <p:selectOneMenu required="true" autoWidth="false" requiredMessage="Valor requerido en Municipio" id="slEcas"  
+                             filter="true" filterMatchMode="contains"
+                             converter="municipioConvert" value="#{dtECASucursalController.obj.mamunicipioId}" >
+                <f:selectItem itemLabel="Selección Municipio ..."  itemValue="#{null}" noSelectionOption="true"/>
+                <f:selectItems   value="#{maMunicipioManager.list}" var="mup" itemValue="#{mup}" itemLabel="#{mup.municipio} (#{mup.idDepartamento.departamento})" />
+            </p:selectOneMenu>
+            
+            <p:selectOneMenu required="true" rendered="#{dtECASucursalController.obj.id ne null}" autoWidth="false" requiredMessage="Valor requerido en Eca" id="slMunicipio"  
+                             filter="true" filterMatchMode="contains"
+                             converter="ecasConvert" value="#{dtECASucursalController.obj.dtEcaid}" >
+                <f:selectItems   value="#{dtECASController.list}" var="ec" itemValue="#{ec}" itemLabel="#{ec.nombre}" />
+            </p:selectOneMenu>
+            <p:outputPanel>
+                <p:outputLabel for="lblhereda" value="Herada consecutivo "/>
+                <p:selectBooleanCheckbox id="lblhereda" value="#{dtECASucursalController.obj.parameterGlobal}"  title="Herada consecutivo" /> 
+           </p:outputPanel>
+            <p:outputPanel>
+                <p:outputLabel for="lblbascula" value="Bascula Manual"/>
+                <p:selectBooleanCheckbox id="lblbascula" value="#{dtECASucursalController.obj.basculamanual}"  title="Bascula Manual" /> 
+           </p:outputPanel>
+        </p:panelGrid>   
+    </p:panelGrid>
+                      
+</ui:composition>
+

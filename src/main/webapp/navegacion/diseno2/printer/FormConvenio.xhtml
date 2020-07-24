@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"          
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://java.sun.com/jsf/core"          
+      xmlns:ui="http://java.sun.com/jsf/facelets"   
+      xmlns:pt="http://xmlns.jcp.org/jsf/passthrough"    
+      xmlns:pm="http://primefaces.org/mobile"
+      xmlns:pe="http://primefaces.org/ui/extensions"
+      xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
+     
+    
+   <p:outputPanel  style="width:100%;text-align:right;position: relative">
+       <h:panelGrid  columns="3" cellspacing="0" cellpadding="0"  styleClass="ui-panelgrid-blank"   style="width:100%;text-align: left" columnClasses="columna20, columna60, columna20">
+                <p:commandLink update="@this"  style="position: absolute;left: 0px;top:0px"   title="Imprimir" action="#{dtMaFacturacionCotroller.reinitDetalle()}"><i style="font-size:2.8em;color: #607D8B" class="material-icons">print</i>
+                    <p:printer target="pnPrinterConvenio" />
+                </p:commandLink>
+           <p:selectOneMenu value="#{dtMaFacturacionCotroller.convenioTercero}" converter="terceroConvert" id="SlConvenioTercero">
+                    <f:selectItem itemLabel="Seleccione un convenio" itemValue="#{null}"/>
+                    <f:selectItems value="#{dtMaFacturacionCotroller.convenio()}" var="dts" itemLabel="#{dts.dttercerojuridico.razonSocial}" itemValue="#{dts}"/>
+                    <p:ajax update="pnPrinterConvenio"  process="@this"
+                            listener="#{dtMaFacturacionCotroller.listenerConvenio}"/>
+                    <ui:include src="../param/param_one.xhtml"/>
+                </p:selectOneMenu>
+                <p:commandButton process="@this" update="pnPrinterConvenio" value="Generar"><ui:include src="../param/param_one.xhtml"/></p:commandButton>
+            </h:panelGrid>
+        </p:outputPanel>
+        <p:outputPanel  id="pnPrinterConvenio" style="font-size:11px !important; size:11px !important;width:250px;margin:auto">
+             <style  type="text/css">
+                    .columna100,.columna50{padding:0px !important}
+                    .borderRound{
+                        border: 2px solid #cccccc !important;
+                         border-radius: 25px;
+                    }
+                    
+                    .header-factura{
+                        background-color: #cccccc !important;
+                    }
+                    
+                    .font-t10{
+                        font-size:12px
+                    }
+                    
+                .DetallePost >  table, th, td {
+                    border: none;
+                    padding: 0px;
+                  }
+                  .DetallePost table {
+                    border-spacing: 0px;
+                  }
+
+            </style>
+            <p:panelGrid  columns="2"  styleClass="ui-panelgrid-blank"  style="width:100%;text-align: left" columnClasses="columna60, columna40">
+                <p:outputLabel>
+                    <img width="70px" src="#{usuarioB.tbUiUsuario.dtecassucursal.logo eq null?'images/alcaldia.png':'data:image/jpeg;base64,'.concat(usuarioB.tbUiUsuario.dtecassucursal.logo)}"/> 
+                </p:outputLabel>
+                <p:outputLabel rendered="#{usuarioB.tbUiUsuario.dtecassucursal.logo ne null}">
+                    <img width="120px" src="images/alcaldia.png"/> 
+                </p:outputLabel>
+            </p:panelGrid>
+            <p:outputPanel  style="text-align: left;">
+                <p:panelGrid  columns="1"    styleClass="ui-panelgrid-blank "  style="width:100%;" columnClasses="columna100">
+                    <p:outputPanel styleClass="font-t10"><b>NIT</b> #{dtMaFacturacionCotroller.obj.dtEcassucursalid.dtEcaid.nit}</p:outputPanel>
+                    <p:outputPanel styleClass="font-t10"><b>DIR</b> #{dtMaFacturacionCotroller.obj.dtEcassucursalid.direccion}/<b>TEL:</b> #{dtMaFacturacionCotroller.obj.dtEcassucursalid.telefono}</p:outputPanel>
+                    <p:outputPanel styleClass="font-t10">#{dtMaFacturacionCotroller.convenioTercero.dttercerojuridico.razonSocial} - #{dtMaFacturacionCotroller.convenioTercero.documento}</p:outputPanel>
+                    <p:outputPanel styleClass="font-t10"><b>Factura(Donación)</b> #{dtMaFacturacionCotroller.obj.consecutivo.toUpperCase()}</p:outputPanel>
+                    <p:outputPanel styleClass="font-t10"><b>Operación de Bascula</b> #{dtMaFacturacionCotroller.obj.usuario.nombre.toUpperCase()}</p:outputPanel>
+                    <p:outputPanel styleClass="font-t10"><b>Fecha:</b> #{dtMaFacturacionCotroller.obj.fecha}-#{dtMaFacturacionCotroller.obj.hora}</p:outputPanel>
+                    <p:separator/>
+                </p:panelGrid>
+            </p:outputPanel>
+            <div class="DetallePost">    
+                <table style="width: 100%" class="DetalleConvenio"  cellpadding="0">
+                    <tr style="border: 1px solid black">
+                        <th colspan="2" style="width:30%;text-align: left" class="td4 font-t10">Material</th>
+                        <th style="width:15%;text-align: right" class="td4 font-t10">Peso</th>
+                    </tr>
+                    <c:forEach items="#{dtMaFacturacionCotroller.obj.dtfacturadetalleList.stream().filter(item-> item.terceroconvenio_id.id eq dtMaFacturacionCotroller.convenioTercero.id).toList()}" varStatus="index" var="dts">
+                        <tr style="border: 1px solid black">
+                            <td class="td4 font-t10"> <h:outputText  value="#{index.index + 1}"/></td>
+                            <td class="td4 font-t10"><h:outputText  value="#{dts.materialid.material.material}" ><f:convertNumber integerOnly="true"/></h:outputText></td>
+                            <td style="text-align: right !important" class="td4  font-t10"> <h:outputText  value="#{dts.cantidad}" ><f:convertNumber  minFractionDigits="2" groupingUsed="true"/></h:outputText></td>
+                         </tr>
+                    </c:forEach> 
+                      <c:choose>
+                        <c:when test="#{dtMaFacturacionCotroller.obj.descripcion ne '' and dtMaFacturacionCotroller.obj.descripcion ne null }">
+                            <tr>
+                                <th colspan="2" class="td4 font-t10" style="text-align:right;border-top: 1px solid black">Total</th>
+                                <td class="td5 font-t10" style="text-align:right;border-top: 1px solid black"><h:outputText  value="#{dtMaFacturacionCotroller.obj.dtfacturadetalleList.stream().filter(item-> item.terceroconvenio_id.id eq dtMaFacturacionCotroller.tercero.obj.id).map(item->(item.cantidad)).sum()}"><f:convertNumber integerOnly="true"/></h:outputText></td>
+                            </tr>
+                            <tr>
+                                <th colspan="3" class="font-t10" style="text-align:left;size:2em;">Obervaciones:</th>
+                            </tr>
+                            <tr>
+                                <th colspan="5" class="font-t10" style="text-align:left;size:2em;">#{dtMaFacturacionCotroller.obj.descripcion}</th>
+                            </tr>
+                        </c:when>
+                      </c:choose>
+
+                </table>    
+            </div>
+        </p:outputPanel>
+                     
+</ui:composition>
+

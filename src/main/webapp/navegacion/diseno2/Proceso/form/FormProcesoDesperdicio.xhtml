@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"          
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://java.sun.com/jsf/core"          
+      xmlns:ui="http://java.sun.com/jsf/facelets"       
+      xmlns:h="http://xmlns.jcp.org/jsf/html">
+    
+    
+    <p:panelGrid  id="pnForm" columns="1"  styleClass="ui-panelgrid-blank"   layout="grid" style="width:100%" columnClasses="columna100">
+        <p:panelGrid    columns="2"  styleClass="ui-panelgrid-blank"   layout="grid" style="width:100%" columnClasses="columna50, columna50">
+            <p:selectOneMenu id="tercero" widgetVar="slTercero"  required="true" requiredMessage="Se requiere un valor en tercero"    var="tcr" value="#{prRecoleccionDesperdiciosController.obj.encargado_id}"  
+               converter="terceroConvert"    filter="true" filterMatchMode="contains">
+               <f:selectItem itemLabel="Encargado del despacho" itemValue="#{null}" />
+               <f:selectItems value="#{dtTerceroNaturalController.getList(usuarioB.tbUiUsuario.dtecassucursal).stream().filter(item->item.dttercerotipo.id eq 2).toList()}"  var="tcS" itemValue="#{tcS.dttercero}" itemLabel="#{tcS.dttercero.documento} #{tcS.nombres} #{tcS.apellidos}" />
+               <p:column width="100" headerText="Documento">
+                   <h:outputText value="#{tcr.documento}" />
+               </p:column>
+               <p:column headerText="Nombres y Apellidos">
+                   <h:outputText value="#{tcr.dtterceronatural.nombres} #{tcr.dtterceronatural.apellidos}" />
+               </p:column>
+               <ui:include src="../../param/param_one.xhtml"/>
+            </p:selectOneMenu>
+        </p:panelGrid>
+        <p:panelGrid  columns="3"  styleClass="ui-panelgrid-blank"   layout="grid" style="width:100%" columnClasses="columna50, columna50, columna25">
+           <h:panelGroup styleClass="md-inputfield">
+               <p:inputNumber id="txtPeso" decimalPlaces="2"   value="#{prRecoleccionDesperdiciosController.obj.cantidad}" required="true"   maxlength="45"></p:inputNumber>
+               <p:outputLabel for="txtPeso" value="Cantidad (Kg)"/>
+           </h:panelGroup>  
+           <h:panelGroup styleClass="md-inputfield">
+               <p:inputText id="txtVehiculo" value="#{prRecoleccionDesperdiciosController.obj.placavehiculorecolector}" required="true"   maxlength="45"></p:inputText>
+               <p:outputLabel for="txtVehiculo" value="Placas vehículo recolector"/>
+           </h:panelGroup>  
+
+           <h:panelGroup  id="pnValor" styleClass="md-inputfield">
+               <p:inputTextarea rows="2" id="txtDescripcion"  value="#{prRecoleccionDesperdiciosController.obj.observacion}" />
+               <p:outputLabel for="txtDescripcion" value="Observacion"/>
+           </h:panelGroup> 
+        </p:panelGrid> 
+    </p:panelGrid> 
+                     
+</ui:composition>
+

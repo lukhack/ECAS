@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"          
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://java.sun.com/jsf/core"          
+      xmlns:ui="http://java.sun.com/jsf/facelets"       
+      xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
+   
+     <p:dataTable var="dt" id="dtDatos" 
+            rowIndexVar="rowIndex"  
+            value='#{dtMaFacturacionDetalleController.findListDetalleEca(usuarioB.tbUiUsuario.dtecassucursal.id)}'
+            filteredValue='#{dtMaFacturacionDetalleController.listFilter}' 
+            paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink}  {LastPageLink} {RowsPerPageDropdown} {Exporters}"
+            paginator="true" scrollHeight="400" scrollable="true" rows="100" rowsPerPageTemplate="100,200,500,1000,2000,5000,1000,#{prReporteController.facturasDetalle.size()}">
+            <p:ajax event="filter"  process="@this" global="false" ignoreAutoUpdate="true"/>
+            <ui:include src="../../param/param_one.xhtml"/>
+            <f:facet name="{Exporters}">
+                <div style="text-align:right;padding-top: 5px;">
+                    <h:commandLink>
+                        <img src="images/excel.png" width="24"/>
+                        <p:dataExporter type="xls" target="dtDatos" fileName="Datos Ventas" />
+                         <ui:include src="../../param/param_one.xhtml"/>
+                    </h:commandLink>
+                </div>
+            </f:facet>
+           
+            <p:column headerText="No" width="50 "  filterBy="#{dt.id eq null?rowIndex+1:dt.id}">
+                <h:outputText  value="#{rowIndex+1}" />
+            </p:column>
+            <p:column headerText="Fecha" width="80" filterBy="#{dt.dtFacturaVentaid.fecha}" filterMatchMode="contains">
+                <h:outputText value='#{dt.dtFacturaVentaid.fecha}' />
+            </p:column> 
+            <p:column headerText="Nombre" width="100" filterBy="#{dt.dtFacturaVentaid.tercero.dtterceronatural.nombres.toUpperCase()} #{dt.dtFacturaVentaid.tercero.dtterceronatural.apellidos.toUpperCase()}" filterMatchMode="contains">
+                <h:outputText value='#{dt.dtFacturaVentaid.tercero.dtterceronatural.nombres.toUpperCase()} #{dt.dtFacturaVentaid.tercero.dtterceronatural.apellidos.toUpperCase()}' />
+            </p:column> 
+            <p:column headerText="Tipo de Usuario" width="80" filterBy="#{dt.dtFacturaVentaid.tercero.dtterceronatural.dttercerotipo.tipo.toUpperCase()}" filterMatchMode="contains">
+                <h:outputText value='#{dt.dtFacturaVentaid.tercero.dtterceronatural.dttercerotipo.tipo.toUpperCase()}' />
+            </p:column> 
+            <p:column headerText="Identificacion" width="80" filterBy="#{dt.dtFacturaVentaid.tercero.documento}" filterMatchMode="contains">
+                <h:outputText value='#{dt.dtFacturaVentaid.tercero.documento}' />
+            </p:column> 
+            <p:column headerText="Factura de compra" width="90" filterBy="#{dt.dtFacturaVentaid.consecutivo.toUpperCase()}" filterMatchMode="contains">
+                <h:outputText value='#{dt.dtFacturaVentaid.consecutivo.toUpperCase()}' />
+            </p:column> 
+            <p:column headerText="Placas del vehiculo" width="90" filterBy="#{dt.dtFacturaVentaid.consecutivo.toUpperCase()}" filterMatchMode="contains">
+                <h:outputText value='#{dt.dtFacturaVentaid.placavehiculo.toUpperCase()}' />
+            </p:column> 
+            <p:column headerText="Material Id" width="80" filterBy="#{dt.materialid.material.dtmagrupomaterial.id}" filterMatchMode="contains">
+                <h:outputText value='#{dt.materialid.material.dtmagrupomaterial.id}' />
+            </p:column>
+
+            <p:column headerText="Material Grupo" width="80" filterBy="#{dt.materialid.material.dtmagrupomaterial.nombre.toUpperCase()}" filterMatchMode="contains">
+                <h:outputText value='#{dt.materialid.material.dtmagrupomaterial.nombre.toUpperCase()}' />
+            </p:column>
+
+            <p:column headerText="Material" width="80" filterBy="#{dt.materialid.material.material.toUpperCase()}" filterMatchMode="contains">
+                <h:outputText value='#{dt.materialid.material.material.toUpperCase()}' />
+            </p:column>
+
+            <p:column headerText="Convenio del Material" width="80" filterBy="#{dt.terceroconvenio_id.dttercerojuridico.razonSocial}" filterMatchMode="contains">
+                <h:outputText value='#{dt.terceroconvenio_id.dttercerojuridico.razonSocial}' />
+            </p:column>
+            <p:column headerText="Cantidad" width="80" filterBy="#{dt.cantidad}" filterMatchMode="contains">
+                <h:outputText value='#{dt.cantidad}'><f:convertNumber/></h:outputText>
+            </p:column> 
+            <p:column headerText="Valor de compra" width="80" filterBy="#{dt.cantidad * dt.valor}" filterMatchMode="contains">
+                <h:outputText value='#{dt.cantidad * dt.valor}' ><f:convertNumber/></h:outputText>
+            </p:column> 
+            <p:column headerText="Donación" width="70" filterBy='#{dt.dtFacturaVentaid.dtTipoFacturaid.id eq 6? "Si":"No"}' filterMatchMode="contains">
+                <h:outputText value='#{dt.dtFacturaVentaid.dtTipoFacturaid.id eq 6? "Si":"No"}' ><f:convertNumber/></h:outputText>
+            </p:column> 
+            <p:column headerText="Observaciones Material" width="100" filterBy="#{dt.descripcion}" filterMatchMode="contains">
+                <h:outputText value='#{dt.descripcion}' ><f:convertNumber/></h:outputText>
+            </p:column> 
+            <p:column headerText="Observaciones" width="100" filterBy="#{dt.dtFacturaVentaid.descripcion}" filterMatchMode="contains">
+                <h:outputText value='#{dt.dtFacturaVentaid.descripcion}' ><f:convertNumber/></h:outputText>
+            </p:column> 
+            
+    </p:dataTable>
+     
+    
+</ui:composition>
+
+

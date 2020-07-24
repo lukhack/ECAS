@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"          
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://java.sun.com/jsf/core"          
+      xmlns:ui="http://java.sun.com/jsf/facelets"   
+      xmlns:pt="http://xmlns.jcp.org/jsf/passthrough"    
+      xmlns:pm="http://primefaces.org/mobile"
+      xmlns:pe="http://primefaces.org/ui/extensions"
+      xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
+    <p:outputLabel value="#{component.pregunta}" for="#{component.codPreg}" />  
+    <h:panelGroup styleClass="md-inputfield"> 
+        <p:inputTextarea rows="3"   id="#{component.codPreg}" maxlength="#{component.vlrMaximo}"    />
+        <label>#{component.pregunta}</label>
+        <p:message for="#{component.codPreg}" />  
+    </h:panelGroup>
+</ui:composition>
+

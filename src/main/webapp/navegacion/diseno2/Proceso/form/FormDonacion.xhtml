@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"          
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://java.sun.com/jsf/core"          
+      xmlns:ui="http://java.sun.com/jsf/facelets"       
+      xmlns:h="http://xmlns.jcp.org/jsf/html">
+    
+    <p:remoteCommand  name="rc" process="@this" actionListener="#{dtMaFacturacionCotroller.lectorQR}" update="@form:tercero formsg:msgs"/>
+    <div class="task-list">
+        <p:panel styleClass="detalle" id="pnFacturaDetalle" class="detalle"   style="position: relative">
+            <p:commandButton id="tasksButton" type="button" icon="ui-icon-menu" styleClass="secondary-btn" style="position: absolute;top:5px;right:5px"/>
+            <p:menu overlay="true" trigger="tasksButton" my="left top" at="left bottom">
+                <p:menuitem title="Lector de codigo QR" value="Lector de codigo QR"  onclick="PF('dgQR').show()" process="@this" update="@form:dgQR" icon="ui-icon-camera-alt" url="#" />
+            </p:menu>
+            <p:panelGrid  id="pnForm" columns="1"   styleClass="ui-panelgrid-blank"   layout="grid" style="width:100%" columnClasses="columna100">
+                <p:panelGrid   columns="4" id="pnTercero"  styleClass="ui-panelgrid-blank"  style="width:100%" columnClasses="columna30,columna15,columna15,columna15">
+                    <p:outputLabel  value="Tercero*" style="font-weight: bold"/>
+                    <p:outputLabel  value="Material" style="font-weight: bold"/>
+                    <p:outputLabel  value="Cantidad" style="font-weight: bold"/>
+                    <p:outputLabel  value="Horario" style="font-weight: bold"/>
+                    <p:selectOneMenu id="tercero" widgetVar="slTercero" autoWidth="false" style="width:300px"   required="true" requiredMessage="Se requiere un valor en tercero"    var="tcr" value="#{dtMaFacturacionCotroller.obj.tercero}" 
+                        converter="terceroConvert"    filter="true" filterMatchMode="contains">
+                        <f:selectItem itemLabel="Select tercero" itemValue="#{null}" />
+                        
+                        <f:selectItems value="#{dtTerceroNaturalController.listTerceros()}"  var="tcS" itemValue="#{tcr}" itemLabel="#{tcS.dtmatipodocumentoId.tipoDocumento} #{tcS.documento} #{tcS.dtterceronatural.nombres.toUpperCase()} #{tcS.dtterceronatural.apellidos.toUpperCase()}" />
+                        <f:selectItems value="#{dtTerceroJuridicoController.listTerceros()}"  var="tcS" itemValue="#{tcr}" itemLabel="#{tcS.dtmatipodocumentoId.tipoDocumento} #{tcS.documento} #{tcS.dtterceronatural.nombres.toUpperCase()} #{tcS.dtterceronatural.apellidos.toUpperCase()}" />
+                        
+                        <p:column width="100" headerText="TD">
+                            <h:outputText value="#{tcr.dtmatipodocumentoId.tipoDocumento}" />
+                        </p:column>
+                        <p:column width="100" headerText="Documento">
+                            <h:outputText value="#{tcr.documento}" />
+                        </p:column>
+                        <p:column headerText="Nombres y Apellidos">
+                            <h:outputText value="#{tcr.dtterceronatural.nombres.toUpperCase()} #{tcr.dtterceronatural.apellidos.toUpperCase()} #{tcr.dttercerojuridico.razonSocial.toUpperCase()}" />
+                        </p:column>
+                        <ui:include src="../../param/param_one.xhtml"/>
+                        <p:ajax update="pnRuta"/>
+                    </p:selectOneMenu>
+                    <p:selectOneMenu id="materiales" var="mts" value="#{dtMaFacturacionCotroller.facturaDetalle.obj.materialid}" required="true" requiredMessage="Se requiere un valor en el material"  converter="materialConvert"    filter="true" filterMatchMode="contains">
+                        <f:selectItem itemLabel="Material ..." itemValue="#{null}" />
+                        <f:selectItems value="#{dtMaMaterialesController.list.stream().filter(x-> x.ecaSucursal.id eq usuarioB.tbUiUsuario.dtecassucursal.id).toList()}"  var="mt" itemValue="#{mts}" itemLabel="#{mt.material.codReferencia} #{mt.material.material.toUpperCase()}" />
+                        <p:column width="100" headerText="Referencia" style="width: 100px">
+                            <h:outputText value="#{mts.material.codReferencia}" />
+                        </p:column>
+                        <p:column headerText="Material">
+                            <h:outputText value="#{mts.material.material.toUpperCase()}" />
+                        </p:column>
+                        <ui:include src="../../param/param_one.xhtml"/>
+                        
+                        <p:ajax  process="@this"  update="@form:dtcantidad"/>
+                    </p:selectOneMenu>
+                    <p:outputPanel id="dtcantidad">
+                    <table>
+                        <tr>
+                            <td style="width:60%">
+                                <h:panelGroup styleClass="md-inputfield">
+                                    <p:inputNumber style="width:100%" id="txtCantidad" readonly="#{usuarioB.tbUiUsuario.dtecassucursal.basculamanual?'false':'true'}"   decimalPlaces="2"   value="#{dtMaFacturacionCotroller.facturaDetalle.obj.cantidad}" required="true" requiredMessage="Valor requerido en cantidad"   maxlength="45"></p:inputNumber>
+                                </h:panelGroup>  
+                            </td>
+                            <p:outputPanel rendered="#{usuarioB.tbUiUsuario.dtecassucursal.basculamanual?'false':'true'}">
+                            <td >
+                                <p:commandButton icon="fa fa-balance-scale" title="Añadir cantidad" process="@this" style="border-radius:0px;width: 50px" ><ui:include src="../../param/param_one.xhtml"/></p:commandButton>
+                            </td>
+                            </p:outputPanel>
+                            <td style="width:40%">
+                                <p:outputLabel value="#{dtMaFacturacionCotroller.facturaDetalle.obj.materialid.material.unidadMedida.unidadMedida} (#{dtMaFacturacionCotroller.facturaDetalle.obj.materialid.material.pesokg}Kg)"/>
+                            </td>
+                        </tr>
+                    </table>
+                    </p:outputPanel> 
+                    <p:outputPanel>
+                        <p:selectOneRadio id="console" value="#{dtMaFacturacionCotroller.obj.horario}" >
+                            <f:selectItem itemLabel="Día" itemValue="D" />
+                            <f:selectItem itemLabel="Noche" itemValue="N" />
+                        </p:selectOneRadio>
+                    </p:outputPanel>
+                </p:panelGrid> 
+                <p:outputLabel  value="Descripción" style="font-weight: bold"/>
+                <h:panelGroup styleClass="md-inputfield">
+                    <p:inputTextarea id="txtdescripcionDetalle" rows="3" style="background-color: white" value="#{dtMaFacturacionCotroller.facturaDetalle.obj.descripcion}" />
+                </h:panelGroup>  
+                <p:outputPanel id="pnRuta" >
+                    <p:panelGrid columns="1" rendered="#{dtMaFacturacionCotroller.obj.tercero.dttercerorutaList.size() > 0}"  styleClass="ui-panelgrid-blank"   layout="grid" style="width:100%;margin-top: 10px" >
+                        <p:outputLabel for="tercero" value="Ruta:"  style="color: red;font-weight: bold"/>
+                        <p:selectOneMenu id="ruta" widgetVar="slRuta"  converter="terceroRutaConvert" required="true" value="#{dtMaFacturacionCotroller.obj.terceroRuta}" requiredMessage="Se requiere un valor en la ruta"    
+                               filter="true" filterMatchMode="contains">
+                            <f:selectItem itemLabel="Select tercero" itemValue="#{null}" />
+                            <f:selectItems value="#{dtMaFacturacionCotroller.obj.tercero.dttercerorutaList}"  var="rut" itemValue="#{rut}" itemLabel="#{rut.ruta}" />
+                            <ui:include src="../../param/param_one.xhtml"/>
+                        </p:selectOneMenu>
+                    </p:panelGrid>
+                </p:outputPanel>
+            </p:panelGrid> 
+        </p:panel> 
+    </div>                
+</ui:composition>
+

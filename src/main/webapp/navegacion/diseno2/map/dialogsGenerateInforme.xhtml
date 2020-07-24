@@ -1,0 +1,468 @@
+<!DOCTYPE html>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"          
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://java.sun.com/jsf/core"          
+      xmlns:ui="http://java.sun.com/jsf/facelets"   
+      xmlns:pt="http://xmlns.jcp.org/jsf/passthrough"    
+      xmlns:pm="http://primefaces.org/mobile"
+      xmlns:pe="http://primefaces.org/ui/extensions">
+    
+    
+    <p:dialog widgetVar="dialogProcesarSueloDireccion" class="dialog2" modal="true"  positionType="fixed"  
+              onShow='document.getElementById("formSueloDireccion").reset();' header="Busqueda de Ficha Catastral" resizable="false" 
+              minimizable="true" position="center,80" 
+              
+              style="max-width:90%;max-height:600px;padding:0px;overflow: auto">
+        
+        <h:form id='formSueloDireccion' >
+            <p:remoteCommand name="rcSuleroDireccion" process="@this" actionListener="#{mapBean.saveFileBitacora()}" />
+    
+            <p:panelGrid columns="2">
+                <p:outputLabel value="Actvidad Económica"/>
+                <p:selectOneMenu id="actividad2" autoWidth="false" value="#{mapBean.actividadEconomicaDir}" converter="actividadConvert" panelStyle="width:400px"
+                         effect="fade" var="t" style="width:300px" filter="true" filterMatchMode="contains">
+                    <f:selectItem itemLabel="Seleccione Actividad ..."  itemValue=""  noSelectionOption="true" />
+                    <f:selectItems value="#{gbMaestrosBean.actividadEconomicas}" var="obj" itemLabel="#{obj.codCIUU}-#{obj.descripcion}" itemValue="#{obj}" />
+                    <p:column style="width:10%">
+                        <h:outputText value="#{t.codCIUU}" />
+                    </p:column>
+                    <p:column>
+                        <h:outputText value="#{t.descripcion}" />
+                    </p:column>
+                </p:selectOneMenu>
+            </p:panelGrid>
+            
+            <p:dataTable var="obj" id="tbdirecciones" 
+                        paginator="true"
+                        scrollable="true"
+                        widgetVar="tbdirecciones"
+                        paginatorPosition="bottom"
+                        paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                        rowsPerPageTemplate="#{config.PAG_PAGETEMPLATE}"
+                        scrollHeight="300"
+                        rows="#{config.PAG_ROWS}" 
+                        scrollWidth="false"   
+                        value="#{mapBean.dependencia.direccionCatastrals}" 
+                        filteredValue="#{mapBean.filterCatastrals1}"  >
+               
+               
+                    <f:facet name="header">
+                        Fichas Catastrales
+                        <p:panelGrid columns="2" id="panelBuscar" style="width:100%"  columnClasses="columna80,columna20" styleClass="ui-panelgrid-blank" >
+                            <p:inputText id="globalFilter" styleClass="input-search" style="width:100% !important" placeholder="Buscar Datos"/>
+                            <p:outputPanel>
+                                <p:commandButton onclick="PF('tbdirecciones').filter();"  process="globalFilter" 
+                                                 ajax="true" value="" style='width:30px;height:30px;' icon="fa fa-search"   />
+                                <p:commandButton id="toggler" type="button"  value="" style='width:30px;height:30px;margin-left:3px !important' icon="fa fa-reorder" />
+                                                 <p:columnToggler datasource="tbdirecciones" trigger="toggler" />
+                                
+                            </p:outputPanel>    
+                        </p:panelGrid>
+                    </f:facet> 
+
+                    
+                    <p:column headerText="Ficha" filterBy="#{obj.ficha}"  width="60" visible="true">
+                         <f:facet name="filter" ><p:inputText  style="width:95% !important;"><p:ajax event="change"  oncomplete="PF('tbdirecciones').filter()"/></p:inputText></f:facet>
+                         <h:outputText value="#{obj.ficha}" />
+                    </p:column>
+                    <p:column headerText="Ced. Catastral" width="150" filterBy="#{obj.cedulaCatastral}">
+                         <f:facet name="filter" ><p:inputText  style="width:95% !important;"><p:ajax event="change"  oncomplete="PF('tbdirecciones').filter()"/></p:inputText></f:facet>
+                         <h:outputText value="#{obj.cedulaCatastral}" />
+                    </p:column>                              
+
+                    <p:column headerText="Dirección" filterBy="#{obj.direPred}">
+                         <f:facet name="filter" ><p:inputText  ><p:ajax event="change"  oncomplete="PF('tbdirecciones').filter()"/></p:inputText></f:facet>
+                         <h:outputText value="#{obj.direPred}" />
+                    </p:column>
+                <p:column headerText="ID Àrea" width="50"  filterBy="#{obj.area.id}"  visible="false">
+                         <f:facet name="filter" ><p:inputText  style="width:95% !important;"><p:ajax event="change"  oncomplete="PF('tbdirecciones').filter()"/></p:inputText></f:facet>
+                         <h:outputText value="#{obj.area.id}" />
+                    </p:column>                
+                    <p:column headerText="Manzana" width="50" filterBy="#{obj.manzana}" >
+                        <f:facet name="filter" ><p:inputText style="width:95% !important;" ><p:ajax event="change"  oncomplete="PF('tbdirecciones').filter()"/></p:inputText></f:facet>
+                         <h:outputText value="#{obj.manzana}" />
+                    </p:column>
+
+                    <p:column headerText="Lote" filterBy="#{obj.nroLote}" width="50" visible="false">
+                         <f:facet name="filter"  ><p:inputText  style="width:95% !important;"><p:ajax event="change"  oncomplete="PF('tbdirecciones').filter()"/></p:inputText></f:facet>
+                         <h:outputText value="#{obj.nroLote}" />
+                    </p:column>
+
+                    <p:column headerText="Edificio" width="50" filterBy="#{obj.edificio}" visible="false">
+                         <f:facet name="filter" ><p:inputText  style="width:95% !important;"><p:ajax event="change"  oncomplete="PF('tbdirecciones').filter()"/></p:inputText></f:facet>
+                         <h:outputText value="#{obj.edificio}" />
+                    </p:column>
+
+                   
+                    <p:column headerText="Dir Original" filterBy="#{obj.direccionOriginal}" width="150"  visible="false">
+                         <f:facet name="filter" ><p:inputText  style="width:95% !important;"><p:ajax event="change"  oncomplete="PF('tbdirecciones').filter()"/></p:inputText></f:facet>
+                         <h:outputText value="#{obj.direccionOriginal}" />
+                    </p:column>
+                    <p:column headerText="Nombre De Via" filterBy="#{obj.nombreVia}" visible="false">
+                         <f:facet name="filter" ><p:inputText  ><p:ajax event="change"  oncomplete="PF('tbdirecciones').filter()"/></p:inputText></f:facet>
+                         <h:outputText value="#{obj.nombreVia}" />
+                    </p:column>
+                    <p:column headerText="Caracteristicas" filterBy="#{obj.caracteristicasPredio}" visible="false">
+                         <f:facet name="filter" ><p:inputText  ><p:ajax event="change"  oncomplete="PF('tbdirecciones').filter()"/></p:inputText></f:facet>
+                         <h:outputText value="#{obj.caracteristicasPredio}" />
+                    </p:column>
+
+                    <p:column headerText="Nombre Detallado" filterBy="#{obj.nombreDetalle}" visible="false">
+                         <f:facet name="filter" ><p:inputText  ><p:ajax event="change"  oncomplete="PF('tbdirecciones').filter()"/></p:inputText></f:facet>
+                         <h:outputText value="#{obj.nombreDetalle}" />
+                    </p:column>
+
+                    <p:column headerText="Cod CUNU" width="80" filterBy="#{obj.cunu}" >
+                        <f:facet name="filter" ><p:inputText style="width:95% !important;"  ><p:ajax event="change"  oncomplete="PF('tbdirecciones').filter()"/></p:inputText></f:facet>
+                         <h:outputText value="#{obj.cunu}" />
+                    </p:column>
+                    <p:column headerText="Barrio" width="150" filterBy="#{obj.barrio.barrio}"  filterMatchMode="exact">
+                        <f:facet name="filter">
+                            <p:selectOneMenu label="Barrios del Municipio" autoWidth="false" style="width:80% !important;" filter="true" onchange="PF('tbdirecciones').filter()" >
+                                <f:selectItem itemLabel="Seleccione Uno" itemValue="#{null}" noSelectionOption="true" />
+                                <f:selectItems value="#{mapBean.dependencia.maBarrios}" var="br" itemLabel="#{br.barrio}" itemValue="#{br.barrio}"/>
+                            </p:selectOneMenu>
+                        </f:facet>
+                       <h:outputText value="#{obj.barrio.barrio}" />
+                    </p:column>
+                    <p:column style="width:30px"  selectRow="false" headerText="E">
+                        <p:commandButton style="width:30px"  update="formsg:msgs" process="formSueloDireccion:actividad2 @this" action="#{mapBean.createInfo(obj)}" title="Crear Informe"  icon="fa fa-bullseye"/>
+                   </p:column>
+           </p:dataTable>
+        </h:form>
+    </p:dialog>
+    
+    <p:dialog widgetVar="dialogProcesarActividad" class="dialog2" modal="true"  positionType="fixed"  
+              header="Busqueda de Ficha Catastral" resizable="false" 
+              minimizable="true" position="center,80" 
+              
+              style="max-width:90%;max-height:600px;padding:0px;overflow: auto">
+        
+        <h:form id='formSueloActividad' >
+            <p:remoteCommand name="rcSuleroActividad" process="@this" actionListener="#{mapBean.saveFileBitacora()}" />
+    
+            
+            <p:dataTable var="obj" id="tbdireccionesActvidad" 
+                        paginator="true"
+                        scrollable="true"
+                        widgetVar="tbdireccionesActvidad"
+                        paginatorPosition="bottom"
+                        paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                        rowsPerPageTemplate="5,10,100,1000,10000"
+                        scrollHeight="300"
+                        rows="10"
+                        value="#{mapBean.dependencia.direccionCatastrals}" 
+                        filteredValue="#{mapBean.filterCatastrals2}"  >
+               
+               
+                <f:facet name="header">
+                    Fichas Catastrales
+                    <p:panelGrid columns="2" id="panelBuscar" style="width:100%"  columnClasses="columna90,columna10" styleClass="ui-panelgrid-blank" >
+                        <p:inputText id="globalFilter" styleClass="input-search" style="width:100% !important" placeholder="Buscar Datos"/>
+                        <p:outputPanel>
+                            <p:commandButton onclick="PF('tbdireccionesActvidad').filter();"  process="globalFilter" 
+                                             ajax="true" value="" style='width:30px;height:30px;' icon="fa fa-search"   />
+                            <p:commandButton id="toggler2" type="button"  value="" style='width:30px;height:30px;margin-left:3px !important' icon="fa fa-reorder" />
+                                                 <p:columnToggler datasource="tbdireccionesActvidad" trigger="toggler2" />
+                                
+                        
+                        </p:outputPanel>    
+                    </p:panelGrid>
+                </f:facet> 
+                    <p:column headerText="Ficha" filterBy="#{obj.ficha}"  width="60" visible="true">
+                         <f:facet name="filter" ><p:inputText  style="width:95% !important;"><p:ajax event="change"  oncomplete="PF('tbdireccionesActvidad').filter()"/></p:inputText></f:facet>
+                         <h:outputText value="#{obj.ficha}" />
+                    </p:column>
+                    <p:column headerText="Ced. Catastral" width="150" filterBy="#{obj.cedulaCatastral}">
+                         <f:facet name="filter" ><p:inputText  style="width:95% !important;"><p:ajax event="change"  oncomplete="PF('tbdireccionesActvidad').filter()"/></p:inputText></f:facet>
+                         <h:outputText value="#{obj.cedulaCatastral}" />
+                    </p:column>                              
+
+                    <p:column headerText="Dirección" filterBy="#{obj.direPred}">
+                         <f:facet name="filter" ><p:inputText  ><p:ajax event="change"  oncomplete="PF('tbdireccionesActvidad').filter()"/></p:inputText></f:facet>
+                         <h:outputText value="#{obj.direPred}" />
+                    </p:column>
+                    <p:column headerText="ID Àrea" width="50"  filterBy="#{obj.area.id}"  visible="false">
+                         <f:facet name="filter" ><p:inputText  style="width:95% !important;"><p:ajax event="change"  oncomplete="PF('tbdireccionesActvidad').filter()"/></p:inputText></f:facet>
+                         <h:outputText value="#{obj.area.id}" />
+                    </p:column>                
+                    <p:column headerText="Manzana" width="50" filterBy="#{obj.manzana}" >
+                        <f:facet name="filter" ><p:inputText style="width:95% !important;" ><p:ajax event="change"  oncomplete="PF('tbdireccionesActvidad').filter()"/></p:inputText></f:facet>
+                         <h:outputText value="#{obj.manzana}" />
+                    </p:column>
+
+                    <p:column headerText="Lote" filterBy="#{obj.nroLote}" width="50" visible="false">
+                         <f:facet name="filter"  ><p:inputText  style="width:95% !important;"><p:ajax event="change"  oncomplete="PF('tbdireccionesActvidad').filter()"/></p:inputText></f:facet>
+                         <h:outputText value="#{obj.nroLote}" />
+                    </p:column>
+
+                    <p:column headerText="Edificio" width="50" filterBy="#{obj.edificio}" visible="false">
+                         <f:facet name="filter" ><p:inputText  style="width:95% !important;"><p:ajax event="change"  oncomplete="PF('tbdireccionesActvidad').filter()"/></p:inputText></f:facet>
+                         <h:outputText value="#{obj.edificio}" />
+                    </p:column>
+
+                   
+                    <p:column headerText="Dir Original" filterBy="#{obj.direccionOriginal}" width="150"  visible="false">
+                         <f:facet name="filter" ><p:inputText  style="width:95% !important;"><p:ajax event="change"  oncomplete="PF('tbdireccionesActvidad').filter()"/></p:inputText></f:facet>
+                         <h:outputText value="#{obj.direccionOriginal}" />
+                    </p:column>
+                    <p:column headerText="Nombre De Via" filterBy="#{obj.nombreVia}" visible="false">
+                         <f:facet name="filter" ><p:inputText  ><p:ajax event="change"  oncomplete="PF('tbdireccionesActvidad').filter()"/></p:inputText></f:facet>
+                         <h:outputText value="#{obj.nombreVia}" />
+                    </p:column>
+                    <p:column headerText="Caracteristicas" filterBy="#{obj.caracteristicasPredio}" visible="false">
+                         <f:facet name="filter" ><p:inputText  ><p:ajax event="change"  oncomplete="PF('tbdireccionesActvidad').filter()"/></p:inputText></f:facet>
+                         <h:outputText value="#{obj.caracteristicasPredio}" />
+                    </p:column>
+
+                    <p:column headerText="Nombre Detallado" filterBy="#{obj.nombreDetalle}" visible="false">
+                         <f:facet name="filter" ><p:inputText  ><p:ajax event="change"  oncomplete="PF('tbdireccionesActvidad').filter()"/></p:inputText></f:facet>
+                         <h:outputText value="#{obj.nombreDetalle}" />
+                    </p:column>
+
+                    <p:column headerText="Cod CUNU" width="80" filterBy="#{obj.cunu}" >
+                        <f:facet name="filter" ><p:inputText style="width:95% !important;"  ><p:ajax event="change"  oncomplete="PF('tbdireccionesActvidad').filter()"/></p:inputText></f:facet>
+                         <h:outputText value="#{obj.cunu}" />
+                         
+                    </p:column>
+
+                    <p:column headerText="Barrio" width="150" filterBy="#{obj.barrio.barrio}"  filterMatchMode="exact">
+                        <f:facet name="filter">
+                            <p:selectOneMenu label="Barrios del Municipio" autoWidth="false" style="width:80% !important;" filter="true" onchange="PF('tbdireccionesActvidad').filter()" >
+                                <f:selectItem itemLabel="Seleccione Uno" itemValue="#{null}" noSelectionOption="true" />
+                                <f:selectItems value="#{mapBean.dependencia.maBarrios}" var="br" itemLabel="#{br.barrio}" itemValue="#{br.barrio}"/>
+                            </p:selectOneMenu>
+                        </f:facet>
+                       <h:outputText value="#{obj.barrio.barrio}" />
+                   </p:column>
+
+               <p:column style="width:30px"  selectRow="false" headerText="E">
+                   <p:commandButton style="width:30px"  process="@this" action="#{mapBean.createInfoActividad(obj)}"  title="Crear Informe"  icon="fa fa-bullseye"/>
+               </p:column>
+           </p:dataTable>
+             
+        </h:form>
+    </p:dialog>
+    
+    <p:dialog widgetVar="dialogProcesarSueloGeo" class="dialog2"  onShow="PF('dialogProcesarSuelo').hide()"  onHide="hideMarkerView()" header="Busqueda de Actividad" resizable="false"  minimizable="true" position="80,80" 
+              width="600" style="max-width:600px !important;max-height:600px;padding:0px;overflow: auto">
+        <h:form id='formSearchGeo' prependId="false">
+            <p:outputPanel id='impresionActividad' style="width:100%">
+                <p:panelGrid columns="1" style="width:100%;padding-bottom:20px">
+                    <p:graphicImage value="images/marca/logo.png" style="width:300px"/>
+                </p:panelGrid>
+                <p:panelGrid columns="1"  style="width:100% !important" >
+                   <p:outputLabel value="Información de uso de suelo"/>
+                    <p:outputLabel value="Todo empresario que desee constituir una empresa debe consultar antes de iniciar su operación si es posible desarrollar la activdad económica en una posición determinada en el mapa de la ciudad, de auerdo con el plan de ordenamiento territorial P.O.T y la reglamentación especifica del respectivo Municipio."/>
+                    <div>El <b>informativo Usos de suelo permite</b> la busqueda de infomación concerniente a los usos de suelo para</div>
+
+
+                </p:panelGrid>
+                <p:panelGrid columns="2"   style="width:100%">
+                    <p:outputLabel value="Actvidad Económica"/>
+
+                    <p:selectOneMenu id="advanced" autoWidth="false" value="#{mapBean.actividadEconomica}" converter="actividadConvert" panelStyle="width:400px"
+                             effect="fade" var="t" style="width:300px" filter="true" filterMatchMode="contains">
+                        <f:selectItems value="#{gbMaestrosBean.actividadEconomicas}" var="obj" itemLabel="#{obj.codCIUU}-#{obj.descripcion}" itemValue="#{obj}" />
+                        <p:column style="width:10%">
+                            <h:outputText value="#{t.codCIUU}" />
+                        </p:column>
+                        <p:column>
+                            <h:outputText value="#{t.descripcion}" />
+                        </p:column>
+                    </p:selectOneMenu>
+                    <p:outputLabel value="Posición LonLat:"/>
+                    <p:inputText id="positionMarker" style="width:400px !important" value="#{mapBean.positionStreet}"/>
+                   <br/>
+                   <p:outputPanel></p:outputPanel>
+                    <p:outputLabel value="Resultado:"/>
+                    <p:outputPanel id="txtresultado">
+                        <p:outputLabel  style="max-width:100px !important;;width:100px !important;" value="#{mapBean.mensajeActividad}" escape="true"/>
+                    </p:outputPanel>
+                </p:panelGrid>
+            </p:outputPanel>
+             <p:commandButton actionListener="#{mapBean.calDistanciaActividad()}" update="txtresultado formmap:gmap"   oncomplete="reloadMap(); mapZoom(17);" process="positionMarker advanced @this " value="Crear Informe" icon="fa fa-puzzle-piece"/>    
+             <p:commandButton  value="Imprimir Informe" icon="fa fa-print"><p:printer target="impresionActividad" /></p:commandButton>    
+               
+       </h:form>
+    </p:dialog>
+    
+   <p:dialog widgetVar="dialogInforme" class="dialog2" modal="true"  positionType="fixed"  
+              header="Informe" resizable="false" 
+              minimizable="true" position="center,80" style="" >
+       <p:outputPanel id="dataInformes" style="width: 792px;max-height:450px;overflow:auto;">
+           
+                    <ui:include src="informes/direccion.xhtml"/>
+            
+        </p:outputPanel>
+    </p:dialog>
+    
+    <p:dialog widgetVar="dialogInformeAct" class="dialog2" modal="true"  positionType="fixed"  
+             header="Informe" resizable="false" 
+              minimizable="true" position="center,80" style="" >
+       <p:outputPanel id="dataInformesAct" style="width: 792px;max-height:450px;overflow:auto;">
+           
+           <ui:include src="informes/actividad.xhtml"/>
+        </p:outputPanel>
+    </p:dialog>
+    
+    <p:dialog widgetVar="dialogProcesarSueloGeo" class="dialog2"  
+              onShow="PF('dialogProcesarSuelo').hide()"  onHide="hideMarkerView()" 
+              header="Busqueda de Actividad" resizable="false"  minimizable="true" 
+              position="80,80" 
+              width="600"
+              style="max-width:600px !important;max-height:600px;padding:0px;overflow: auto">
+            <h:form id='formSearchDataGeo' prependId="false">
+                <p:outputPanel id='impresionActividad2' style="width:100%">
+                    <p:panelGrid columns="1" style="width:100%;padding-bottom:20px">
+                        <p:graphicImage value="images/marca/logo.png" style="width:300px"/>
+                    </p:panelGrid>
+                    <p:panelGrid columns="1"  style="width:100% !important" >
+                       <p:outputLabel value="Información de uso de suelo"/>
+                       <p:outputLabel value="Permite realizar un análisis para identificar las áreas donde se concentra un tipo de negocio en el municipio."/>
+                       <div>
+                           <ul>Los Pasos a seguir:
+                               <li>Seleccionar la actividad económica a analizar</li>
+                               <li>Ubicar el lugar en el mapa donde se realizará el análisis</li>
+                               <li>Presionar la opción Consultar.</li>
+                           </ul>
+                       </div>
+                    </p:panelGrid>
+                    <p:panelGrid columns="2"   style="width:100%">
+                        <p:outputLabel value="Actvidad Económica"/>
+
+                        <p:selectOneMenu autoWidth="false" id="actividadEconomicaMarker" value="#{mapBean.actividadEconomica}" converter="actividadConvert" panelStyle="width:400px"
+                                 effect="fade" var="t" style="width:300px" filter="true" filterMatchMode="contains">
+                            <f:selectItems value="#{gbMaestrosBean.actividadEconomicas}" var="obj" itemLabel="#{obj.codCIUU}-#{obj.descripcion}" itemValue="#{obj}" />
+                            <p:column style="width:10%">
+                                <h:outputText value="#{t.codCIUU}" />
+                            </p:column>
+                            <p:column>
+                                <h:outputText value="#{t.descripcion}" />
+                            </p:column>
+                        </p:selectOneMenu>
+                        <p:outputLabel value="Posición LonLat:"/>
+                        <p:inputText id="positionMarkerInfo" style="width:400px !important" value="#{mapBean.positionStreet}"/>
+                       <br/>
+                       <p:outputPanel></p:outputPanel>
+                        <p:outputLabel value="Resultado:"/>
+                        <p:outputPanel id="txtresultado3">
+                            <p:outputLabel  style="max-width:100px !important;;width:100px !important;" value="#{mapBean.mensajeActividad}" escape="true"/>
+                        </p:outputPanel>
+                    </p:panelGrid>
+                </p:outputPanel>
+                 <p:commandButton actionListener="#{mapBean.calDistanciaActividad()}" update="txtresultado3 formmap:gmap"   oncomplete="reloadMap(); mapZoom(17);" process="positionMarkerInfo actividadEconomicaMarker advanced @this " value="Crear Informe" icon="fa fa-puzzle-piece"/>    
+                 <p:commandButton  value="Imprimir Informe" icon="fa fa-print"><p:printer target="impresionActividad" /></p:commandButton>    
+            </h:form>
+    </p:dialog>
+    
+    
+    <p:dialog widgetVar="dialogInformeSuelos" class="dialog2"  positionType="fixed"  
+              header="Informe" resizable="false"  width="600"
+              minimizable="true" position="center,80" style="width:400px !important;" >
+            <h:form id='formSearchDataActMap' >
+                   <p:panelGrid columns="1" style="padding-bottom:20px">
+                        <p:graphicImage value="images/marca/logo.png" style="width:300px"/>
+                    </p:panelGrid>
+                    <p:panelGrid columns="1"  style="width:100% !important" >
+                        <p:outputLabel value="Información de uso de suelo por actividad económica"/>
+                        <p:outputLabel value="Todo empresario que desee constituir una empresa debe consultar antes de iniciar su operación por lo que en este modulo de consulta se le ofrece al usuario ver la agrupación de los negocios que se concentran en distintos sectores."/>
+                        <div>El <b>usuario</b> puede realizar consulta simultanea hasta por tres tipos de actividad económicas</div>
+                    </p:panelGrid>
+                    <p:panelGrid columns="1" style="padding-bottom:20px">
+                        <p><b>Seleccione una actvidad Económica:</b></p>
+                    </p:panelGrid>
+                    
+               <p:panelGrid columns="2">
+                    <p:graphicImage value="images/markerIconblue.png" />
+                    <p:selectOneMenu id="actividad4" autoWidth="false" value="#{mapBean.actividadEconomica1}" converter="actividadConvert" panelStyle="width:400px"
+                             effect="fade" var="t" style="width:300px" filter="true" filterMatchMode="contains">
+                        <f:selectItem itemLabel="Seleccione una Actividad"  itemValue=""   noSelectionOption="true" />                                
+                        <f:selectItems value="#{gbMaestrosBean.actividadEconomicas}" var="obj" itemLabel="#{obj.codCIUU}-#{obj.descripcion}" itemValue="#{obj}" />
+                        <p:column style="width:10%">
+                            <h:outputText value="#{t.codCIUU}" />
+                        </p:column>
+                        <p:column>
+                            <h:outputText value="#{t.descripcion}" />
+                        </p:column>
+                    </p:selectOneMenu>
+                </p:panelGrid>
+                <p:panelGrid columns="2">
+                    <p:graphicImage value="images/markerIconNeg.png" />
+                    <p:selectOneMenu id="actividad5" autoWidth="false" value="#{mapBean.actividadEconomica2}" converter="actividadConvert" panelStyle="width:400px"
+                             effect="fade" var="t" style="width:300px" filter="true" filterMatchMode="contains">
+                        <f:selectItem itemLabel="Seleccione una Actividad"  itemValue=""   noSelectionOption="true" />                                
+                        <f:selectItems value="#{gbMaestrosBean.actividadEconomicas}" var="obj" itemLabel="#{obj.codCIUU}-#{obj.descripcion}" itemValue="#{obj}" />
+                        <p:column style="width:10%">
+                            <h:outputText value="#{t.codCIUU}" />
+                        </p:column>
+                        <p:column>
+                            <h:outputText value="#{t.descripcion}" />
+                        </p:column>
+                    </p:selectOneMenu>
+                </p:panelGrid>
+                <p:panelGrid columns="2">
+                    <p:graphicImage value="images/markerIconyellow.png" />
+                    <p:selectOneMenu id="actividad6" autoWidth="false" value="#{mapBean.actividadEconomica3}" converter="actividadConvert" panelStyle="width:400px"
+                             effect="fade" var="t" style="width:300px" filter="true" filterMatchMode="contains">
+                        <f:selectItem itemLabel="Seleccione una Actividad"  itemValue=""   noSelectionOption="true" />                                
+                        <f:selectItems value="#{gbMaestrosBean.actividadEconomicas}" var="obj" itemLabel="#{obj.codCIUU}-#{obj.descripcion}" itemValue="#{obj}" />
+                        <p:column style="width:10%">
+                            <h:outputText value="#{t.codCIUU}" />
+                        </p:column>
+                        <p:column>
+                            <h:outputText value="#{t.descripcion}" />
+                        </p:column>
+                    </p:selectOneMenu>
+                </p:panelGrid>
+                
+                
+                <p:commandButton style="width:30px" value="procesar"   update="formmap:gmap formsg:msgs" process="actividad4 actividad5 actividad6 @this" 
+                                     action="#{mapBean.showPointEstable()}" title="Procesar"  icon="fa fa-bullseye"/>
+            </h:form>
+    </p:dialog>
+    
+    <p:dialog widgetVar="dialogProcesarSueloStreetview" class="dialog2"   
+               header="Busqueda de Actividad" resizable="false"  
+               minimizable="true" position="80,80"  width="600"
+              style="width:600px !important;max-height:600px;padding:0px;overflow: auto">
+        <h:form id='formSearchActStreet' prependId="false">
+            <p:panelGrid columns="1"  style="width: 600px !important">
+               <p:outputLabel value="Información de uso de suelo"/>
+                <p:outputLabel value="Permite realizar un análisis para identificar las áreas donde se concentra un tipo de negocio en el municipio."/>
+                       <div>
+                           <ul>Los Pasos a seguir:
+                               <li>Seleccionar la actividad económica a analizar</li>
+                               <li>Ubicar el lugar en el mapa donde se realizará el análisis</li>
+                               <li>Presionar la opción Consultar.</li>
+                           </ul>
+                       </div>
+            </p:panelGrid>
+            <p:panelGrid columns="2"   style="width: 200px !important">
+                <p:outputLabel value="Actvidad Económica"/>
+               
+                <p:selectOneMenu id="advanced2" autoWidth="false" value="#{mapBean.actividadEconomica}" converter="actividadConvert" panelStyle="width:400px"
+                         effect="fade" var="t" style="width:300px" filter="true" filterMatchMode="contains">
+                    <f:selectItems value="#{gbMaestrosBean.actividadEconomicas}" var="obj" itemLabel="#{obj.codCIUU}-#{obj.descripcion}" itemValue="#{obj}" />
+                    <p:column style="width:10%">
+                        <h:outputText value="#{t.codCIUU}" />
+                    </p:column>
+                    <p:column>
+                        <h:outputText value="#{t.descripcion}" />
+                    </p:column>
+                </p:selectOneMenu>
+                <p:outputLabel value="Posición LonLat:"/>
+                <p:inputText id="positionStreet" style="width:300px" value="#{mapBean.positionStreet}"/>
+                <p:commandButton actionListener="#{mapBean.calDistanciaActividad()}" update="txtresultado2 formmap:gmap"   oncomplete="reloadMap(); mapZoom(17);" process="positionStreet advanced @this " value="Consultar" icon="fa fa-search"/>    
+                <br/>
+                <p:outputLabel value="Resultado:"/>
+                <p:outputPanel id="txtresultado2">
+                    <p:outputLabel  style="max-width:100px !important;;width:100px !important;" value="#{mapBean.mensajeActividad}"/>
+                </p:outputPanel>
+            </p:panelGrid>
+                
+       </h:form>
+    </p:dialog> 
+</ui:composition>
+

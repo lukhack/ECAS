@@ -1,0 +1,439 @@
+<!DOCTYPE html>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"          
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://java.sun.com/jsf/core"          
+      xmlns:ui="http://java.sun.com/jsf/facelets"   
+      xmlns:pt="http://xmlns.jcp.org/jsf/passthrough"    
+      xmlns:pe="http://primefaces.org/ui/extensions"
+      xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
+     
+     
+    <p:dialog header="Crear nueva factura" id="dgDataCreateNew" dynamic="true" widgetVar="dgDataCreateNew" width="1200" height="600" modal="true">
+        <div class="task-list" >
+            <div class="layout-breadcrumb-options-dise1"   >
+                <p:commandLink styleClass="button" process="@form:pnTercero @form:pnTotales @this" update="@form:pnFacturaDetalle formsg:msgs"  action='#{dtMaFacturacionCotroller.saveupdate(dtMaFacturacionCotroller.obj,dtECASucursalController.obj,["update;frmApp"],"1")}'  style="margin:0px;padding: 0px"  title="Guardar"><i style="font-size:2.8em;color: #607D8B" class="material-icons">&#xE161;</i>
+                    <ui:include src="../../../param/param_one.xhtml"/>
+                </p:commandLink>
+                <p:commandLink styleClass="button" update="@form"  process="@this" style="margin:0px;padding: 0px" title="Nuevo" action="#{dtMaFacturacionCotroller.newObejc(dtMaFacturacionCotroller.obj)}"><i style="font-size:2.8em;color: #607D8B" class="material-icons">insert_drive_file</i>
+                    <ui:include src="../../../param/param_one.xhtml"/>
+                </p:commandLink>
+                 <p:commandLink styleClass="button" update="@form:dgFactura formsg:msgs" oncomplete="PF('dgFactura').show()"  id="btnDialogPrinter"    title="Imprimir" action="#{dtMaFacturacionCotroller.reinitDetalle()}"><i style="font-size:2.8em;color: #607D8B" class="material-icons">print</i>
+                   <ui:include src="../../../param/param_one.xhtml"/>
+                </p:commandLink>
+            </div>
+            <p:outputPanel styleClass="detalle" id="pnFacturaDetalle" class="detalle" style="position: relative">
+                <p:panelGrid  id="pnForm" columns="2"   styleClass="ui-panelgrid-blank"   layout="grid" style="width:100%" >
+                    <p:panel header="Información Principal" style="position: relative;height:100%">
+                        <p:commandButton id="tasksButton" type="button" icon="ui-icon-menu" styleClass="secondary-btn" style="position: absolute;top:5px;right:5px"/>
+                        
+                        <p:menu overlay="true" trigger="tasksButton" my="left top" at="left bottom">
+                            <p:menuitem title="Lector de codigo QR" value="Lector de codigo QR"  onclick="PF('dgQR').show()" process="@this" update="@form:dgQR" icon="ui-icon-camera-alt" url="#" />
+                        </p:menu>
+                        <p:panelGrid   columns="2" id="pnTercero"  styleClass="ui-panelgrid-blank"  style="width:100%" columnClasses="columna30,columna70">
+                            <p:outputLabel  value="Fecha Factura*"  style="font-weight: bold"/>
+                            <p:calendar id="fechaFactura" value='#{dtMaFacturacionCotroller.obj.fecha}' locale="es" pattern="dd-MM-yyyy"  mode="popup"
+                                showOn="button">
+                                <p:ajax event="dateSelect" process="@this" update="@form:fechaFactura"><ui:include src="../../../param/param_one.xhtml"/></p:ajax>
+                                
+                            </p:calendar>
+                            
+                            <p:outputLabel  value="Tercero*" style="font-weight: bold"/>
+                            <p:selectOneMenu id="tercero" widgetVar="slTercero" autoWidth="false" style="min-width:300px;width:100%"   required="true" requiredMessage="Se requiere un valor en tercero"    
+                                var="tcr" value="#{dtMaFacturacionCotroller.obj.tercero}" 
+                                converter="terceroConvert"    filter="true" filterMatchMode="contains">
+                                <f:selectItem itemLabel="Seleccione tercero" itemValue="#{null}" />
+                                <f:selectItems value="#{dtMaFacturacionCotroller.terceroNatural.listTerceros()}"  var="tcS" itemValue="#{tcr}" itemLabel="#{tcS.dtmatipodocumentoId.tipoDocumento} #{tcS.documento} #{tcS.dtterceronatural.nombres} #{tcS.dtterceronatural.apellidos}" />
+                                <f:selectItems value="#{dtTerceroJuridicoController.listTerceros()}"  var="tcS" itemValue="#{tcr}" itemLabel="#{tcS.dtmatipodocumentoId.tipoDocumento} #{tcS.documento} #{tcS.dtterceronatural.nombres} #{tcS.dtterceronatural.apellidos}" />
+                                <p:column width="100" headerText="TD">
+                                    <h:outputText value="#{tcr.dtmatipodocumentoId.tipoDocumento}" />
+                                </p:column>
+                                <p:column width="100" headerText="Documento">
+                                    <h:outputText value="#{tcr.documento}" />
+                                </p:column>
+                                <p:column headerText="Nombres y Apellidos">
+                                    <h:outputText value="#{tcr.dtterceronatural.nombres} #{tcr.dtterceronatural.apellidos} #{tcr.dttercerojuridico.razonSocial}" />
+                                </p:column>
+                                <ui:include src="../../../param/param_one.xhtml"/>
+                                <p:ajax update="pnRuta @form:slmedioTransporte @form:pnlabelvehiculo @form:pntxtvehiculo" process="@this" listener="#{dtMaFacturacionCotroller.listenerTercero}"/>
+                            </p:selectOneMenu>
+                            <p:outputLabel  value="Horario" style="font-weight: bold"/>
+                            <p:outputPanel>
+                                <p:selectOneRadio id="console" value="#{dtMaFacturacionCotroller.obj.horario}" >
+                                    <f:selectItem itemLabel="Día" itemValue="D" />
+                                    <f:selectItem itemLabel="Noche" itemValue="N" />
+                                </p:selectOneRadio>
+                            </p:outputPanel>
+                            <p:outputLabel  value="Añadir Recolector" style="font-weight: bold"/>
+                            <p:commandButton icon="ui-icon-group-add" oncomplete="PF('dgTercero').show()" update="@form:dgTercero"/>
+
+
+                            <p:outputLabel  value="Medio Transporte*" style="font-weight: bold"/>
+                            <p:selectOneMenu  value="#{dtMaFacturacionCotroller.obj.dttransporte_id}" autoWidth="false" style="width:100%" id="slmedioTransporte" converter="medioTransporteConver">
+                                <f:selectItems value="#{dtMaMedioTransporte.findList()}" var="mt" itemValue="#{mt}" itemLabel="#{mt.mediotransporte}"/>
+                                <p:ajax process="@this @form:slmedioTransporte" update="@form:pnlabelvehiculo @form:pntxtvehiculo"></p:ajax>
+                                <ui:include src="../../../param/param_one.xhtml"/>
+                            </p:selectOneMenu>
+                            <p:outputPanel id="pnlabelvehiculo"><p:outputLabel rendered="#{dtMaFacturacionCotroller.obj.dttransporte_id.placavehiculo}" value="Placas vehículo" style="font-weight: bold"/></p:outputPanel>
+                            <p:outputPanel id="pntxtvehiculo"><p:inputText  required="true" requiredMessage="Se requiere valor en placas del vehículo" value="#{dtMaFacturacionCotroller.obj.placavehiculo}"  rendered="#{dtMaFacturacionCotroller.obj.dttransporte_id.placavehiculo}" style="font-weight: bold" maxlength="7" /></p:outputPanel>
+                        </p:panelGrid>
+                    </p:panel>
+                    <p:panel header="Ingreso del material">
+                        <p:commandLink  process="@form:materiales @form:txtCantidad  @form:txtValor @form:txtValor @form:clasificacion @form:txtdescripcionDetalle @this" id="btnAnadir" style="position: absolute;right:20px;top:10px"  update="@form:pnMaterial @form:dtDatos @form:pnTotales  @form:materiales  formsg:msgs"    title="Añadir detalle" action="#{dtMaFacturacionCotroller.reinitDetalle()}"><i style="font-size:2.8em;color: #607D8B" class="material-icons">add_circle</i>
+                            <p:collector value="#{dtMaFacturacionDetalleController.obj}" addTo="#{dtMaFacturacionCotroller.obj.dtfacturadetalleList}"  unique="true" />
+                            <ui:include src="../../../param/param_one.xhtml"/>
+                         </p:commandLink>
+                        <h:panelGrid   columns="4" id="pnMaterial"  styleClass="ui-panelgrid-blank"  style="width:100%" columnClasses="columna15,columna25,columna25,columna25">
+
+                            <p:outputLabel  value="Material" style="font-weight: bold"/>
+                            <p:outputLabel  value="Cantidad" style="font-weight: bold"/>
+                            <p:outputLabel  value="Costo" style="font-weight: bold"/>
+                            <p:outputLabel  value="Material Clasificado" style="font-weight: bold" rendered="#{config.TEMPLATE_DISENO eq 'diseno1'}"/>
+                            <p:outputPanel>
+                                <div class="ui-inputgroup">
+                                     <p:selectOneMenu id="materiales" var="mts" value="#{dtMaFacturacionCotroller.facturaDetalle.obj.materialid}" required="true" 
+                                                      requiredMessage="Se requiere un valor en el material" 
+                                                      converter="materialConvert"  style="width:170px"  autoWidth="false"  filter="true" filterMatchMode="contains">
+                                        <f:selectItem itemLabel="Material ..." itemValue="#{null}" />
+                                        <f:selectItems value="#{dtMaMaterialesController.findList().stream().filter(x-> x.ecaSucursal.id eq dtECASucursalController.obj.id).toList()}"  var="mt" itemValue="#{mts}" itemLabel="#{mt.material.codReferencia} #{mt.material.material}" />
+                                        <p:column width="100" headerText="Referencia" style="width: 100px">
+                                            <h:outputText value="#{mts.material.codReferencia}" />
+                                        </p:column>
+                                        <p:column headerText="Material">
+                                            <h:outputText value="#{mts.material.material}" />
+                                        </p:column>
+                                        <p:ajax listener="#{dtMaFacturacionCotroller.onSelectMaterialCompra}" process="@this"  update="@form:pnValor  @form:dtcantidadMedida"/>
+                                        <ui:include src="../../../param/param_one.xhtml"/>
+                                    </p:selectOneMenu>       
+                                    <p:commandButton icon="ui-icon-library-add" oncomplete="PF('dgMaterialAdd').show()" process="@this" update="@form:dgMaterialAdd" title="Añadir Material" style="border-radius:0px !important;width:30px"> <ui:include src="../../../param/param_one.xhtml"/></p:commandButton>  
+                                </div>
+                            </p:outputPanel> 
+
+
+                            <p:outputPanel id="dtcantidad">
+                                <table>
+                                    <tr>
+                                        <td style="width:60%">
+                                            <h:panelGroup styleClass="md-inputfield">
+                                                <p:inputNumber style="width:100%" id="txtCantidad" readonly="#{usuarioB.tbUiUsuario.dtecassucursal.basculamanual?'false':'true'}"   decimalPlaces="2"   value="#{dtMaFacturacionCotroller.facturaDetalle.obj.cantidad}" required="true" requiredMessage="Valor requerido en cantidad"   maxlength="45"></p:inputNumber>
+                                            </h:panelGroup>  
+                                        </td>
+                                        <p:outputPanel rendered="#{usuarioB.tbUiUsuario.dtecassucursal.basculamanual?'false':'true'}">
+                                        <td >
+                                            <p:commandButton icon="fa fa-balance-scale" title="Añadir cantidad" process="@this" style="border-radius:0px;width: 50px" ><ui:include src="../../../param/param_one.xhtml"/></p:commandButton>
+                                        </td>
+                                        </p:outputPanel>
+                                    </tr>
+                                </table>    
+                            </p:outputPanel> 
+                            <h:panelGroup  id="pnValor" styleClass="md-inputfield">
+                                <p:inputNumber id="txtValor"  decimalPlaces="2" value="#{dtMaFacturacionCotroller.facturaDetalle.obj.valor}" required="true"   requiredMessage="Valor requerido en valor"  maxlength="45"/>
+                            </h:panelGroup>
+
+                            <p:outputPanel rendered="#{config.TEMPLATE_DISENO eq 'diseno1'}">
+                                <p:selectOneRadio id="clasificacion" value="#{dtMaFacturacionCotroller.facturaDetalle.obj.clasificacion}" >
+                                    <f:selectItem itemLabel="Si" itemValue="S" />
+                                    <f:selectItem itemLabel="No" itemValue="N" />
+                                </p:selectOneRadio>
+                            </p:outputPanel>
+                        </h:panelGrid>
+
+                        <p:panelGrid   columns="2"   styleClass="ui-panelgrid-blank"  style="width:100%" columnClasses="columna82,columna15">
+                            <p:outputLabel value="Unidad de Medida por Kg" style="font-weight: bold"/>
+                            <p:outputPanel id="dtcantidadMedida">
+                                <p:outputLabel value="#{dtMaFacturacionCotroller.facturaDetalle.obj.materialid.material.unidadMedida.unidadMedida} (#{dtMaFacturacionCotroller.facturaDetalle.obj.materialid.material.pesokg}Kg)"/>
+                            </p:outputPanel>
+
+                            <h:panelGroup styleClass="md-inputfield" style="text-align: center">
+                                <p:inputTextarea id="txtdescripcionDetalle" rows="3" placeholder="Observación" style="background-color: white;width:100%" value="#{dtMaFacturacionCotroller.facturaDetalle.obj.descripcion}" />
+                            </h:panelGroup> 
+                            <p:commandButton style=" background:rgb(161,170,52) !important;color: white !important;font-weight: bold" process="@form:materiales @form:txtCantidad @form:txtValor @form:txtValor @form:clasificacion @form:txtdescripcionDetalle @this" id="btnAnadir2"   update="@form:pnMaterial @form:dtDatos @form:txtdescripcionDetalle @form:txtValor @form:txtCantidad @form:pnTotales @form:materiales  formsg:msgs"    title="Añadir material" action="#{dtMaFacturacionCotroller.reinitDetalle()}">
+                                <p:collector value="#{dtMaFacturacionDetalleController.obj}" addTo="#{dtMaFacturacionCotroller.obj.dtfacturadetalleList}"  unique="true" />
+                                <ui:include src="../../../param/param_one.xhtml"/>
+                            </p:commandButton>
+                        </p:panelGrid>
+                    </p:panel>
+                    <p:outputPanel id="pnRuta" >
+                        <p:panelGrid columns="1" rendered="#{dtMaFacturacionCotroller.obj.tercero.dttercerorutaList.size() > 0}"  styleClass="ui-panelgrid-blank"   layout="grid" style="width:100%;margin-top: 10px" >
+                            <p:outputLabel for="tercero" value="Ruta:"  style="color: red;font-weight: bold"/>
+                            <p:selectOneMenu id="ruta" widgetVar="slRuta"  converter="terceroRutaConvert" required="true" value="#{dtMaFacturacionCotroller.obj.terceroRuta}" requiredMessage="Se requiere un valor en la ruta"   
+                                   filter="true" filterMatchMode="contains">
+                                <f:selectItem itemLabel="Select tercero" itemValue="#{null}" />
+                                <f:selectItems value="#{dtMaFacturacionCotroller.obj.tercero.dttercerorutaList}"  var="rut" itemValue="#{rut}" itemLabel="#{rut.ruta}" />
+                                <ui:include src="../../../param/param_one.xhtml"/>
+                            </p:selectOneMenu>
+                        </p:panelGrid>
+                    </p:outputPanel>
+                </p:panelGrid> 
+            </p:outputPanel> 
+        </div>  
+        
+        <p:panel header="Detalle">
+            <p:dataTable var="dt" id="dtDatos" 
+                rowIndexVar="rowIndex"  
+                value='#{dtMaFacturacionCotroller.obj.dtfacturadetalleList}'
+                filteredValue='#{dtMaFacturacionDetalleController.listFilter}'>
+                <p:ajax event="filter"  process="@this" global="true" ignoreAutoUpdate="true"/>
+                <ui:include src="../../../param/param_one.xhtml"/>
+
+                <p:column headerText="No" width="40"  filterBy="#{dt.iddetalleFactura eq null?rowIndex+1:dt.iddetalleFactura}">
+                    <h:outputText  value="#{dt.iddetalleFactura eq null?rowIndex+1:dt.iddetalleFactura}" />
+                </p:column>
+                <p:column headerText="Referencia" width="95%" filterBy="#{dt.materialid.material.codReferencia}" filterMatchMode="contains">
+                    <h:outputText value='#{dt.materialid.material.codReferencia}' />
+                </p:column> 
+                <p:column headerText="Material" width="95%" filterBy="#{dt.materialid.material.material}" filterMatchMode="contains">
+                    <h:outputText value='#{dt.materialid.material.material}' />
+                </p:column> 
+                <p:column headerText="Descripción" width="95%" filterBy="#{dt.descripcion}" filterMatchMode="contains">
+                    <h:outputText value='#{dt.descripcion}' />
+                </p:column> 
+                <p:column headerText="Cantidad(Kg)" width="95%"  filterBy="#{dt.cantidad}" filterMatchMode="contains">
+                    <h:outputText value='#{dt.cantidad}' ><f:convertNumber  minFractionDigits="2" groupingUsed="true"/></h:outputText>
+                </p:column>  
+                <p:column headerText="Costo(Pesos)" width="95%" filterBy="#{dt.valor}" filterMatchMode="contains">
+                    <h:outputText value='#{dt.valor}' />
+                </p:column> 
+                <p:column headerText="Total" width="95%">
+                    <h:outputText value='#{(dt.cantidad * dt.valor)}' ><f:convertNumber  minFractionDigits="2" groupingUsed="true"/></h:outputText>
+                </p:column>
+                <p:column headerText="" width="20" >
+                    <p:commandButton title="Editar" action="#{dtMaFacturacionCotroller.facturaDetalle.selectObjec(dt)}"    icon="fa fa-pencil-square-o" update="@form:pnFacturaDetalle" process="@this">
+                        <ui:include src="../../../param/param_one.xhtml"/>
+                    </p:commandButton>
+                </p:column>
+                <p:column headerText="" width="20" rendered="#{config.TEMPLATE_DISENO eq 'diseno1'}">
+                    <p:commandButton title="Clasificacón del material" rendered="#{dt.clasificacion eq 'S'}" action="#{dtMaFacturacionCotroller.facturaDetalle.selectObjec(dt)}" icon="fa fa-server" oncomplete="PF('dgCLMT').show()" update="@form:dgCLMT" process="@this">
+                        <ui:include src="../../../param/param_one.xhtml"/>
+                    </p:commandButton>
+                </p:column>
+                <p:column headerText="" width="20">
+                    <p:commandButton title="Eliminar"   style="width: 30px" icon="fa fa-trash" update="dtDatos" process="@this" action="#{dtMaFacturacionCotroller.reinitDetalle()}">
+                        <p:collector value="#{dt}" removeFrom="#{dtMaFacturacionCotroller.obj.dtfacturadetalleList}" unique="true"/>
+                        <ui:include src="../../../param/param_one.xhtml"/>
+                    </p:commandButton>
+                </p:column>
+            </p:dataTable>
+            <p:panelGrid  id="pnTotales" columns="2"  styleClass="ui-panelgrid-blank pnTotales"    layout="grid" style="width:98%;background-image: url('images/Diseno1/banner.jpg') !important;padding:10px" columnClasses="columna60, columna40, ">
+
+                <h:panelGroup styleClass="md-inputfield">
+                        <p:inputTextarea id="txtDescripcion" rows="7" style="background-color: white" value="#{dtMaFacturacionCotroller.obj.descripcion}" />
+                        <p:outputLabel for="txtDescripcion" value="Descripción"/>
+                    </h:panelGroup>  
+                    <p:panelGrid  columns="2"  styleClass="ui-panelgrid-blank"   layout="grid" style="width:100%" columnClasses="columna40, columna60">
+                       <p:outputLabel for="txtmttotal" value="Material Total"/>
+                        <p:inputNumber id="txtmttotal"  style="background-color: white;padding:5px" readonly="true" decimalPlaces="2" value="#{dtMaFacturacionCotroller.obj.dtfacturadetalleList.stream().map(item->(item.cantidad)).sum()}" required="true"   maxlength="45"/>  
+
+                        <p:outputLabel for="txtCantidad" value="SubTotal"/>
+                        <p:inputNumber id="txtSubtotal"  style="background-color: white;padding:5px" readonly="true" decimalPlaces="2" value="#{dtMaFacturacionCotroller.obj.subTotal}" required="true"   maxlength="45"/>
+
+                        <p:outputLabel for="txtClasificacion" value="Total Clasificado"/>
+                        <h:panelGroup   styleClass="md-inputfield">
+                            <p:inputNumber id="txtClasificacion"  decimalPlaces="2"  style="background-color: white;padding:5px" value="#{dtMaFacturacionCotroller.obj.totalClasificacino}"  maxlength="45">
+                                <p:ajax event="change" global="false"  listener="#{dtMaFacturacionCotroller.total()}" update="@form:panelTotal"/>
+                                <ui:include src="../../../param/param_one.xhtml"/>
+                            </p:inputNumber>
+                        </h:panelGroup> 
+                        <p:outputLabel for="txtDes" value="Descuento"/>
+                        <h:panelGroup   styleClass="md-inputfield">
+                            <p:inputNumber id="txtDes"  decimalPlaces="2"  style="background-color: white;padding:5px" value="#{dtMaFacturacionCotroller.obj.descuento}"  maxlength="45">
+                                <p:ajax event="change" global="false"  listener="#{dtMaFacturacionCotroller.total()}" update="@form:panelTotal"/>
+                                <ui:include src="../../../param/param_one.xhtml"/>
+                            </p:inputNumber>
+                        </h:panelGroup> 
+                        <p:outputLabel for="txtTotal" value="Total"/>
+                        <h:panelGroup  id="panelTotal"  styleClass="md-inputfield">
+                            <p:inputNumber id="txtTotal"  decimalPlaces="2"  style="background-color: white;padding:5px" readonly="true"  value="#{dtMaFacturacionCotroller.obj.total}" required="true"   maxlength="45"/>
+                        </h:panelGroup> 
+                    </p:panelGrid>   
+            </p:panelGrid> 
+        </p:panel>
+    </p:dialog>
+    
+    <p:dialog header="Impresión de factura compra"  modal="true" id="dgFactura" widgetVar="dgFactura" width="450" height="650">
+        <ui:include src="ImprimirFactura.xhtml"/>
+    </p:dialog>
+    
+    <p:dialog header="Añadir Clasificación del material" closable="false"  modal="true" id="dgCLMT" widgetVar="dgCLMT" width="700" height="600">
+            <p:commandButton icon="fa fa-plus-circle " update="@form:dtDatos @form:pnTotales @form:materiales  formsg:msgs @form:dtgMarcaPresentacion @form:pnMaterialMarcaPresentacion"  process="@form:pnMaterialMarcaPresentacion @this" title="añadir marca" action="#{dtMaFacturacionCotroller.reinitDetalleMarterialPresentacion()}">
+                <p:collector value="#{dtMaFacturacionCotroller.materiaPresentacionController.obj}" addTo="#{dtMaFacturacionCotroller.facturaDetalle.obj.dtFacturaDetalle}"  unique="true" />
+                <ui:include src="../../../param/param_one.xhtml"/>
+            </p:commandButton>
+            <p:panelGrid  columns="4" id="pnMaterialMarcaPresentacion"  styleClass="ui-panelgrid-blank form-group" columnClasses="columna25, columna25, columna25, columna25">
+                <p:selectOneMenu required="true" autoWidth="false" requiredMessage="Valor requerido en marca" id="slUnidadMarca"  
+                        filter="true" filterMatchMode="contains"
+                        converter="materiaMarcaConver" value="#{dtMaMaterialesMarcaController.obj}" >
+                   <f:selectItem itemLabel="Marca ..."  itemValue="#{null}" noSelectionOption="true"/>
+                   <f:selectItems   value="#{dtMaFacturacionCotroller.facturaDetalle.obj.materialid.material.dtmamaterialMarcas}" var="list" itemLabel="#{list.marca}" />
+                   <ui:include src="../../../param/param_one.xhtml"/>
+                   <p:ajax update="@form:slUnidadPresentacion" process="@this"></p:ajax>
+                </p:selectOneMenu>
+                <p:selectOneMenu required="true" autoWidth="false" requiredMessage="Valor requerido en marca" id="slUnidadPresentacion"  
+                                 filter="true" filterMatchMode="contains" 
+                                 converter="materiaPresentacionConver" value="#{dtMaFacturacionCotroller.materiaPresentacionController.obj.materialid}" >
+                   <f:selectItem itemLabel="Presentación ..."  itemValue="#{null}" noSelectionOption="true"/>
+                   <f:selectItems   value="#{dtMaMaterialesMarcaController.obj.dtmarcasPresentaciones}" var="prs" itemValue="#{prs}" itemLabel="#{prs.presentacion}" />
+                </p:selectOneMenu>
+                <h:panelGroup styleClass="md-inputfield" >
+                    <p:inputText required="true" maxlength="45" value="#{dtMaFacturacionCotroller.materiaPresentacionController.obj.cantidad}"  />
+                    <label>Cantidad</label>
+                </h:panelGroup>
+            </p:panelGrid>   
+            <p:commandButton value="Aceptar"  process="@this" oncomplete="PF('dgCLMT').hide()" update="@form:dtDatos @form:pnTotales @form:materiales  formsg:msgs " action="#{dtMaFacturacionCotroller.reinitDetalle()}">
+                 <ui:include src="../../../param/param_one.xhtml"/>
+            </p:commandButton>
+            <p:dataTable var="prs" id="dtgMarcaPresentacion" 
+                paginator="true"
+                style="width: 100% !important;"
+                paginatorPosition="bottom"
+                rowsPerPageTemplate="5,10,20,50,100"
+                rows="20" scrollHeight="300"
+                rowIndexVar="rowIndex"
+                value='#{dtMaFacturacionCotroller.facturaDetalle.obj.dtFacturaDetalle}'
+                filteredValue='#{dtMaFacturacionCotroller.materiaPresentacionController.listFilter}'>
+                <f:facet name="header" >
+                   #{uiNavegacionBean.title}
+                </f:facet>
+                <p:ajax  event="rowToggle" global="false" async="true"/>
+                <p:ajax event="filter"  global="false" ignoreAutoUpdate="true"/>
+                <ui:include src="../../../param/param_one.xhtml"/>
+                <p:column headerText="No" width="30" >
+                    <h:outputText  value="#{rowIndex+1}" />
+                </p:column>
+                <p:column headerText="Material" width="100">
+                    <h:outputText value="#{prs.facturaDetalle.materialid.material.material}" />
+                </p:column>  
+                <p:column headerText="Presentaciòn" width="100">
+                    <h:outputText value="#{prs.materialid.presentacion}" />
+                </p:column>   
+                <p:column headerText="Cantidad" width="100">
+                    <h:outputText value="#{prs.cantidad}" />
+                </p:column> 
+                <p:column headerText="Valor" width="100">
+                    <h:outputText value="#{prs.materialid.valor}" />
+                </p:column>
+                <p:column headerText="Total" width="100">
+                    <h:outputText value="#{prs.materialid.valor * prs.cantidad}" />
+                </p:column>      
+                <p:column width="20" headerText="ED">
+                    <p:commandButton icon="ui-icon-edit" update="@form:pnMaterialMarcaPresentacion" process="@this" title="Editar" action="#{dtMaFacturacionCotroller.materiaPresentacionController.selectObjec(prs)}">
+                       <ui:include src="../../../param/param_one.xhtml"/>
+                    </p:commandButton>
+                </p:column>
+            </p:dataTable>
+    </p:dialog>
+    
+    
+    <p:dialog header="Añadir Material" modal="true" id="dgMaterialAdd" widgetVar="dgMaterialAdd" width="700">
+        
+        <p:panelGrid  id="pnFormMaterial" columns="1"  styleClass="ui-panelgrid-blank"   layout="grid" style="width:100%" columnClasses="columna100">
+            <p:panelGrid  columns="4"  styleClass="ui-panelgrid-blank form-group" columnClasses="columna30, columna30, columna30,columna10">
+                <p:selectOneMenu required="true" autoWidth="false" requiredMessage="Valor requerido en unidad medida" id="slUnidad"  
+                                 filter="true" filterMatchMode="contains"
+                                 converter="materialCategoriaConvert" value="#{dtMaFacturacionCotroller.material.obj.material}" >
+                    <f:selectItem itemLabel="Material ..."  itemValue="#{null}" noSelectionOption="true"/>
+                    
+                    <f:selectItems   value="#{dtMaMaterialesCategoriaController.list.stream().filter(y-> not(dtMaMaterialesController.list.stream().filter(x-> x.ecaSucursal.id eq usuarioB.tbUiUsuario.dtecassucursal.id).toList().stream().anyMatch(x-> x.material.id eq y.id))).toList()}" var="list" itemValue="#{list}" itemLabel="#{list.codReferencia}  #{list.material}" />
+                </p:selectOneMenu>
+                <h:panelGroup styleClass="md-inputfield" >
+                    <p:inputText required="true" maxlength="45" value="#{dtMaFacturacionCotroller.material.obj.valorCompra}"  />
+                    <label>Precio Compra</label>
+                </h:panelGroup>
+                <h:panelGroup styleClass="md-inputfield" >
+                    <p:inputText required="true" maxlength="45" value="#{dtMaFacturacionCotroller.material.obj.valorVenta}"  />
+                    <label>Precio Venta</label>
+                </h:panelGroup>
+                <p:commandButton process="@form:pnFormMaterial" update="@form:pnMaterial @form:pnFormMaterial formsg:msgs"  action="#{dtMaFacturacionCotroller.anadirMaterial(dtMaFacturacionCotroller.material.obj)}" 
+                                 id="btnAnadirMaterial"  value="Añadir Material" title="Añadir Material" > <ui:include src="../../../param/param_one.xhtml"/></p:commandButton>     
+            </p:panelGrid>   
+        </p:panelGrid>
+    </p:dialog>
+    
+   
+    <p:dialog header="Añadir Tercero"   modal="true" id="dgTercero" widgetVar="dgTercero" width="700">
+        <p:outputPanel style="width:100%;text-align:right;position: relative" >
+            <p:commandLink process="@form:pnFormTercero @this"  action="#{dtMaFacturacionCotroller.anadirTercero(dtMaFacturacionCotroller.terceroNatural.obj)}" 
+                           id="btnAnadirTercero" style="position: absolute;right: 5px;top:-10px"  
+                           update="@form:pnFormTercero @form:tercero formsg:msgs"    title="Añadir">
+                <i style="font-size:2.8em;color: #607D8B" class="material-icons">playlist_add</i>
+               <ui:include src="../../../param/param_one.xhtml"/>
+            </p:commandLink>
+        </p:outputPanel>
+        <p:panelGrid  id="pnFormTercero" columns="1"   styleClass="ui-panelgrid-blank"   layout="grid" style="width:100%" columnClasses="columna100">
+            <p:panelGrid  columns="3"  styleClass="ui-panelgrid-blank form-group" style="width:100%"  columnClasses="columna25, columna25, columna25, columna25">
+                <p:selectOneMenu required="true" autoWidth="false" style="width:300px" requiredMessage="Valor requerido en Municipio" id="sdTipoDocumento"  
+                                 filter="true" filterMatchMode="contains" 
+                                 converter="tipoDocumentoConvert" value="#{dtMaFacturacionCotroller.terceroNatural.obj.dttercero.dtmatipodocumentoId}" >
+                    <f:selectItem itemLabel="Selección Tipo documento ..."  itemValue="#{null}" noSelectionOption="true"/>
+                    <f:selectItems  value="#{dtMaTipodocumento.list.stream().filter(x->x.tipoDocumento ne 'NIT').toList()}" var="tpc" itemLabel="#{tpc.tipoDocumento} - #{tpc.descripcion}" itemValue="#{tpc}" />
+                </p:selectOneMenu>
+                <h:panelGroup styleClass="md-inputfield">
+                    <p:inputText value="#{dtMaFacturacionCotroller.terceroNatural.obj.dttercero.documento}" maxlength="15" required="true"  requiredMessage="Valor requerido en Nit"/>
+                    <label>Cc</label>
+                </h:panelGroup>   
+            </p:panelGrid>
+            <p:panelGrid  columns="3"  styleClass="ui-panelgrid-blank form-group" style="width: 100%" columnClasses="columna25,columna15,columna25,columna35">
+                
+                <h:panelGroup styleClass="md-inputfield" >
+                    <p:inputText required="true" maxlength="45" value="#{dtMaFacturacionCotroller.terceroNatural.obj.nombres}"  requiredMessage="Valor requerido en Nombre o Razon social"/>
+                    <label>Nombres</label>
+                </h:panelGroup>
+                <h:panelGroup styleClass="md-inputfield" >
+                    <p:inputText required="true" maxlength="45" value="#{dtMaFacturacionCotroller.terceroNatural.obj.apellidos}"  requiredMessage="Valor requerido en Nombre o Razon social"/>
+                    <label>Apellidos</label>
+                </h:panelGroup>
+                <h:panelGroup styleClass="md-inputfield" >
+                    <p:inputText value="#{dtMaFacturacionCotroller.terceroNatural.obj.dttercero.telefono}" maxlength="10"/>
+                    <label>Telefono 1</label>
+                </h:panelGroup>
+                <h:panelGroup styleClass="md-inputfield">
+                    <p:inputText value="#{dtMaFacturacionCotroller.terceroNatural.obj.dttercero.direccion}" maxlength="100"/>
+                    <label>Direccion</label>
+                </h:panelGroup>
+                <h:panelGroup styleClass="md-inputfield">
+                    <p:inputText value="#{dtMaFacturacionCotroller.terceroNatural.obj.dttercero.correo}" maxlength="100"/>
+                    <label>Correo</label>
+                </h:panelGroup> 
+                <p:selectOneMenu required="true" autoWidth="false" style="width:200px" requiredMessage="Valor requerido en Municipio" id="slMunicipio"  
+                                 filter="true" filterMatchMode="contains"
+                                 converter="municipioConvert" value="#{dtMaFacturacionCotroller.terceroNatural.obj.dttercero.idmunicipio}" >
+                    <f:selectItem itemLabel="Selección Municipio ..."  itemValue="#{null}" noSelectionOption="true"/>
+                    <f:selectItems  value="#{maMunicipioManager.list}" var="mup" itemLabel="#{mup.municipio} (#{mup.idDepartamento.departamento})" />
+                </p:selectOneMenu>
+                <p:selectOneMenu required="true" autoWidth="false" style="width:200px" requiredMessage="Valor requerido en Medio transporte" id="slMedioTransporte"  
+                                 filter="true" filterMatchMode="contains"
+                                 converter="medioTransporteConver" value="#{dtMaFacturacionCotroller.terceroNatural.obj.dttercero.dtmamediotransporteId}" >
+                    <f:selectItem itemLabel="Selección Medio Transporte..."  itemValue="#{null}" noSelectionOption="true"/>
+                    <f:selectItems  value="#{dtMaMedioTransporte.list}" var="mt" itemLabel="#{mt.mediotransporte}" />
+                </p:selectOneMenu>
+                <p:selectOneMenu required="true" autoWidth="false" style="width:200px" requiredMessage="Valor requerido en condición social" id="slCondicionSocial"  
+                                 filter="true" filterMatchMode="contains"
+                                 converter="condicionSocialConvert" value="#{dtMaFacturacionCotroller.terceroNatural.obj.dtmacondicionsocialId}" >
+                    <f:selectItem itemLabel="Selección Condición social..."  itemValue="#{null}" noSelectionOption="true"/>
+                    <f:selectItems  value="#{dtMaCodicionSocial.list}" var="cs" itemLabel="#{cs.condicionSocial}" />
+                </p:selectOneMenu>
+                <p:selectOneMenu required="true" autoWidth="false" style="width:200px" requiredMessage="Valor requerido en condición Reciclador" id="slCondicionTercero"  
+                                 filter="true" filterMatchMode="contains"
+                                 converter="condicionTerceroConvert" value="#{dtMaFacturacionCotroller.terceroNatural.obj.dtmacondicionrecicladorId}" >
+                    <f:selectItem itemLabel="Selección Condición Reciclador..."  itemValue="#{null}" noSelectionOption="true"/>
+                    <f:selectItems  value="#{dtMaCodicionTercero.list}" var="ct" itemLabel="#{ct.condicion}" />
+                </p:selectOneMenu>
+                <p:selectOneMenu required="true" autoWidth="false" style="width:200px" requiredMessage="Valor requerido en estado civil" id="slEstadocivil"  
+                                 filter="true" filterMatchMode="contains"
+                                 converter="estadoCivilConvert" value="#{dtMaFacturacionCotroller.terceroNatural.obj.dtmaestadocivilId}" >
+                    <f:selectItem itemLabel="Selección Estado civil..."  itemValue="#{null}" noSelectionOption="true"/>
+                    <f:selectItems  value="#{dtMaEstadoCivil.list}" var="ec" itemLabel="#{ec.estadocivil}" />
+                </p:selectOneMenu>
+                <p:selectOneMenu  autoWidth="false" style="width:200px" requiredMessage="Valor requerido en estrato" id="slEstrato"  
+                                 filter="true" filterMatchMode="contains"
+                                 converter="estratoConvert" value="#{dtMaFacturacionCotroller.terceroNatural.obj.dtmaestratoId}" >
+                    <f:selectItem itemLabel="Selección estrato..."  itemValue="#{null}" noSelectionOption="true"/>
+                    <f:selectItems  value="#{dtMaEstrato.list}" var="es" itemLabel="#{es.estrato}" />
+                </p:selectOneMenu>
+            </p:panelGrid>
+            <h:inputHidden converter="terceroTipoConvert" value="#{dtTerceroNaturalController.obj.dttercerotipo}"  />
+        </p:panelGrid> 
+    </p:dialog>
+</ui:composition>
+
+

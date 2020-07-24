@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"          
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://java.sun.com/jsf/core"          
+      xmlns:ui="http://java.sun.com/jsf/facelets"       >
+      <script type="text/javascript">
+            
+          
+
+            function geocodeDir(direccion) {
+                //alert(direccion)
+                var map=PF('geoMap').getMap();//PERFECT
+                var address=direccion;//PERFECT
+                var geocoder = new google.maps.Geocoder();//PERFECT
+                geocoder.geocode({'address': address}, function(results, status) {
+                    if (status === 'OK') {
+                        map.setCenter(results[0].geometry.location);
+                        var marker = new google.maps.Marker({
+                            map: map,
+                            position: results[0].geometry.location
+                        });
+                    } else {
+                        error.log(status)
+                        alert('CUSTOMIZED ERROR MESSAGE');
+                    }
+                });
+            }
+        </script>
+        <p:dataTable var="dts" id="dtDatoSubcursal" 
+            paginator="true"
+            style="width: 100% !important;height:100%"
+            paginatorPosition="bottom"
+            paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+            rowsPerPageTemplate="5,10,20,50,100"
+            rows="20"
+            rowIndexVar="rowIndex"
+            value='#{dtClienteController.obj.dtclientesucursalList}'
+            filteredValue='#{dtParameterController.listFilter}'>
+            <f:facet name="header" >
+               #{uiNavegacionBean.title}
+            </f:facet>
+          
+            <p:ajax  event="rowToggle" global="false" async="true"/>
+           <p:ajax event="filter"  global="false" ignoreAutoUpdate="true"/>
+           <f:param name="name" value="#{param.name}" /><f:param name="path" value="#{param.path}" />
+           <p:column style="width:16px">
+               <p:rowToggler />
+            </p:column>
+            <p:column headerText="No" width="30" >
+                <h:outputText  value="#{rowIndex+1}" />
+            </p:column>
+            <p:column headerText="Nombre" width="100">
+                <h:outputText value="#{dts.nombre}" />
+            </p:column>   
+            <p:column headerText="Dirección" width="150">
+                <h:outputText value='#{dts.direccion}' />
+            </p:column>    
+            <p:column headerText="telefono" width="60">
+                <h:outputText value="#{dts.telefono}" />
+            </p:column>   
+            <p:column headerText="Municipio" width="100">
+                <h:outputText value="#{dts.mamunicipioId.municipio}" />
+            </p:column>   
+            <p:column headerText="GPS" width="20">
+                <p:commandButton icon="ui-icon-gps-fixed"  style='#{dts.pocision eq null?"background-color:Red !important":""}' update="@form:dialogMap" process="@this" oncomplete="PF('dialogMap').show()" title="Añadir Posición GPS" action="#{dtClienteController.sucursalController.selectObjecGeo(dts)}">
+                    <f:param name="name" value="#{param.name}" /><f:param name="path" value="#{param.path}" />
+                </p:commandButton>
+            </p:column>
+            <p:column width="20" headerText="ED">
+               <p:commandButton icon="ui-icon-edit" update="@form:pnFormSub" process="@this" title="Editar" action="#{dtClienteController.selectObjec(dts)}">
+                    <f:param name="name" value="#{param.name}" /><f:param name="path" value="#{param.path}" />
+               </p:commandButton>
+            </p:column>
+            <p:column width="20" headerText="CONS" >
+                <p:commandButton icon="ui-icon-apps" process="@this" rendered="#{dts.parameterGlobal?'false':'true'}" title="Añadir Consecutivo" oncomplete="PF('dialogParametersSubEcas').show()" update="@form:dialogParametersSubEcas"  action="#{dtClienteController.sucursalController.selectObjec(dts)}">
+                    <f:param name="name" value="#{param.name}" /><f:param name="path" value="#{param.path}" />
+                </p:commandButton>
+            </p:column>
+            
+    </p:dataTable>
+    <p:dialog  id="dialogParametersSubEcas" width="1200" widgetVar="dialogParametersSubEcas"  header="Consecutivo de la sucursal">
+        <p:outputPanel style="padding:10px" >
+            <p:outputPanel style="width:100%;text-align:right;position: relative">
+                <p:commandLink process="@form:pnFormParameterSucural  @this" id="btnAnadirParameterSucursal" style="position: absolute;right: 0;top:0"  update="@form:dtDatoSubcursal  @form:dtDatosParamterEcasSucurasal @form:pnFormParameterSucural formsg:msgs"    title="Añadir" action="#{dtParameterController.reinit()}"><i style="font-size:2.8em;color: #607D8B" class="material-icons">playlist_add</i>
+                    <p:collector value="#{dtParameterController.obj}" addTo="#{dtECASController.sucursalController.obj.dtmaparameterList}"  unique="true" />
+                    <f:param name="name" value="#{param.name}" /><f:param name="path" value="#{param.path}" />
+                </p:commandLink> 
+            </p:outputPanel>
+            <ui:include src="../form/FormParametroEcasSucurasal.xhtml"/>
+            <ui:include src="../dataTable/TableParametroEcasSucursal.xhtml"/>
+        </p:outputPanel>
+    </p:dialog>
+    
+    <p:dialog  id="dialogMap" widgetVar="dialogMap"  header="Localizar dirección">
+        <p:gmap id="geoGmap" widgetVar="geoMap" zoom="#{mapsBean.zoom}" center="#{mapsBean.centerGeoMap}"  type="ROADMAP" model="#{mapsBean.geoModel}" style="width:100%;height:400px">
+            <p:ajax event="geocode" listener="#{dtECASucursalController.onGeocode}" update="@this" />
+            <p:ajax event="markerDrag" listener="#{dtECASucursalController.onMarkerDrag}" update="formsg:msgs" />
+            <ui:include src="../../param/param_one.xhtml"/>
+        </p:gmap>
+    </p:dialog>
+</ui:composition>
+
+

@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"          
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://java.sun.com/jsf/core"          
+      xmlns:ui="http://java.sun.com/jsf/facelets"       >
+    
+     <p:dataTable var="dt" id="dtDatos" 
+            paginator="true"
+            style="width: 100% !important"
+            paginatorPosition="bottom"
+            paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+            rowsPerPageTemplate="5,10,20,50,100"
+            rows="20"
+            rowIndexVar="rowIndex"
+            value='#{dtParameterController.list}'
+            filteredValue='#{dtParameterController.listFilter}'>
+             <f:facet name="header" >
+                #{uiNavegacionBean.title}
+             </f:facet>
+           <p:ajax event="filter"  process="@this" global="true" ignoreAutoUpdate="true">
+               <f:param name="name" value="#{param.name}" /><f:param name="path" value="#{param.path}" />
+          </p:ajax>
+            <p:column style="width:16px">
+                <p:rowToggler />
+            </p:column>
+            <p:column headerText="No" width="5%"  filterBy="#{dt.id eq null?rowIndex+1:dt.id}">
+                <h:outputText  value="#{dt.id eq null?rowIndex+1:dt.id}" />
+            </p:column>
+            <p:column headerText="Prefijo" width="10%" filterBy="#{dt.prefijo}" filterMatchMode="contains">
+                <h:outputText value='#{dt.prefijo}' />
+            </p:column>    
+            <p:column headerText="Con. Ini" width="10%" filterBy="#{dt.consInicial}" filterMatchMode="contains">
+                <h:outputText value='#{dt.consInicial}' />
+            </p:column>    
+            <p:column headerText="Con. Final" width="10%" filterBy="#{dt.consInicial}" filterMatchMode="contains">
+                <h:outputText value='#{dt.consFinal}' />
+            </p:column>    
+            <p:column headerText="Con. Actual" width="10%" filterBy="#{dt.consActual}" filterMatchMode="contains">
+                <h:outputText value='#{dt.consActual}' />
+            </p:column>     
+            <p:column headerText="Resolución" width="10%" filterBy="#{dt.resolucion}" filterMatchMode="contains">
+             <h:outputText value='#{dt.resolucion}' />
+            </p:column>     
+            <p:column headerText="F. Resolu" width="10%" filterBy="#{dt.fechaResolucio}" filterMatchMode="contains">
+                <h:outputText value='#{dt.fechaResolucio}' />
+            </p:column>     
+            <p:column headerText="Vigente" width="10%" filterBy="#{dt.consActual}" filterMatchMode="Activo">
+                <h:outputText value='#{dt.vigente?"Si":"No"}' />
+            </p:column>     
+            <p:column headerText="Tipo" width="10%" filterBy="#{dt.dtTipoFacturaid.tipo}" filterMatchMode="Activo">
+                <h:outputText value='#{dt.dtTipoFacturaid.tipo}' />
+            </p:column> 
+            <p:column headerText="Action" width="5%">
+                <p:commandButton title="Remove" rendered="#{dt.id eq null}"  style="width: 30px" icon="ui-icon-delete" update="dtDatos" process="@this">
+                    <p:collector value="#{dt}" removeFrom="#{dtParameterController.list}" unique="true"/>
+                    <f:param name="name" value="#{param.name}" /><f:param name="path" value="#{param.path}" />
+                </p:commandButton>
+            </p:column>
+            <p:column headerText="Editar" width="5%">
+                <p:commandButton title="Editar" action="#{dtParameterController.selectObjec(dt)}"   icon="ui-icon-edit" update="@form:pnForm" process="@this">
+                  <f:param name="name" value="#{param.name}" /><f:param name="path" value="#{param.path}" />
+                </p:commandButton>
+            </p:column>
+    </p:dataTable>
+    
+</ui:composition>
+
+

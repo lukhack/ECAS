@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"          
+      xmlns:p="http://primefaces.org/ui"          
+      xmlns:ui="http://java.sun.com/jsf/facelets"       
+      xmlns:pe="http://primefaces.org/ui/extensions">
+      
+        <pe:masterDetail id="masterDetail" level="#{uiUsuarioBean.nivel}"  style="width:100%"   showAllBreadcrumbItems="false" 
+                                    breadcrumbAboveHeader="false" showBreadcrumb="false" >  
+
+            <pe:masterDetailLevel level="0" >
+                <ui:include src="./usuarios.xhtml"/>
+            </pe:masterDetailLevel>
+            <pe:masterDetailLevel level="1" levelLabel="Proponentes">
+                <p:outputPanel id="usuario">
+                    <ui:include src="./usuario.xhtml"/>
+                </p:outputPanel>
+            </pe:masterDetailLevel>
+            
+        </pe:masterDetail>
+           
+               
+</ui:composition>
+

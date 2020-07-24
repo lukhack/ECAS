@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"          
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://java.sun.com/jsf/core"          
+      xmlns:ui="http://java.sun.com/jsf/facelets"   
+      xmlns:pt="http://xmlns.jcp.org/jsf/passthrough"    
+      xmlns:pm="http://primefaces.org/mobile"
+      xmlns:pe="http://primefaces.org/ui/extensions"
+      xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
+    <style type="text/css">
+        .label {
+            width:15%;
+            padding:4px;
+        }
+
+        .value {
+            width:90%;
+            padding:4px;
+        }
+        
+        .label2 {
+            width:15%;
+            padding:4px;
+        }
+
+        .value2 {
+            width:40%;
+            padding:4px;
+        }
+
+        .grid {
+            width:100%;
+        }
+
+        .error {
+            color: red;
+        }
+
+        .outputLabel {
+            font-weight: bold;
+        }
+
+        .grid {
+            width:33%;
+            padding:4px;
+        }
+        
+        .ui-wizard-navbar button{
+            max-width: 150px; 
+            text-align: center;
+        }
+    </style>
+    <script type="text/javascript" >
+        function nextTab() {
+                var $tabs = jQuery('.ui-tabs:eq(0)').tabs();
+                $tabs.select($tabs.tabs('option', 'selected')+1);
+            }
+    </script>
+    
+    <p:remoteCommand name="rc" update="formsg:msgs" action="#{remoteCommandView.execute}" />
+    
+    
+    <p:growl id="growl" sticky="true" showDetail="true" />
+    <p:tabView  activeIndex="#{uiFormularioProcessManager.activeIndex}"   id="TabView" prependId="false">
+        <c:forEach items="#{uiFormularioManager.list}" var="form" varStatus="loop"> 
+            <p:tab id="#{form.idCampo}"  title="#{form.grupo}"  ariaLabel="dasd" >
+                
+                
+                
+                <c:forEach items="#{form.dtsubgrupoCollection}" var="panel"> 
+                    <p:panel  header="#{panel.subgrupo}" toggleable="true" style="width: 100%">
+                        <p:panelGrid columns="#{panel.detalle  ? '1':panel.columna}" id="#{panel.idSub}"  layout="grid" style="border:0px !important; background:none;width:100% "  styleClass="ui-panelgrid-blank form-group">
+                           
+                            <c:forEach items="#{uiFormularioProcessManager.getListFormulario(panel.dtformularioCollection)}" var="component"> 
+                                <c:choose>
+                                    <c:when test="#{component.tipo eq 'Detalle'}">
+                                        <ui:include src="componente/formDetalleLabel.xhtml">
+                                            <ui:param name="codPreg2" value="#{component.codPreg}"/>
+                                            <ui:param name="vlrMaximo2" value="#{component.vlrMaximo}"/>
+                                            <ui:param name="pregunta2" value="#{component.pregunta}"/>
+                                            <ui:param name="removeDetalle" value="#{component.remove}"/>
+                                        </ui:include>
+                                    </c:when>
+                                    <c:otherwise >
+                                        <p:outputLabel style="font-weight: bold"  value="#{component.NCodPreg}. #{component.pregunta}" for="#{component.codPreg}" />  
+                                        <h:panelGroup  styleClass="md-inputfield" > 
+                                            <p:outputLabel id="#{component.codPreg}"  value="#{uiFormularioProcessManager.traslateList(uiFormularioProcessManager.uiFormulario.formulario,component.codPreg,uiRespuestasFormManager.valRepuesta(component.codPreg)) }"/>
+                                        </h:panelGroup>
+                                    </c:otherwise>
+                                </c:choose>
+                            </c:forEach>    
+                        </p:panelGrid>
+                    </p:panel>
+                </c:forEach>
+                
+                <c:choose>
+                    <c:when test="#{uiFormularioManager.list.size() eq (loop.index)+1}">
+                        <table>
+                            <tr>
+                                <td><p:commandButton process="#{form.idCampo}" value="Atras"   icon="ui-icon-navigate-before" action="#{uiFormularioProcessManager.nextTabView(loop.index-1)}"  update="TabView formsg:msgs" title="Atras"/></td>
+                             </tr>
+                        </table>
+                    </c:when>  
+                    <c:when test="#{loop.index eq 0}">
+                         <table>
+                                <tr>
+                                    <td><p:commandButton action="#{uiFormularioProcessManager.nextTabView(loop.index+1)}" value="Siguiente"  icon="ui-icon-navigate-next"  update="TabView formsg:msgs" process="#{form.idCampo}" title="Siguiente"/></td>
+                                </tr>
+                            </table>
+                    </c:when> 
+                    <c:when test="#{loop.index ne 0}">
+                            <table>
+                                <tr>
+                                    <td><p:commandButton process="#{form.idCampo}" value="Atras"   icon="ui-icon-navigate-before" action="#{uiFormularioProcessManager.nextTabView(loop.index-1)}"  update="TabView formsg:msgs" title="Atras"/></td>
+                                    <td><p:commandButton process="#{form.idCampo}" value="Siguiente"  icon="ui-icon-navigate-next" action="#{uiFormularioProcessManager.nextTabView(loop.index+1)}" update="TabView formsg:msgs"  title="Siguiente"/></td>
+                                </tr>
+                            </table>
+                    </c:when>  
+                </c:choose>
+                
+            </p:tab>
+            
+            
+        </c:forEach>
+        
+            
+    </p:tabView> 
+    
+    
+
+</ui:composition>
+

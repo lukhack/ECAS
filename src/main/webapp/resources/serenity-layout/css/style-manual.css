@@ -1,0 +1,190 @@
+.layout-footer{
+            content: "";
+            background:none !important;
+            background: url('images/footer.png')  no-repeat !important;
+            height:130px !important;
+            background-repeat:no-repeat !important;
+            background-position: bottom right !important;
+            -webkit-box-shadow: none !important;
+            -moz-box-shadow:none !important;
+            box-shadow: none !important;
+            background-size: 500px 180px !important;
+            width:600px !important;
+            height:180px !important; 
+            border:none !important;
+    }
+    
+.ui-button{
+    background-color: rgb(96,163,172) !important;
+}
+
+.layout-menu > li.active-menuitem > a {
+    background-color: rgb(96,163,172) !important;
+}
+
+.layout-menu > li.active-menuitem > a {
+    background-color: rgb(96,163,172) !important;
+}
+
+.topbar-badge{
+    background-color: rgb(96,163,172) !important;
+
+}
+
+
+
+
+.profile-image-wrapper2{
+display:inline-block;
+vertical-align:middle;
+width:50px;height:50px;
+-moz-border-radius:50%;
+-webkit-border-radius:50%;
+border-radius:50%;
+}
+
+.ui-fileupload{
+background-color: transparent !important;
+}
+
+.layout-topbar{
+content: "";
+background:none !important;
+background: url('images/banner.png')  no-repeat 0 50% !important;
+height:130px !important;
+background-repeat:no-repeat !important;
+background-position: bottom right !important;
+-webkit-box-shadow: none !important;
+-moz-box-shadow:none !important;
+box-shadow: none !important;
+}
+
+
+
+
+
+.layout-breadcrumb{
+ padding-top: 110px !important;
+}
+
+.background-text{
+ background: rgba(220, 145, 27, .7);
+ padding:5px;
+ font-weight: bold;
+ left:-150px !important;
+ size:13em;
+}
+
+.layout-topbar-menu-background{
+ background: rgba(220, 145, 27, .7) !important;
+ padding:7px !important;
+ border-radius: 10px 10px 10px 10px;
+ -moz-border-radius: 10px 10px 10px 10px;
+ -webkit-border-radius: 10px 10px 10px 10px;
+ border: 0px solid #000000;
+
+ -webkit-box-shadow: 4px 2px 5px 0px rgba(0,0,0,0.75);
+ -moz-box-shadow: 4px 2px 5px 0px rgba(0,0,0,0.75);
+ box-shadow: 4px 2px 5px 0px rgba(0,0,0,0.75);
+}
+
+ .background{
+                        vertical-align:bottom;
+                        position: fixed;
+                        left: 0;
+                        right: 0;
+                        top:0;
+                        z-index: -1;
+                        width:100%;
+                        height:100vh;
+                        display: block;
+                        background-image: url("images/Diseno2/fondo 2.png");
+                        -moz-background-size: cover;
+                        -webkit-background-size: cover;
+                        background-size: cover;
+                        opacity: 0.5;
+                        /* background-repeat: no-repeat !important;
+                        -webkit-filter: blur(3px);
+                        -moz-filter: blur(3px);
+                        -o-filter: blur(3px);
+                        -ms-filter: blur(3px);
+                        filter: blur(3px);*/
+                    }
+      
+
+.columna10{
+    width: 10% !important;
+}
+
+.columna15{
+    width: 25% !important;
+}
+
+
+.columna20{
+    width: 20% !important;
+}
+
+.columna25{
+    width: 25% !important;
+}
+
+.columna30{
+    width: 30% !important;
+}
+
+.columna35{
+    width: 35% !important;
+}
+                    
+.columna40{
+    width: 40% !important;
+}
+
+.columna45{
+    width: 45% !important;
+}
+
+.columna50{
+    width: 50% !important;
+}
+
+.columna55{
+    width: 55% !important;
+}
+
+.columna60{
+    width: 60% !important;
+}
+
+.columna65{
+    width: 65% !important;
+}
+
+.columna70{
+    width: 70% !important;
+}
+
+.columna75{
+    width: 75% !important;
+}
+
+.columna80{
+    width: 80% !important;
+}
+
+.columna85{
+    width: 85% !important;
+}
+
+.columna90{
+    width: 90% !important;
+}
+
+.columna95{
+    width: 95% !important;
+}
+
+.columna100{
+    width: 100% !important;
+}

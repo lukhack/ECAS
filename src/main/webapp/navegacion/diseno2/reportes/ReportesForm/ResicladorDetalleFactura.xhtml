@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"          
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://java.sun.com/jsf/core"          
+      xmlns:ui="http://java.sun.com/jsf/facelets"   
+      xmlns:pt="http://xmlns.jcp.org/jsf/passthrough"    
+      xmlns:pm="http://primefaces.org/mobile" 
+      xmlns:o="http://omnifaces.org/ui"
+      xmlns:of="http://omnifaces.org/functions"
+      xmlns:pe="http://primefaces.org/ui/extensions"
+      xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
+     
+    
+    <p:panel header="Compras de #{prReporteController.mes}-#{prReporteController.anio}  por Recilador">
+                    <p:dataTable value="#{prReporteController.facturasDetalle}" scrollHeight="400" 
+                                 sortBy="#{dt.dtFacturaVentaid.fecha}" scrollWidth="98%"
+                                 scrollable ="true"   rowIndexVar="index" id="tbl4"   var="dt"
+                         paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink}  {LastPageLink} {RowsPerPageDropdown} {Exporters}"
+                        paginator="true" rows="100" rowsPerPageTemplate="100,200,500,1000,2000,5000,1000,#{prReporteController.facturasDetalle.size()}" style="margin-bottom:20px">
+                        
+                        <f:facet name="{Exporters}">
+                            <div style="position: relative">
+                               <h:commandLink title="Exportar a excel" style="position: absolute;right: 0;top: -30px;">
+                                   <img src="images/excel.png" width="35"/>
+                                   <p:dataExporter type="xls" target="tbl4" fileName="Datos_Compras" />
+                                   <ui:include src="../../param/param_one.xhtml"/>
+                               </h:commandLink>
+                           </div>
+                       </f:facet>
+                        
+                        <p:ajax event="filter"  global="false" ignoreAutoUpdate="true" />
+                         <p:column headerText="" width="30" filterBy="#{index+1}" filterMatchMode="contains" >
+                            <p:outputLabel value="#{index+1}"/>
+                        </p:column>
+                        <p:column headerText="Factura No" width="50" filterBy="#{dt.dtFacturaVentaid.consecutivo}" filterMatchMode="contains" >
+                            <p:outputLabel value="#{dt.dtFacturaVentaid.consecutivo.toUpperCase()}"/>
+                        </p:column>
+                        <p:column headerText="Fecha" width="70" filterBy="#{dt.dtFacturaVentaid.fecha}" filterMatchMode="contains" >
+                            <p:outputLabel value="#{dt.dtFacturaVentaid.fecha}"/>
+                        </p:column>
+                        <p:column headerText="Documento" width="80" filterBy="#{dt.dtFacturaVentaid.tercero.documento}" filterMatchMode="contains" >
+                            <p:outputLabel value="#{dt.dtFacturaVentaid.tercero.documento}"/>
+                        </p:column>
+                        <p:column headerText="Recolector" width="100"  filterBy="#{dt.dtFacturaVentaid.tercero.dtterceronatural.nombres} #{dt.dtFacturaVentaid.tercero.dtterceronatural.apellidos}" filterMatchMode="contains">
+                            <p:outputLabel value="#{dt.dtFacturaVentaid.tercero.dtterceronatural.nombres} #{dt.dtFacturaVentaid.tercero.dtterceronatural.apellidos}"/>
+                        </p:column>
+                        <p:column headerText="Material Id" width="80" filterBy="#{dt.materialid.material.dtmagrupomaterial.id}" filterMatchMode="contains">
+                            <h:outputText value='#{dt.materialid.material.dtmagrupomaterial.id}' />
+                        </p:column>
+
+                        <p:column headerText="Material Grupo" width="80" filterBy="#{dt.materialid.material.dtmagrupomaterial.nombre.toUpperCase()}" filterMatchMode="contains">
+                            <h:outputText value='#{dt.materialid.material.dtmagrupomaterial.nombre.toUpperCase()}' />
+                        </p:column>
+
+                        <p:column headerText="Material" width="80" filterBy="#{dt.materialid.material.material.toUpperCase()}" filterMatchMode="contains">
+                            <h:outputText value='#{dt.materialid.material.material.toUpperCase()}' />
+                        </p:column>
+
+                        <p:column headerText="Convenio del Material" width="80" filterBy="#{dt.terceroconvenio_id.dttercerojuridico.razonSocial}" filterMatchMode="contains">
+                            <h:outputText value='#{dt.terceroconvenio_id.dttercerojuridico.razonSocial}' />
+                        </p:column>
+                        
+                        <p:column headerText="Medio Transporte" width="80" filterBy="#{dt.dtFacturaVentaid.dttransporte_id.mediotransporte}" filterMatchMode="contains" >
+                            <p:outputLabel value="#{dt.dtFacturaVentaid.dttransporte_id.mediotransporte}"/>
+                        </p:column>
+                        <p:column headerText="Vehiculo Placas" width="70" filterBy="#{dt.dtFacturaVentaid.placavehiculo}" filterMatchMode="contains" >
+                            <p:outputLabel value="#{dt.dtFacturaVentaid.placavehiculo}"/>
+                        </p:column>
+                        
+                        
+                        <p:column headerText="Valor" visible="#{prReporteController.tipoFactura eq 1?'true':'false'}"  width="70" filterBy="#{dt.valor}" filterMatchMode="contains">
+                            <p:outputLabel value="#{dt.valor}"><f:convertNumber  /> </p:outputLabel>
+                        </p:column>
+                        <p:column headerText="Peso Total(Kg)" width="70" filterBy="#{dt.cantidad}" filterMatchMode="contains">
+                            <p:outputLabel value="#{dt.cantidad}"><f:convertNumber  /> </p:outputLabel>
+                        </p:column>
+                        <p:column headerText="Total" width="70" visible="#{prReporteController.tipoFactura eq 1?'true':'false'}"  filterBy="#{dt.cantidad * dt.valor}" filterMatchMode="contains">
+                            <p:outputLabel value="#{dt.cantidad * dt.valor}"><f:convertNumber  /> </p:outputLabel>
+                        </p:column>
+                        
+                        
+                        <p:columnGroup type="footer">
+                                <p:row>
+                                    <p:column style="font-weight: bold !important;"  colspan="2" footerText="Total Peso(Kg)" />
+                                    <p:column  colspan="5" style="text-align: right" >
+                                        <f:facet name="footer">
+                                            <h:outputText value="#{prReporteController.facturasDetalle.stream().map(item->(item.cantidad)).sum()}">
+                                              <f:convertNumber pattern="##,###"  />
+                                          </h:outputText>
+                                        </f:facet>
+                                    </p:column>
+                                </p:row>
+                                <p:row>
+                                    <p:column style="font-weight: bold !important"  colspan="2" footerText="Total Pesos($)" />
+                                    <p:column  colspan="5" style="text-align: right" >
+                                        <f:facet name="footer">
+                                            <h:outputText value="#{prReporteController.facturasDetalle.stream().map(item->(item.cantidad * item.valor)).sum()}">
+                                              <f:convertNumber pattern="##,###"  />
+                                          </h:outputText>
+                                        </f:facet>
+                                    </p:column>
+                                </p:row>
+                        </p:columnGroup>
+                        
+                        
+                        
+                    </p:dataTable>
+                </p:panel>
+</ui:composition>
+
+

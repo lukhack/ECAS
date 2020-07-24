@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"          
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://java.sun.com/jsf/core"          
+      xmlns:ui="http://java.sun.com/jsf/facelets"   
+      xmlns:pt="http://xmlns.jcp.org/jsf/passthrough"    
+      xmlns:pm="http://primefaces.org/mobile" 
+      xmlns:o="http://omnifaces.org/ui"
+      xmlns:of="http://omnifaces.org/functions"
+      xmlns:pe="http://primefaces.org/ui/extensions"
+      xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
+     
+     <style>
+        .ui-selectonemenu-panel{
+            z-index:999999999 !important;
+        }
+        
+        .black-button{
+           border-radius: 0px 0px 0px 0px !important;
+            -moz-border-radius: 0px 0px 0px 0px !important;
+            -webkit-border-radius: 0px 0px 0px 0px !important;
+            border: 0px none #ffffff !important;
+            background-color: transparent !important;
+            color: #000 !important;
+            -webkit-box-shadow: 0px 0px 0px 0px rgba(0,0,0,0.75)  !important;
+            -moz-box-shadow: 0px 0px 0px 0px rgba(0,0,0,0.75)  !important;
+            box-shadow: 0px 0px 0px 0px rgba(0,0,0,0.75)  !important;
+        }
+        
+        .ui-selectonemenu-panel{
+            z-index: 999999999 !important;
+        }
+        
+        
+        .emp1 .fc-content {
+            background: orange;
+        }
+        .emp2 .fc-content {
+           background: green;
+         }
+         
+        .emp3 .fc-content {
+           background: graytext;
+         }
+
+         .emp4 .fc-content {
+            background: #607D8B;
+        }
+        
+        .emp5 .fc-content {
+            background: #006de5;
+            color: white;
+        }
+        
+        .emp6 .fc-content {
+            background: green;
+            color: white;
+        }
+    </style>
+     
+    <h:form  id="frmApp"  >
+        <h:messages/>
+         
+        <p:outputPanel id="panelReferencia" >
+            <p:panel header="Filtro por desperdicios">
+                <p:panelGrid   columns="3" id="pnTercero"  styleClass="ui-panelgrid-blank"  style="width:100%;background-color: white" columnClasses="columna35, columna30, columna35, columna35">
+                    <p:outputLabel value="Fecha Inicio" style="font-weight:bold;font-size:16px"/>
+                    <p:outputLabel value="Fecha Fin" style="font-weight:bold;font-size:16px"/>
+                    <p:commandButton value="Buscar" icon="fa fa-filter" process="@form:pnTercero" update="@form:tblRecolector formsg:msgs" action="#{prReporteController.reporteDesperdicios()}"/>
+                   
+                    <p:calendar  showOn="button" value="#{prReporteController.fechaInicio}"  pattern="dd-MM-yyyy" mask="true"/>
+                    <p:calendar  showOn="button"  value="#{prReporteController.fechafin}" pattern="dd-MM-yyyy" mask="true"/>
+                </p:panelGrid>
+                <p:dataTable value="#{prReporteController.desperdiciosDetalle}"   rowIndexVar="index" id="tblRecolector"   var="dt"
+                         paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink}  {LastPageLink} {RowsPerPageDropdown} {Exporters}"
+                        paginator="true" rows="100" rowsPerPageTemplate="100,200,500,1000,2000,5000,1000,#{prReporteController.facturasDetalle.size()}" style="margin-bottom:20px;width: 100%">
+                        
+                        <f:facet name="{Exporters}">
+                            <div style="text-align:right;padding-top: 5px;">
+                                <h:commandLink>
+                                    <img src="images/excel.png" width="24"/>
+                                    <p:dataExporter type="xls" target="tbl3" fileName="Datos" />
+                                </h:commandLink>
+                            </div>
+                        </f:facet>
+                        
+                        <p:ajax event="filter"  global="false" ignoreAutoUpdate="true" />
+                         <p:column headerText="No." width="30" filterBy="#{index+1}" filterMatchMode="contains" >
+                            <p:outputLabel value="#{index+1}"/>
+                        </p:column>
+                        <p:column headerText="Cod recolección" width="80" filterBy="#{dt.id}" filterMatchMode="contains" >
+                            <p:outputLabel value="#{dt.id}"/>
+                        </p:column>
+                        <p:column headerText="Fecha" width="80" filterBy="#{dt.fecharecoleccion}" filterMatchMode="contains" >
+                            <p:outputLabel value="#{dt.fecharecoleccion}"/>
+                        </p:column>
+                        <p:column headerText="Encargado"  filterBy="#{dt.encargado_id.dtterceronatural.nombres} #{dt.encargado_id.dtterceronatural.apellidos}" filterMatchMode="contains" >
+                            <p:outputLabel value="#{dt.encargado_id.dtterceronatural.nombres} #{dt.encargado_id.dtterceronatural.apellidos}"/>
+                        </p:column>
+                        <p:column headerText="Vehiculo Placas" width="80" filterBy="#{dt.placavehiculorecolector}" filterMatchMode="contains" >
+                            <p:outputLabel value="#{dt.placavehiculorecolector}"/>
+                        </p:column>
+                        <p:column headerText="Observación"  filterBy="#{dt.observacion}" filterMatchMode="contains" >
+                            <p:outputLabel value="#{dt.observacion}"/>
+                        </p:column>
+                        <p:column headerText="Cantidad(kg)" width="80" style="text-align: right"  filterBy="#{dt.cantidad}" filterMatchMode="contains" >
+                            <p:outputLabel value="#{dt.cantidad}" />
+                        </p:column>
+                        <p:columnGroup type="footer">
+                                <p:row>
+                                    <p:column style="font-weight: bold !important;font-size:24px;"  colspan="6" footerText="Total ($)" />
+                                    <p:column  colspan="1" style="text-align: right" >
+                                        <f:facet name="footer">
+                                            <h:outputText style="font-size:24px;font-weight:bold" value="#{prReporteController.desperdiciosDetalle.stream().map(item->item.cantidad).sum()}">
+                                              <f:convertNumber pattern="##,###"  />
+                                          </h:outputText>
+                                        </f:facet>
+                                    </p:column>
+                                </p:row>
+                        </p:columnGroup>
+                    </p:dataTable>
+            </p:panel>
+        </p:outputPanel>
+        
+    </h:form>
+</ui:composition>
+
+

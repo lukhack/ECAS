@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"          
+      xmlns:p="http://primefaces.org/ui"          
+      xmlns:ui="http://java.sun.com/jsf/facelets"       >
+     
+    <p:dataTable var="dt" id="dtDatosDetalle" 
+                         rowIndexVar="rowIndex"  scrollable="true" scrollHeight="400"  style="height: 400px" 
+            value='#{dtMaFacturacionCotroller.obj.dtfacturadetalleList}'
+            filteredValue='#{dtMaFacturacionDetalleController.listFilter}'>
+            <p:ajax event="filter"  process="@this" global="true" ignoreAutoUpdate="true"/>
+            <ui:include src="../../../param/param_one.xhtml"/>
+
+            <p:column headerText="No" width="10%"  >
+                <h:outputText  value="#{dt.iddetalleFactura eq null?rowIndex+1:dt.iddetalleFactura}" />
+            </p:column>
+            <p:column headerText="Referencia" width="100" filterMatchMode="contains">
+                <h:outputText value='#{dt.materialid.material.codReferencia}' />
+            </p:column> 
+            <p:column headerText="Material" width="100"  filterMatchMode="contains">
+                <h:outputText value='#{dt.materialid.material.material}' />
+            </p:column> 
+            <p:column headerText="Cantidad(Kg)" width="100" filterMatchMode="contains">
+                <h:outputText value='#{dt.cantidad}' />
+            </p:column> 
+            <p:column headerText="Costo(Pesos)" width="100" filterMatchMode="contains">
+                <h:outputText value='#{dt.valor}' />
+            </p:column> 
+            <p:column headerText="Total" width="100">
+                <h:outputText value='#{(dt.cantidad * dt.valor)}' />
+            </p:column>
+    </p:dataTable>
+        
+    <p:panelGrid  id="pnTotales2" columns="2"  styleClass="ui-panelgrid-blank"    layout="grid" style="width:98%;background: gainsboro;padding:10px" columnClasses="columna70, columna30">
+        <h:panelGroup styleClass="md-inputfield">
+            <p:inputTextarea id="txtDescripcion2" rows="7" style="background-color: white" value="#{dtMaFacturacionCotroller.obj.descripcion}" />
+            <p:outputLabel for="txtDescripcion2" value="Descripción"/>
+        </h:panelGroup>  
+        <p:panelGrid  columns="2"  styleClass="ui-panelgrid-blank"   layout="grid" style="width:100%" columnClasses="columna40, columna60">
+            <p:outputLabel for="txtSubtotal2" value="SubTotal"/>
+            <p:inputNumber id="txtSubtotal2"  style="background-color: white;padding:5px" readonly="true" decimalPlaces="2" value="#{dtMaFacturacionCotroller.obj.subTotal}" required="true"   maxlength="45"/>
+            <p:outputLabel for="txtDes2" value="Descuento"/>
+            <h:panelGroup   styleClass="md-inputfield">
+                <p:inputNumber id="txtDes2"  decimalPlaces="2"  style="background-color: white;padding:5px" value="#{dtMaFacturacionCotroller.obj.descuento}"  maxlength="45">
+                    <p:ajax event="change" global="false"  listener="#{dtMaFacturacionCotroller.total()}" update="@form:panelTotal"/>
+                    <ui:include src="../../../param/param_one.xhtml"/>
+                </p:inputNumber>
+            </h:panelGroup> 
+            <p:outputLabel for="txtTotal2" value="Total"/>
+            <h:panelGroup  id="panelTotal2"  styleClass="md-inputfield">
+                <p:inputNumber id="txtTotal2"  decimalPlaces="2"  style="background-color: white;padding:5px" readonly="true"  value="#{dtMaFacturacionCotroller.obj.total}" required="true"   maxlength="45"/>
+            </h:panelGroup> 
+        </p:panelGrid>   
+    </p:panelGrid> 
+</ui:composition>
+
+

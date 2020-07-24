@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"          
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://java.sun.com/jsf/core"          
+      xmlns:ui="http://java.sun.com/jsf/facelets"   
+      xmlns:pt="http://xmlns.jcp.org/jsf/passthrough"    
+      xmlns:pm="http://primefaces.org/mobile"
+      xmlns:pe="http://primefaces.org/ui/extensions"
+      xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
+     
+    
+    <p:panelGrid  id="pnForm" columns="2"  styleClass="ui-panelgrid-blank"   layout="grid" style="width:100%" columnClasses="columna75, columna25">
+        <h:panelGroup styleClass="md-inputfield">
+            <p:inputText id="txtPrefijo"  value="#{dtMaTipoFacturaController.obj.tipo}" required="true"   maxlength="45"/>
+            <p:outputLabel for="txtPrefijo" value="Tipo de facturación"/>
+        </h:panelGroup>   
+        <p:outputPanel style="width:100%;text-align:right">
+            <p:commandLink process="pnForm" id="btnAnadir"  update="@form:dtDatos @form:pnForm formsg:msgs"    title="Añadir" action="#{dtMaTipoFacturaController.reinit}"><i style="font-size:2.8em;color: #607D8B" class="material-icons">playlist_add</i>
+                <p:collector value="#{dtMaTipoFacturaController.obj}" addTo="#{dtMaTipoFacturaController.list}"  unique="true" />
+               <f:param name="name" value="#{param.name}" /><f:param name="path" value="#{param.path}" />
+            </p:commandLink> 
+        </p:outputPanel>
+    </p:panelGrid> 
+                     
+</ui:composition>
+

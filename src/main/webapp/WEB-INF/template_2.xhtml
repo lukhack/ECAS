@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui"
+      lang="en"
+      xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
+
+    <h:head>
+       
+        <f:facet name="first">
+            <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"/>
+            <meta name="apple-mobile-web-app-capable" content="yes" />
+        </f:facet>
+        <title><ui:insert name="title">ecas</ui:insert></title>
+        <h:outputScript name="js/nanoscroller.js" library="serenity-layout" />
+        <h:outputScript name="js/layout.js" library="serenity-layout" />
+        <h:outputScript name="js/ripple.js" library="serenity-layout" />
+        <h:outputScript name="js/filesUpload.js" library="serenity-layout" />
+        <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAAsbelbQ71UwxP3ut3SiozFDWHneQm5J4"/>
+        <ui:insert name="head"/>
+        
+        <script>
+            PrimeFaces.locales['es'] = {
+                    closeText: 'Cerrar',
+                    prevText: 'Anterior',
+                    nextText: 'Siguiente',
+                    monthNames: ['Enero','Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'],
+                    monthNamesShort: ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun','Jul','Ago','Sep','Oct','Nov','Dic'],
+                    dayNames: ['Domingo','Lunes','Martes','Miércoles','Jueves','Viernes','Sábado'],
+                    dayNamesShort: ['Dom','Lun', 'Mar', 'Mie', 'Jue', 'Vie', 'Sab'],
+                    dayNamesMin: ['D','L','M','M','J','V','S'],
+                    weekHeader: 'Semana',
+                    firstDay: 1,
+                    isRTL: false,
+                    showMonthAfterYear: false,
+                    yearSuffix: '',
+                    timeOnlyTitle: 'Sólo hora',
+                    timeText: 'Tiempo',
+                    hourText: 'Hora',
+                    minuteText: 'Minuto',
+                    secondText: 'Segundo',
+                    currentText: 'Fecha actual',
+                    ampm: false,
+                    month: 'Mes',
+                    week: 'Semana',
+                    day: 'Día',
+                    allDayText : 'Todo el día'
+            };
+        </script>
+        <style>
+            .ui-datatable th{
+                vertical-align: bottom !important;
+            }
+        </style>
+    </h:head>
+    <h:body>
+        <c:choose>
+            <c:when  test="#{usuarioB.checkUsuario() eq true}">
+                    <f:event type="preRenderView" listener="#{facesContext.externalContext.response.sendRedirect('login.xhtml')}" />
+            </c:when>
+            <c:otherwise>
+                <div class="layout-wrapper  layout-menu-horizontal">
+                    <ui:include src="./Diseno/#{config.TEMPLATE_DISENO}/sidebar.xhtml" />
+                    <div class="layout-main">
+                        <ui:include src="./Diseno/#{config.TEMPLATE_DISENO}/topbar.xhtml" />
+                        <div class="layout-breadcrumb" >
+                            <p:panelGrid columns="2" styleClass="ui-panelgrid-blank" columnClasses="columna" layout="grid"  style="top:-15px;padding:0px !important;margin:0px !important">
+                                <p:outputPanel style="padding:0px !important;margin:0px !importan">
+                                    <ul><ui:insert name="breadcrumb"/></ul>
+                                </p:outputPanel>
+                                <p:outputPanel style="width:100%;">
+                                    <ui:insert name="actionEvent"/>
+                                </p:outputPanel>
+                            </p:panelGrid>
+                        </div>
+                        <div class="layout-content" >
+                            <div style="margin-top:98px">
+                                <div class="plataforma-body" />
+                            <ui:insert name="content" />
+                            </div>
+                        </div>
+                        <ui:include src="./Diseno/#{config.TEMPLATE_DISENO}/footer.xhtml" />
+                        
+                        <div class="layout-main-mask"></div>
+                    </div>
+                </div>
+                <p:ajaxStatus style="width:32px;height:32px;position:fixed;right:7px;bottom:7px">
+                    <f:facet name="start">
+                       <i class="fa fa-circle-o-notch fa-spin ajax-loader" aria-hidden="true"></i>
+                    </f:facet>
+                    <f:facet name="complete">
+                       <h:outputText value="" />
+                   </f:facet>
+                </p:ajaxStatus>
+                <ui:include src="./Diseno/grow.xhtml" />
+                <h:outputStylesheet name="css/nanoscroller.css" library="serenity-layout" />
+                <h:outputStylesheet name="css/ripple.css" library="serenity-layout" />
+                <h:outputStylesheet name="css/layout-#{guestPreferences.layout}.css" library="serenity-layout" />
+                <ui:include src="./Diseno/#{config.TEMPLATE_DISENO}/dialogs.xhtml"/>
+                <style>
+                    .plataforma-body{
+                        vertical-align:bottom;
+                        position: fixed;
+                        left: 0;
+                        right: 0; 
+                        top: 0;
+                        z-index: -1;
+
+                        background-image: url(images/Diseno2/plataforma/fondo.jpg);
+                        background-size: cover;
+
+                        width: 100%;
+                        height: 100vh;
+                         background-repeat: no-repeat !important;
+
+                    }
+                </style>
+                <div class="background"></div>
+                <h:outputStylesheet name="css/style-manual.css" library="serenity-layout"/>
+            </c:otherwise>
+        </c:choose> 
+    </h:body>
+
+</html>

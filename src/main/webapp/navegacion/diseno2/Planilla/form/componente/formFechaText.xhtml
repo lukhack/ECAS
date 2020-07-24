@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"          
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://java.sun.com/jsf/core"          
+      xmlns:ui="http://java.sun.com/jsf/facelets"   
+      xmlns:pt="http://xmlns.jcp.org/jsf/passthrough"    
+      xmlns:pm="http://primefaces.org/mobile"
+      xmlns:pe="http://primefaces.org/ui/extensions"
+      xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
+   
+    <p:outputLabel value="#{ncodPreg}. #{pregunta}" for="#{codPreg}" /> 
+    
+    <h:panelGroup styleClass="md-inputfield"> 
+        <p:calendar   id="#{codPreg}" required="#{obligatorio}" navigator="true" requiredMessage="valor requerido en #{pregunta}"  pattern="#{parameter}" locale="es"   />
+        <label>#{pregunta}</label>
+        <p:message for="#{codPreg}" />  
+    </h:panelGroup>
+</ui:composition>
+

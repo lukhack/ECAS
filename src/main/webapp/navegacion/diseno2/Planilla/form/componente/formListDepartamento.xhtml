@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"          
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://java.sun.com/jsf/core"          
+      xmlns:ui="http://java.sun.com/jsf/facelets"       >
+   <p:outputLabel value="#{ncodPreg }. #{pregunta}" for="#{codPreg}" /> 
+        <h:panelGroup > 
+            <p:selectOneMenu  id="#{codPreg}"  filter="true"
+                          required="#{obligatorio}" requiredMessage="valor requerido en #{pregunta}" >
+                <f:selectItem  itemLabel="Seleccione..." itemValue="#{null}" noSelectionOption="true" /> 
+            <f:selectItems value="#{maDepartamentoManager.list}" var="selet" itemValue="#{selet.id}" itemLabel="#{selet.departamento}" /> 
+        </p:selectOneMenu>
+        <p:message for="#{codPreg}" />  
+    </h:panelGroup>
+                      
+</ui:composition>
+

@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"          
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://java.sun.com/jsf/core"          
+      xmlns:ui="http://java.sun.com/jsf/facelets"   
+      xmlns:pt="http://xmlns.jcp.org/jsf/passthrough"    
+      xmlns:pm="http://primefaces.org/mobile"
+      xmlns:pe="http://primefaces.org/ui/extensions"
+      xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
+    <style>
+        .ui-datepicker {
+             z-index:999999999 !important   ;
+            
+        }
+    </style>
+        <p:panelGrid  id="pnForm" columns="1"  styleClass="ui-panelgrid-blank"   layout="grid" style="width:100%" columnClasses="columna100">
+            <p:panelGrid  columns="2"  styleClass="ui-panelgrid-blank form-group"  style="width:100%" columnClasses="columna50, columna50">
+                <p:selectOneMenu value="#{uiPlanillaManager.obj.tipoIdentificacion}" maxlength="15" required="true"  requiredMessage="Valor requerido en tipo de documento">
+                    <f:selectItem itemValue="#{null}" itemLabel="Tipo de documento..." noSelectionOption="true"></f:selectItem>
+                        <f:selectItem itemValue="CC" itemLabel="CC"></f:selectItem>
+                        <f:selectItem itemValue="CE" itemLabel="CE"></f:selectItem>
+                        <f:selectItem itemValue="RC" itemLabel="RC"></f:selectItem>
+                        <f:selectItem itemValue="TI" itemLabel="TI"></f:selectItem>
+                        <f:selectItem itemValue="PA" itemLabel="PA"></f:selectItem>                    
+                        <f:selectItem itemValue="PEP" itemLabel="PEP"></f:selectItem>
+                </p:selectOneMenu>
+                <h:panelGroup styleClass="md-inputfield">
+                    <p:inputText value="#{uiPlanillaManager.obj.numeroIdentificacion}" maxlength="15" required="true"  requiredMessage="Valor requerido en documento"/>
+                    <label>Cc</label>
+                </h:panelGroup>   
+            </p:panelGrid> 
+            <p:panelGrid  columns="2"  styleClass="ui-panelgrid-blank form-group"  style="width:100%" columnClasses="columna50, columna50">
+                <h:panelGroup styleClass="md-inputfield">
+                    <p:inputText value="#{uiPlanillaManager.obj.primerNombre}"  />
+                    <label>Primer nombre</label>
+                </h:panelGroup>   
+                <h:panelGroup styleClass="md-inputfield" >
+                    <p:inputText required="true" maxlength="45" value="#{uiPlanillaManager.obj.segundoNombre}"  requiredMessage="Valor requerido en Nombre o Razon social"/>
+                    <label>Segundo nombre</label>
+                </h:panelGroup>
+            </p:panelGrid>
+            <p:panelGrid  columns="2"  styleClass="ui-panelgrid-blank form-group"  style="width:100%" columnClasses="columna50, columna50">
+                <h:panelGroup styleClass="md-inputfield">
+                    <p:inputText value="#{uiPlanillaManager.obj.primerApellido}" />
+                    <label>Primer Apellido</label>
+                </h:panelGroup>   
+                <h:panelGroup styleClass="md-inputfield" >
+                    <p:inputText required="true" maxlength="45" value="#{uiPlanillaManager.obj.segundoApellido}"  requiredMessage="Valor requerido en Nombre o Razon social"/>
+                    <label>Segundo Apellido</label>
+                </h:panelGroup>
+            </p:panelGrid>
+            <p:panelGrid  columns="2"  styleClass="ui-panelgrid-blank form-group"  style="width:100%" columnClasses="columna50, columna50">
+                <h:panelGroup styleClass="md-inputfield" >
+                    <p:inputNumber  value="#{uiPlanillaManager.obj.edad}"  decimalPlaces="0" maxValue="110"/>
+                    <label>Edad</label>
+                </h:panelGroup>
+                <h:panelGroup styleClass="md-inputfield" >
+                    <p:calendar  value="#{uiPlanillaManager.obj.fechaNacimiento}" pattern="yyyy-MM-dd" maxlength="10"/>
+                    <label>Fecha de nacimiento</label>
+                </h:panelGroup>
+            </p:panelGrid>
+           <p:panelGrid  columns="2"  styleClass="ui-panelgrid-blank form-group"  style="width:100%" columnClasses="columna50, columna50">
+                <p:selectOneMenu value="#{uiPlanillaManager.obj.genero}" maxlength="15" required="true"  requiredMessage="Valor requerido en genero">
+                    <f:selectItem itemValue="#{null}" itemLabel="Genero..." noSelectionOption="true"></f:selectItem>
+                    <f:selectItem itemValue="M" itemLabel="Masculino"></f:selectItem>
+                    <f:selectItem itemValue="F" itemLabel="Femenino"></f:selectItem>
+                </p:selectOneMenu>
+               
+                <h:panelGroup styleClass="md-inputfield">
+                    <p:inputText value="#{uiPlanillaManager.obj.entidadAseguradora}" maxlength="100"/>
+                    <label>Entidad aseguradora</label>
+                </h:panelGroup>  
+                
+            </p:panelGrid>
+            <p:panelGrid  columns="2"  styleClass="ui-panelgrid-blank form-group"  style="width:100%" columnClasses="columna50, columna50">
+                <h:panelGroup styleClass="md-inputfield">
+                    <p:inputText value="#{uiPlanillaManager.obj.iuplanillacol}" maxlength="100"/>
+                    <label>Código fuente notificadora</label>
+                </h:panelGroup>  
+                <p:selectOneMenu  filter="true" filterMatchMode="contains" value="#{uiPlanillaManager.obj.idMunicipio}" converter="municipioConvert" maxlength="15" required="true"  requiredMessage="Valor requerido en Municipio">
+                    <f:selectItem itemValue="#{null}" itemLabel="Municipio..." noSelectionOption="true"></f:selectItem>
+                    <f:selectItems value="#{maMunicipioManager.list}" var="mn" itemValue="#{mn}" itemLabel="#{mn.municipio}(#{mn.idDepartamento.departamento})"></f:selectItems>
+                </p:selectOneMenu>
+            </p:panelGrid>
+
+            <p:panelGrid  columns="2"  styleClass="ui-panelgrid-blank form-group"  style="width:100%" columnClasses="columna50, columna50">
+                <h:panelGroup styleClass="md-inputfield">
+                    <p:inputText value="#{uiPlanillaManager.obj.iuplanillacol}" maxlength="100"/>
+                    <label>Dirección</label>
+                </h:panelGroup>
+                <p:selectOneMenu  value="#{uiPlanillaManager.obj.idEstadoPaciente}" converter="estadoPacienteConvert" maxlength="15" required="true"  requiredMessage="Valor requerido en estado paciente">
+                    <f:selectItem itemValue="#{null}" itemLabel="estado..." noSelectionOption="true"></f:selectItem>
+                    <f:selectItems value="#{uiEstadoPacienteManager.list}" var="est" itemValue="#{est}" itemLabel="#{est.estado}"></f:selectItems>
+                </p:selectOneMenu>
+            </p:panelGrid>    
+            <h2>Morfologia  del tumor</h2>
+            <p:dataTable value="#{uiPlanillaManager.obj.iuplanilladetalleList}" id="dtMorfologia"  var="dts" >
+                <f:facet name="header">
+                    <p:outputLabel value="Morfologia del tumor"/>
+                </f:facet>
+                <p:column headerText="Institución"><p:outputLabel value="#{dts.idInsticion.razonsocial}"/></p:column>
+                <p:column headerText="Fecha de Diagnóstico" ><p:outputLabel value="#{dts.fechaDiagnostico}"/></p:column>
+                <p:column headerText="Método Diagnóstico"><p:outputLabel value="#{dts.idDiagnostico.metodologia}-#{dts.idDiagnostico.descripcion}"/></p:column>
+                <p:column headerText="Ed" width="30"><p:commandButton icon="ui-icon-edit" update="@form:pnMorfologia" oncomplete="PF('dglTumor').show()" action="#{uiPlanillaManager.selectDetalle(dts)}" process="@this"/></p:column>
+            </p:dataTable>
+    </p:panelGrid> 
+    
+    <p:dialog widgetVar="dglTumor" modal="true"   header="Morfologia  del tumor" width="500" id="dglTumo"> 
+        <p:panelGrid columns="1" id="pnMorfologia"  styleClass="ui-panelgrid-blank"   layout="grid" style="width:100%" columnClasses="columna100">
+            <p:panelGrid  columns="2"  styleClass="ui-panelgrid-blank form-group"  style="width:100%" columnClasses="columna50, columna50">
+                <p:selectOneMenu  filter="true" autoWidth="false" panelStyle="width:500px !important;overflow: hidden !important" filterMatchMode="contains" value="#{uiPlanillaManager.detalle.idInsticion}" converter="terceroConvert" maxlength="15" required="true"  requiredMessage="Valor requerido en Municipio">
+                    <f:selectItem itemValue="#{null}" itemLabel="Institución que remite..." noSelectionOption="true"></f:selectItem>
+                    <f:selectItems value="#{uiTerceroManager.list}" var="ter" itemValue="#{ter}" itemLabel="#{ter.razonsocial})"></f:selectItems>
+                </p:selectOneMenu> 
+                <h:panelGroup styleClass="md-inputfield">
+                    <p:calendar value="#{uiPlanillaManager.detalle.fechaDiagnostico}" />
+                    <label>Fecha de Diagnóstico</label>
+                </h:panelGroup>  
+            </p:panelGrid>
+            <p:panelGrid  columns="2"  styleClass="ui-panelgrid-blank form-group"  style="width:100%" columnClasses="columna50, columna50">
+                <p:selectOneMenu  filter="true" autoWidth="false" filterMatchMode="contains" panelStyle="width:500px !important;" 
+                                  value="#{uiPlanillaManager.detalle.idDiagnostico}" converter="metodoDiagnosticoConvert" maxlength="15" required="true"  requiredMessage="Valor requerido en Municipio">
+                    <f:selectItem itemValue="#{null}" itemLabel="Método Diagnóstico..." noSelectionOption="true"></f:selectItem>
+                    <f:selectItems value="#{uiMetodoDiagnosticoManager.list}" var="met" itemValue="#{met}" itemLabel="#{met.metodologia}"></f:selectItems>
+                </p:selectOneMenu> 
+                <h:panelGroup styleClass="md-inputfield">
+                    <p:inputText value="#{uiPlanillaManager.detalle.lugarAnatopatologico}" maxlength="100"/>
+                    <label>Lugar anatomopatológico</label>
+                </h:panelGroup>  
+            </p:panelGrid>
+            <p:panelGrid  columns="2"  styleClass="ui-panelgrid-blank form-group"  style="width:100%" columnClasses="columna50, columna50">
+                <p:selectOneMenu  filter="true" filterMatchMode="contains" value="#{uiPlanillaManager.detalle.idLugarTumor}" converter="lateralidadConvert" maxlength="15" required="true"  requiredMessage="Valor requerido en lugar tumor">
+                    <f:selectItem itemValue="#{null}" itemLabel="Lateralidad..." noSelectionOption="true"></f:selectItem>
+                    <f:selectItems value="#{uiLateralidadManager.list}" var="lat" itemValue="#{lat}" itemLabel="#{lat.lugarOrgano}"></f:selectItems>
+                </p:selectOneMenu> 
+                <h:panelGroup styleClass="md-inputfield">
+                    <p:inputText value="#{uiPlanillaManager.detalle.lugarAnatopatologico}" maxlength="100"/>
+                    <label>Lugar anatomopatológico</label>
+                </h:panelGroup>  
+            </p:panelGrid>
+            <p:panelGrid  columns="2"  styleClass="ui-panelgrid-blank form-group"  style="width:100%" columnClasses="columna50, columna50">
+                <h:panelGroup styleClass="md-inputfield">
+                    <p:inputText value="#{uiPlanillaManager.detalle.codMorfoCIEO}" maxlength="100"/>
+                    <label>Código Topografía CIEO</label>
+                </h:panelGroup>  
+                <h:panelGroup styleClass="md-inputfield">
+                    <p:inputText value="#{uiPlanillaManager.detalle.codTopCIEO}" maxlength="100"/>
+                    <label>Código Morfología CIEO</label>
+                </h:panelGroup>  
+            </p:panelGrid>
+            <p:panelGrid  columns="2"  styleClass="ui-panelgrid-blank form-group"  style="width:100%" columnClasses="columna50, columna50">
+                <p:selectOneMenu  filter="true" filterMatchMode="contains" value="#{uiPlanillaManager.detalle.idCompoCIEO}" converter="comportaminetoCieoConvert" maxlength="15" required="true"  requiredMessage="Valor requerido en Municipio">
+                    <f:selectItem itemValue="#{null}" itemLabel="Comportamiento CIEO..." noSelectionOption="true"></f:selectItem>
+                    <f:selectItems value="#{uiComportaminetoCieoManager.list}" var="com" itemValue="#{com}" itemLabel="#{com.descripcion}"></f:selectItems>
+                </p:selectOneMenu> 
+                 <h:panelGroup styleClass="md-inputfield">
+                     <p:inputTextarea rows="3" value="#{uiPlanillaManager.detalle.diagnosticoMorfologico}" maxlength="100"/>
+                    <label>Diagnóstico Morfológico</label>
+                </h:panelGroup>   
+            </p:panelGrid>
+        </p:panelGrid>
+    </p:dialog>
+                      
+</ui:composition>
+

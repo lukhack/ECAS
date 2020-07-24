@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"          
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://java.sun.com/jsf/core"          
+      xmlns:ui="http://java.sun.com/jsf/facelets"   
+      xmlns:pt="http://xmlns.jcp.org/jsf/passthrough"    
+      xmlns:pm="http://primefaces.org/mobile"
+      xmlns:pe="http://primefaces.org/ui/extensions">
+    <div class="ui-g form-group" style="margin-bottom: 16px;">
+        <style>
+            .ui-tabs-panel, .ui-toolbarm .ui-grid-row{
+                padding:0px !important;
+                margin:0px !important;
+            }
+        </style>
+        <p:tabView id="tabDetalle" scrollable="true" cache="false" style="padding:0px !important;width: 100%;height: 300px !important">
+            <p:tab title="Colores" id="tabDetalle" >
+                <h:form id="frmColors">
+                    <ui:include src="detalle/colores.xhtml" />
+                </h:form>
+            </p:tab>
+            <p:tab title="Tallaje" id='tabTallaje'>
+                <h:form id="frmTallaje">
+                    <ui:include src="detalle/tallaje.xhtml" />
+                </h:form>
+            </p:tab>
+            <p:tab title="Imagenes" id="tabImages">
+                <h:form id="frmImagen">
+                 <ui:include src="detalle/Imagenes.xhtml" />
+                </h:form>
+            </p:tab>
+        </p:tabView>
+        
+        
+        
+     </div>   
+</ui:composition>
+
+

@@ -1,0 +1,52 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"          
+      xmlns:p="http://primefaces.org/ui"     
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:h="http://xmlns.jcp.org/jsf/html">
+    
+    <h:form id="formapp" onkeypress="if (event.keyCode == 13) { return false; }"> 
+        <p:outputPanel  styleClass="searchs">
+            <p:panelGrid columns="1"   layout="grid"   columnClasses="col1" styleClass="ui-panelgrid-blank" style="background-color: rgba(0,0,0,0) !important;width:350px !important;" >
+                <p:panelGrid styleClass="ui-panelgridtranparent" columns="2" columnClasses="columna90 columna10" >
+                    <p:selectOneMenu id="meterial" autoWidth="false" style="width:250px"   value="#{mapBean.meteriales}"  
+                                     converter="materialConvert" 
+                                     filter="true" filterMatchMode="contains">
+                            <f:selectItem itemLabel="Seleccione Material"  itemValue=""   noSelectionOption="true" />                                
+                            <f:selectItems value="#{dtMaMaterialesCategoriaController.list}" var="dep" itemLabel="#{dep.material}" itemValue="#{dep}" />
+                            <p:ajax listener="#{mapBean.chanlistenSelecOneMenu}" update="formoverlay formEncuestaBarrio" />
+                    </p:selectOneMenu>
+                </p:panelGrid>
+                      
+                
+                <p:column >
+                    <p:outputPanel style="width:102%;text-align: right">
+                        <p:splitButton   icon="fa fa-map" title="Tipo de Mapa"  disabled='#{!maDatosMaestroBean.rederMap?"true":"false"}' styleClass="comp-button" style="text-align: left">
+                            <p:menuitem value="ROADMAP" actionListener='#{mapBean.selectOptionMapListener("ROADMAP")}' update="formmap:gmap"  oncomplete="reloadMap()" />
+                            <p:menuitem value="SATELLITE" actionListener='#{mapBean.selectOptionMapListener("SATELLITE")}' update="formmap:gmap"  oncomplete="reloadMap()"/>
+                            <p:menuitem value="HYBRID" actionListener='#{mapBean.selectOptionMapListener("HYBRID")}'  update="formmap:gmap"  oncomplete="reloadMap()"/>
+                            <p:menuitem value="TERRAIN" actionListener='#{mapBean.selectOptionMapListener("TERRAIN")}' update="formmap:gmap"  oncomplete="reloadMap()"/>
+                        </p:splitButton>
+                    </p:outputPanel>
+                </p:column>
+            </p:panelGrid> 
+        </p:outputPanel>
+        <p:panelGrid columns="1"  layout="grid"     styleClass="contenTools" >
+            </p:panelGrid>
+        
+        
+        
+    </h:form>    
+    
+    
+    
+     <!--
+            
+           
+     
+     -->
+    
+     
+    
+        
+          
+</ui:composition>

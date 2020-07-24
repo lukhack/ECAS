@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"          
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://java.sun.com/jsf/core"          
+      xmlns:ui="http://java.sun.com/jsf/facelets"   
+      xmlns:pt="http://xmlns.jcp.org/jsf/passthrough"    
+      xmlns:pm="http://primefaces.org/mobile"
+      xmlns:pe="http://primefaces.org/ui/extensions"
+      xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
+    
+     <style>
+        .ui-selectonemenu-panel{
+            z-index:999999999 !important;
+        }
+    </style>
+    
+    <h:form id="frmReferencia">
+        <p:commandButton update="@this" ajax="true" immediate="true" value="data">
+            
+        </p:commandButton>
+        <p:outputPanel id="panelReferencia">
+            <h2>#{uiFacturacionManager.titulo}</h2>
+            <div class="ui-g ui-fluid">
+                <div class="ui-g-12" >
+                  <div class="card" style="min-height:270px;">
+                    <p:panelGrid  columns="1"  styleClass="ui-panelgrid-blank" layout="grid" style="width:100%">
+                          <p:panelGrid columns="1" styleClass="ui-panelgrid-blank" layout="grid" style="width:100%">
+                              <p:dataTable var="dt" id="tbtipolayers" 
+                               paginator="true"
+                               scrollable="true"
+                               scrollHeight="230"
+                               paginatorPosition="bottom"
+                               paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                               rowsPerPageTemplate="5,10,20,50,100"
+                               scrollWidth="true"
+                               rows="20"
+                               rowIndexVar="rowIndex"
+                               value="#{uiFacturacionManager.List(uiFacturacionManager.tipoFacturacion,uiFacturacionManager.estado)}">
+                                <f:facet name="header" >
+                                   #{uiFacturacionManager.titulo}
+                                </f:facet>
+                                <p:column headerText="No" width="30" >
+                                    <h:outputText  value="#{rowIndex+1}" />
+                                </p:column>
+                                <p:column headerText="Número de #{uiFacturacionManager.titulo}" width="50">
+                                    <h:outputText value="#{dt.consecutivo}" />
+                                </p:column>    
+                                <p:column headerText="Fecha Factura" width="80">
+                                    <h:outputText value="#{dt.fechaFactura}"><f:convertDateTime pattern="yyyy-MM-dd"/></h:outputText>
+                                </p:column>  
+                                <p:column headerText="Nit" width="80">
+                                    <h:outputText value="#{dt.iditercero.nitocedula}"><f:convertDateTime pattern="yyyy-MM-dd"/></h:outputText>
+                                </p:column>  
+                                <p:column headerText="Tercero" width="80">
+                                    <h:outputText value="#{dt.iditercero.razonsocial}"><f:convertDateTime pattern="yyyy-MM-dd"/></h:outputText>
+                                </p:column>  
+                                <p:column headerText="STotal" width="80">
+                                    <h:outputText value="#{dt.neto}"></h:outputText>
+                                </p:column>   
+                                <p:column headerText="Estado" width="80">
+                                    <h:outputText value="#{dt.idfacturaEstado.estado}"></h:outputText>
+                                </p:column>  
+                                <p:column style="width:25px;padding:0 !important" selectRow="false"  >
+                                    <p:commandButton process="@this" ajax="true" update="printFacturas"  
+                                                    action="#{uiFacturacionManager.selectObjec(dt)}" 
+                                                    onclick="PF('printFactura').show()"  icon="ui-icon-local-printshop" 
+                                                    title="Imprimir Factura" style="width:100%;margin:0px !important;border-radius:0 !important;"  >
+                                    </p:commandButton>
+                                </p:column>
+                                  <p:column  style="width:25px;padding:0 !important" selectRow="false"  >
+                                    <p:commandButton style="width:100%;margin:0px !important;border-radius:0 !important;"  process="@this"   
+                                                     action="#{uiFacturacionManager.anular(dt)}"  icon="ui-icon-delete" title="Cancelar Factura"><p:confirm header="Cofirmación" message="Esta seguro que desea anular la factura?" icon="ui-icon-alert" /></p:commandButton>
+                                </p:column>
+                              </p:dataTable>
+                        </p:panelGrid>
+                    </p:panelGrid>
+                  </div>
+                </div>
+            </div>
+        </p:outputPanel>  
+        <p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
+            <p:commandButton value="Si" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+            <p:commandButton value="No" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+        </p:confirmDialog>
+    </h:form> 
+    
+   <p:dialog modal="true" showHeader="true"  header="Impresión de factura"  showEffect="fade"  widgetVar="printFactura"  draggable="true" height="400" closable="true" style="height: 400px;width:100%; max-width:800px;">
+        <p:outputPanel id="printFacturas">
+            <ui:include src="subMenu/sello.xhtml"/>
+        </p:outputPanel>
+    </p:dialog>
+    
+    
+</ui:composition>
+
+

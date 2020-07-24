@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"          
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://java.sun.com/jsf/core"          
+      xmlns:ui="http://java.sun.com/jsf/facelets"   
+      xmlns:pt="http://xmlns.jcp.org/jsf/passthrough"    
+      xmlns:pm="http://primefaces.org/mobile" 
+      xmlns:o="http://omnifaces.org/ui"
+      xmlns:of="http://omnifaces.org/functions"
+      xmlns:pe="http://primefaces.org/ui/extensions"
+      xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
+     
+     <style>
+        .ui-selectonemenu-panel{
+            z-index:999999999 !important;
+        }
+        
+        .black-button{
+           border-radius: 0px 0px 0px 0px !important;
+            -moz-border-radius: 0px 0px 0px 0px !important;
+            -webkit-border-radius: 0px 0px 0px 0px !important;
+            border: 0px none #ffffff !important;
+            background-color: transparent !important;
+            color: #000 !important;
+            -webkit-box-shadow: 0px 0px 0px 0px rgba(0,0,0,0.75)  !important;
+            -moz-box-shadow: 0px 0px 0px 0px rgba(0,0,0,0.75)  !important;
+            box-shadow: 0px 0px 0px 0px rgba(0,0,0,0.75)  !important;
+        }
+        
+        .ui-selectonemenu-panel{
+            z-index: 999999999 !important;
+        }
+        
+        
+        .rcorners1 {
+            text-align: center;
+            vertical-align:middle;
+            border-radius: 100px;
+            background: #73AD21;
+            width: 80px;
+            height: 80px;
+            height: 80px;
+            line-height: 80px;
+            color: #ffffff;
+        }
+          
+        .rcorners1:hover{
+          background: #cccccc !important;
+        }
+        
+        
+        .pnlist2{
+           background: #cccccc !important;
+           color: white
+        }
+        
+        .pnlist2:hover, .pnlist:hover{
+           background: #00ccff !important;
+           color: white;
+        }
+        
+        
+        
+        span {
+            
+          display: inline-block;
+          vertical-align: middle;
+          line-height: normal;
+        }
+    </style>
+     
+    <p:outputPanel id="panelReferenciaDia" >
+        <p:panel  menuTitle="Compras" closeTitle="Compras">
+            <p:panelGrid style="width:100%;border: 1px solid #cccccc;min-height: 100%"  styleClass="ui-panelgrid-blank" layout="grid" columns="2"  >
+                <p:dataTable value="#{prReporteController.reporteDia(prReporteController.mes , prReporteController.anio)}" var="cd" scrollHeight="400" 
+                                sortBy="#{cd.fecha}" scrollWidth="98%"
+                                scrollable ="true"   rowIndexVar="index" id="dtfecha"
+                            paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink}  {LastPageLink} {RowsPerPageDropdown} {Exporters}"
+                            paginator="true" rows="100" rowsPerPageTemplate="100,200,500,1000,2000,5000,1000,#{prReporteController.facturasDetalle.size()}" style="margin-bottom:20px">
+                     <f:facet name="header">
+                         <p:outputLabel value="#{prReporteController.mes} - #{prReporteController.anio}"/> 
+                     </f:facet>
+                        <f:facet name="{Exporters}">
+                            <div style="position: relative">
+                               <h:commandLink title="Exportar a excel" style="position: absolute;right: 0;top: -30px;">
+                                   <img src="images/excel.png" width="35"/>
+                                   <p:dataExporter type="xls" target="dtfecha" fileName="Datos_Compras_dia" />
+                                   <ui:include src="../../param/param_one.xhtml"/>
+                               </h:commandLink>
+                           </div>
+                       </f:facet>
+                        
+                        <p:ajax event="filter"  global="false" ignoreAutoUpdate="true" />
+                         <p:column headerText="No." width="20" filterBy="#{index+1}" filterMatchMode="contains" >
+                            <p:outputLabel value="#{index+1}"/>
+                        </p:column>
+                        
+                        <p:column headerText="Imagen" exportable="false" width="60" style="text-align: center;width:100px"> <p:graphicImage name="images/avatar_2.png" library="serenity-layout" width="45"/></p:column>
+                        <p:column headerText="Fecha" width="70">#{cd.fecha}</p:column>
+                        <p:column headerText="Total en Kg" width="70" style="width:100px;text-align: right" >
+                            <p:outputLabel value="#{cd.cantidad}" style="text-align: right"><f:convertNumber pattern="##,###"  /> </p:outputLabel>
+                        </p:column>
+                        <p:column headerText="Total en $" rendered="#{prReporteController.tipoFactura ne 6}" width="70" style="width:100px;text-align: right" >
+                             <p:outputLabel value="#{cd.total}" style="text-align: right"><f:convertNumber pattern="##,###"  /> </p:outputLabel>
+                        </p:column>
+                        <p:column  width="30" exportable="false" style="width:30px;width:50px;font-size:36px !important"><p:commandButton title="ver datalle factura" icon="ui-icon-view-list" action="#{prReporteController.selectFechaDia(prReporteController.tipoFactura,cd.fecha)}" oncomplete="PF('dgDialogDataDetalle').show()" update="@form:dgDialogDataDetalle"/></p:column>
+                        <p:column  width="30" exportable="false" style="width:30px;font-size:36px !important"><p:commandButton title="Graficar" icon="ui-icon-pie-chart" action="#{prReporteController.selectFechaDia(prReporteController.tipoFactura,cd.fecha)}"  update="@form:dataChar"/></p:column>
+                        <p:columnGroup type="footer">
+                            <p:row>
+                                <p:column style="font-weight: bold !important;font-size:24px;"  colspan="4" footerText="Total Peso(Kg)" />
+                                <p:column  colspan="3" style="text-align: right" >
+                                    <f:facet name="footer">
+                                        <h:outputText style="font-size:24px;font-weight:bold" value="#{prReporteController.reporteDia(prReporteController.mes , prReporteController.anio).stream().map(item->item.cantidad).sum()}">
+                                          <f:convertNumber pattern="##,###"  />
+                                      </h:outputText>
+                                    </f:facet>
+                                </p:column>
+                            </p:row>
+                            <p:row rendered="#{prReporteController.tipoFactura ne 6}">
+                                <p:column style="font-weight: bold !important;font-size:24px;"  colspan="4" footerText="Total ($)" />
+                                <p:column  colspan="3" style="text-align: right" >
+                                    <f:facet name="footer">
+                                        <h:outputText style="font-size:24px;font-weight:bold" value="#{prReporteController.reporteDia(prReporteController.mes , prReporteController.anio).stream().map(item->(item.total)).sum()}">
+                                          <f:convertNumber pattern="##,###"  />
+                                      </h:outputText>
+                                    </f:facet>
+                                </p:column>
+                            </p:row>
+                        </p:columnGroup>
+                </p:dataTable>  
+                <p:chart type="bar" model="#{prReporteController.animatedModel2}" id="dataChar" style="width:100%;height:100%;" />
+            </p:panelGrid>
+        </p:panel>
+    </p:outputPanel>
+    
+    <p:dialog header="Donación Detallada" id="dgDialogDataDetalle" widgetVar="dgDialogDataDetalle" width="1200" modal="true">
+        <ui:include src="ResicladorDetalleFactura.xhtml"/>  
+    </p:dialog>
+        
+</ui:composition>
+
+

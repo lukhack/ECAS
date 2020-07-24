@@ -1,0 +1,166 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                template="/WEB-INF/template.xhtml" >
+     <ui:define name="head">
+         <style>
+        .profile-image-wrapper3{
+            display:inline-block;
+            vertical-align:middle;
+            border:2px solid transparent;
+            width:40px;height:40px;
+            -moz-border-radius:50%;
+            -webkit-border-radius:50%;
+            border-radius:50%;}
+        .ui-fileupload-content{
+            display: none !important;
+        }
+        </style>
+    </ui:define>
+    
+     <ui:define name="breadcrumb">
+         <li>Perfil de usuario</li>
+    </ui:define>
+    <ui:define name="content">
+         <h:form id="formapp">
+            
+            <div class="ui-g ui-fluid">
+                
+                  <div class="ui-g-12 ui-lg-6">
+
+                      <!-- Left Side -->
+                      <div class="card">
+                          <h1>Perfild de usuario</h1>
+
+
+
+                            <p:panelGrid columns="2" layout="grid" style="border:0px !important; background:none;" styleClass="ui-panelgrid-blank">
+                                <p:outputLabel for="avatar"   value="Nombre Usuario" title="Nombre del usuario encargado"/>
+                                <p:outputPanel id="avatar">
+                                    <img id="avatar" style="profile-image-wrapper3"  width="40" src='#{usuarioB.tbUiUsuario.avatar==null?"images/avatar.png":usuarioB.tbUiUsuario.avatar}' alt="Avatar"  title="Avatar"/>
+                                </p:outputPanel>
+                                
+                                <p:outputLabel value="" />
+                                <p:fileUpload value="#{uiAcount.file}" label="Avatar" previewWidth="10"    skinSimple="true" update="avatar" fileUploadListener="#{uiAcount.handleFileUpload}" 
+                                              mode="advanced" allowTypes="/(\.|\/)(gif|jpe?g|png)$/"
+                                        auto="true"/>
+                                  
+                                  
+                                <p:outputLabel for="nombre"  value="Nombres y apellidos" title="Nombre del usuario encargado"/>
+                                <p:inputText id="nombre" value="#{usuarioB.tbUiUsuario.nombre}" placeholder="Nombre"/>
+
+                                <p:outputLabel for="usuairo" value="Nombre Usuario" title="Usuario de ingreso al sistema"/>
+                                <p:inputText id="usuairo"  value="#{usuarioB.tbUiUsuario.usuario}" placeholder="Usuario"/>
+
+                                <p:outputLabel for="correo" value="Correo"  title="Usuario de ingreso al sistema"/>
+                                <p:inputText id="correo" value="#{usuarioB.tbUiUsuario.correo}" placeholder="Correo"/>                            
+
+                                <p:outputLabel for="telefono" value="Teléfono"  title="Teléfono"/>
+                                <p:inputText id="telefono" value="#{usuarioB.tbUiUsuario.telefono}" placeholder="Teléfono"/>                            
+                                
+                                <p:outputLabel for="orientacion"  value="Orientación Menu"/>
+                                <p:selectBooleanButton id="orientacion" value="#{usuarioB.tbUiUsuario.verticalMenu}"  onLabel="Horizontal" offLabel="Vertical" style="width:100px"/>
+                                
+                                <p:outputLabel for="theme"  value="Diseño Aplicación Componentes"/>
+                                <p:selectOneMenu id="theme" value="#{usuarioB.tbUiUsuario.theme}">
+                                    <f:selectItem itemLabel='amber' itemValue='amber'/>
+                                    <f:selectItem itemLabel='blue' itemValue='blue'/>
+                                    <f:selectItem itemLabel='bluegrey' itemValue='bluegrey'/>
+                                    <f:selectItem itemLabel='brown' itemValue='brown'/>
+                                    <f:selectItem itemLabel='cyan' itemValue='cyan'/>
+                                    <f:selectItem itemLabel='deeporange' itemValue='deeporange'/>
+                                    <f:selectItem itemLabel='deeppurple' itemValue='deeppurple'/>
+                                    <f:selectItem itemLabel='green' itemValue='green'/>
+                                    <f:selectItem itemLabel='grey' itemValue='grey'/>
+                                    <f:selectItem itemLabel='indigo' itemValue='indigo'/>
+                                    <f:selectItem itemLabel='lightblue' itemValue='lightblue'/>
+                                    <f:selectItem itemLabel='lightgreen' itemValue='lightgreen'/>
+                                    <f:selectItem itemLabel='lime' itemValue='lime'/>
+                                    <f:selectItem itemLabel='orange' itemValue='orange'/>
+                                    <f:selectItem itemLabel='pink' itemValue='pink'/>
+                                    <f:selectItem itemLabel='purple' itemValue='purple'/>
+                                    <f:selectItem itemLabel='teal' itemValue='teal'/>
+                                    <f:selectItem itemLabel='yellow' itemValue='yellow'/>
+                                   
+                                </p:selectOneMenu>
+                                <p:outputLabel for="layout"  value="Diseño Aplicación Menu"/>
+                                <p:selectOneMenu id="layout" value="#{usuarioB.tbUiUsuario.layout}">
+                                    <f:selectItem itemLabel='medellin' itemValue='medellin'/>
+                                    <f:selectItem itemLabel='moody' itemValue='moody'/>
+                                    <f:selectItem itemLabel='reflection' itemValue='reflection'/>
+                                    <f:selectItem itemLabel='cityscape' itemValue='cityscape'/>
+                                    <f:selectItem itemLabel='storm' itemValue='storm'/>
+                                    <f:selectItem itemLabel='palm' itemValue='palm'/>
+                                    <f:selectItem itemLabel='flatiron' itemValue='flatiron'/>
+                                    <f:selectItem itemLabel='panaroma' itemValue='panaroma'/>
+                                    <f:selectItem itemLabel='horizon' itemValue='horizon'/>
+                                    
+                                    <f:selectItem itemLabel='amber' itemValue='amber'/>
+                                    <f:selectItem itemLabel='blue' itemValue='blue'/>
+                                    <f:selectItem itemLabel='bluegrey' itemValue='bluegrey'/>
+                                    <f:selectItem itemLabel='brown' itemValue='brown'/>
+                                    <f:selectItem itemLabel='cyan' itemValue='cyan'/>
+                                    <f:selectItem itemLabel='deeporange' itemValue='deeporange'/>
+                                    <f:selectItem itemLabel='deeppurple' itemValue='deeppurple'/>
+                                    <f:selectItem itemLabel='green' itemValue='green'/>
+                                    <f:selectItem itemLabel='grey' itemValue='grey'/>
+                                    <f:selectItem itemLabel='indigo' itemValue='indigo'/>
+                                    <f:selectItem itemLabel='lightblue' itemValue='lightblue'/>
+                                    <f:selectItem itemLabel='lightgreen' itemValue='lightgreen'/>
+                                    <f:selectItem itemLabel='lime' itemValue='lime'/>
+                                    <f:selectItem itemLabel='orange' itemValue='orange'/>
+                                    <f:selectItem itemLabel='pink' itemValue='pink'/>
+                                    <f:selectItem itemLabel='purple' itemValue='purple'/>
+                                    <f:selectItem itemLabel='teal' itemValue='teal'/>
+                                    <f:selectItem itemLabel='yellow' itemValue='yellow'/>
+                                   
+                                </p:selectOneMenu>
+                                
+                                <p:commandButton icon="" action="#{uiAcount.saveUsuario}"  update="@all" value="Guardar" styleClass="ui-button-components"/>
+                            
+                            
+                            </p:panelGrid>
+                           
+
+                      </div>
+
+                      
+
+
+                  </div>
+                <div class="ui-g-12 ui-lg-6">
+                    <div class="card" >
+                        <h1>Cambio de Contraseña</h1>
+                          <p:panelGrid  columns="2"  layout="grid" style="border:0px !important; background:none;" styleClass="ui-panelgrid-blank">
+                              <p:outputLabel for="sipass"  value="Cambiar Contraseña"/>
+                                <p:selectBooleanButton id="sipass" value="#{uiAcount.changePassword}"  onLabel="Si" offLabel="No" style="width:60px">
+                                    <p:ajax listener="#{uiAcount.changePasswordListen}"  process="@this"/>
+                                </p:selectBooleanButton>
+                              <p:outputLabel for="pass1" value="Contraseña" title="Contraseña"/>
+                              <p:password feedback="true"  id="pass1" value="#{usuarioB.tbUiUsuario.pass1}" placeholder="Password" inline="true" />
+                              
+                              <p:outputLabel for="pass2"  value="Confirmación de contraseña" title="Confirmación de contraseña"/>
+                              <p:password  id="pass2" value="#{usuarioB.tbUiUsuario.pass2}" placeholder="Password" inline="true" />
+                              
+                          </p:panelGrid>
+                      </div>
+                </div>
+               
+              </div>
+         </h:form>
+        <script type="text/javascript" >
+            function mostrar(id){
+                document.getElementById(id).style.display = 'block';
+            }
+            
+            function ocultar(){
+                document.getElementById(id).style.display = 'none';
+            }
+        </script>
+            
+            
+    </ui:define>
+
+</ui:composition>

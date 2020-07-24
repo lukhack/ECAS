@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"          
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://java.sun.com/jsf/core"          
+      xmlns:ui="http://java.sun.com/jsf/facelets"   
+      xmlns:pt="http://xmlns.jcp.org/jsf/passthrough"    
+      xmlns:pm="http://primefaces.org/mobile"
+      xmlns:pe="http://primefaces.org/ui/extensions"
+      xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
+    <style>
+        .ui-dialog{
+            max-height:100% !important;
+            z-index:999998 !important;
+            max-height:70vh;
+            min-width:500px; 
+        }
+        
+        @media only screen and (max-width: 700px) {
+            .ui-dialog{
+                top:0px;
+                bottom:0px;
+                margin-top:0px;
+                margin-bottom:0px;
+                height:98vh;
+                width:100%; 
+            }
+        }
+        
+        .overlayDialog div.ui-dialog-titlebar{
+            display: none;
+         }
+         
+        .ui-dialog-content{
+            padding:0px !important;
+            margin:5px;
+            background: red;
+        }
+        
+        .chat{
+           background-color: transparent;
+        }
+        
+        .fecha{
+            width: 100%;text-align:center;
+            font-size:12px;
+            color:gainsboro;
+            
+        }
+        .panelStyle{
+            z-index:999999 !important;
+        }
+        
+        
+        </style>
+   
+        <script type="text/javascript">
+            var altura = $(document).height();
+
+          function finScroll(){
+              var scrollBottom = $(window).scrollTop() + $(window).height();
+                  //alert(scrollBottom)
+                  
+                  $(window).animate({scrollTop: scrollBottom});
+                  
+          }
+          
+        </script>
+    <p:dialog  widgetVar="dialogMensaje"  styleClass="dialogMensaje" height="auto"  responsive="true" resizable="true" closeOnEscape="true"
+               appendTo="@(body)"  showHeader="false" style="max-width:540px;" onHide="recep12();" onShow="recep11();"  >
+        <p:outputPanel  id="panelMensajes">
+            <h:form id="formensajes">
+                <div class="dashboard" style="background-color:yellow;height: 100%;max-width:540px;vertical-align: bottom">
+                    <div class="ui-g-12 chat task-list">
+                        <p:panel header="Chat" style="padding:0px" id="panelChat"   
+                                 toggleable="true"  toggleOrientation="horizontal"  >
+                            <p:commandButton id="tasksButton" process="@this" style="top:-10px" type="button" onclick="PF('dialogMensaje').hide()" icon="ui-icon-close" styleClass="secondary-btn"/>
+                            <div class="new-message" style="width: 100%;text-align: center;padding:20px" >
+                                <div  style="float:left">
+                                   <img  class="profile-image-wrapper2" src='#{mensajeriaBean.usuario.avatar==null?"images/avatar.png":mensajeriaBean.usuario.avatar}' alt="Avatar"  />
+                                </div>
+                                <div class="message-input"  >
+                                    <p:selectOneMenu id="selectOneMenu" required="true"  autoWidth="false"  panelStyleClass="panelStyle"  value="#{mensajeriaBean.usuario}"
+                                                      filter="true" filterMatchMode="contains" converter="usuarioConvert"
+                                                      requiredMessage="seleccione un usuario para enviar el mensaje" var="U" style="z-index:999999 !important;width: 90%;padding:10px">
+                                        <f:selectItem itemLabel="seleccion contacto"   itemValue="#{null}" noSelectionOption="true" />
+                                        
+                                        <p:ajax update="panelPrintMensajes" process="@this" global="false"/>
+                                    </p:selectOneMenu>
+                                </div>
+                            </div>
+                            <p:scrollPanel class="data" id="data"  mode="native"  style="width:100%;height:90vh;max-height:70vh">
+                                <p:outputPanel id="panelPrintMensajes" >
+                                    <c:forEach  items="#{mensajeriaController.mensajesPorUsuario(mensajeriaBean.usuario)}" var="msn">
+                                        <ul>
+                                            <li class='#{msn.uisuario_emi.id eq usuarioB.tbUiUsuario.id?"message-own":"message-from"}'>   
+                                                <div class="fecha">
+                                                       #{fechas.fechaFormatoConTiempo(msn.fecha)}
+                                                </div>
+                                                <div >
+                                                    <img id="avatar" style="profile-image-wrapper3"  width="40" src='#{msn.uisuario_emi.id eq usuarioB.tbUiUsuario.id?msn.uisuario_rec.avatar:usuarioB.tbUiUsuario.avatar}' alt="Avatar"  title="Avatar"/>
+                                                </div>
+                                                
+                                                <span>#{msn.mensaje}</span>
+                                            </li>
+                                        </ul>
+                                    </c:forEach>
+                                    <script type="text/javascript">
+                                       finScroll()
+                                    </script>
+                                    
+                                </p:outputPanel>        
+                                <a name="ultimo"></a>
+                            </p:scrollPanel>
+                        </p:panel>
+
+                        <p:outputPanel id="monitorMensajeria" >
+                            
+                            <p:poll interval="3" rendered="#{mensajeriaBean.renderTheadMensaje}" update="panelPrintMensajes monitorMensajeria" global="false" process="@this"/>
+                            
+                            <p:outputLabel rendered="#{mensajeriaBean.renderTheadMensaje}" value="hola mundo #{mensajeriaController.contador()}"/>
+                            
+                        </p:outputPanel>
+                        <div class="new-message" >
+                            <div class="message-attachment">
+                                <i class="material-icons">&#xE226;</i>
+                            </div>
+                            <div class="message-input">
+                                <p:inputText id='inputMensaje' value="#{mensajeriaController.mensaje}" placeholder="Escribe un mensaje" />
+                            </div>
+                            <div class="message-attachment">
+                                <p:commandLink  global="false" update="panelPrintMensajes inputMensaje :formsg:msgs" ajax="true" process="inputMensaje selectOneMenu @this" action="#{mensajeriaController.save}">
+                                    <i class="material-icons">send</i>
+                                </p:commandLink>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </h:form>
+        </p:outputPanel>
+       
+    </p:dialog> 
+    <h:form>
+        
+        
+        <p:remoteCommand name="recep11" process="@this"  global="false" update=":formensajes:monitorMensajeria" actionListener="#{mensajeriaBean.setRenderTheadMensaje(true)}" />
+        <p:remoteCommand name="recep12" process="@this" global="false" update=":formensajes:monitorMensajeria" actionListener="#{mensajeriaBean.setRenderTheadMensaje(false)}" />
+    </h:form>
+</ui:composition>
+

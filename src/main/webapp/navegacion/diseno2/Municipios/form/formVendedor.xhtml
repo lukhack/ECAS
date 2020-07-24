@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"          
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://java.sun.com/jsf/core"          
+      xmlns:ui="http://java.sun.com/jsf/facelets"   
+      xmlns:pt="http://xmlns.jcp.org/jsf/passthrough"    
+      xmlns:pm="http://primefaces.org/mobile"
+      xmlns:pe="http://primefaces.org/ui/extensions"
+      xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
+        
+    <p:panelGrid  id="pnForm" columns="1"  styleClass="ui-panelgrid-blank"   layout="grid" style="width:100%" columnClasses="columna100">
+        <p:panelGrid  columns="4"  styleClass="ui-panelgrid-blank form-group" columnClasses="columna30, columna5, columna40, columna15">
+            <h:panelGroup styleClass="md-inputfield">
+                <p:inputText value="#{uiVendedorManager.obj.cedula}" maxlength="15" required="true"  requiredMessage="Valor requerido en Nit"/>
+                <label>Cc</label>
+            </h:panelGroup>   
+
+            <h:panelGroup styleClass="md-inputfield" >
+                <p:inputText required="true" maxlength="45" value="#{uiVendedorManager.obj.nombre}"  requiredMessage="Valor requerido en Nombre o Razon social"/>
+                <label>Nombres</label>
+            </h:panelGroup>
+
+            <h:panelGroup styleClass="md-inputfield" >
+                <p:inputText value="#{uiVendedorManager.obj.telefono}" maxlength="10"/>
+                <label>Telefono 1</label>
+            </h:panelGroup>
+            
+        </p:panelGrid>
+        <p:panelGrid  columns="4"  styleClass="ui-panelgrid-blank form-group" style="width: 100%" columnClasses="columna25, columna25, columna25, columna25">
+            <h:panelGroup styleClass="md-inputfield">
+                <p:inputText value="#{uiVendedorManager.obj.telefono2}" maxlength="10"/>
+                <label>Telefono 2</label>
+            </h:panelGroup>
+            <h:panelGroup styleClass="md-inputfield">
+                <p:inputText value="#{uiVendedorManager.obj.direccion}" maxlength="100"/>
+                <label>Direccion</label>
+            </h:panelGroup>
+            <h:panelGroup styleClass="md-inputfield">
+                <p:inputText value="#{uiVendedorManager.obj.correo}" maxlength="100"/>
+                <label>Correo</label>
+            </h:panelGroup>   
+            <p:selectOneMenu required="true" autoWidth="false" requiredMessage="Valor requerido en Municipio" id="slMunicipio"  
+                             filter="true" filterMatchMode="contains"
+                             converter="municipioConvert" value="#{uiVendedorManager.obj.idmunicipio}" >
+                <f:selectItem itemLabel="Municipio"  itemValue="#{null}" noSelectionOption="true"/>
+                <f:selectItems  value="#{maMunicipioManager.list}" var="mup" itemLabel="#{mup.municipio} (#{mup.idDepartamento.departamento})" />
+            </p:selectOneMenu>
+         </p:panelGrid>
+    </p:panelGrid> 
+                      
+</ui:composition>
+

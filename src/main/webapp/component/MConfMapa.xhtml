@@ -1,0 +1,80 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"          
+      xmlns:p="http://primefaces.org/ui"     
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:c="http://xmlns.jcp.org/jsp/jstl/core"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+    
+    <p:outputPanel id="panelMap">
+        <c:choose>
+            <c:when test="${maDatosMaestroBean.rederMap}">
+                <p:gmap id="gmap"  widgetVar="gmap" styleClass="gmap" center="#{mapsBean.centerGeoMap}"  
+                                         mapTypeControl="false" navigationControl="true"  
+                                         streetView="true"  scrollWheel="true" 
+                                         model="#{dtECASucursalController.gmap.geoModel}" zoom="#{mapsBean.zoom}" type="#{mapsBean.typeMap}" 
+                                        style="width:100%;height:99vh"    >
+                    <p:ajax  event="overlaySelect"     process="@this"  listener="#{dtECASucursalController.onMarkerSelect}" update="formsg:msgs" />
+                    <p:gmapInfoWindow id="infoWindow">
+                        <p:outputPanel style="text-align: center; display: block; margin: auto">
+                            <p:panelGrid columns="2">
+                                <p:outputLabel value="Razon social(Nombre):" style="font-weight: bold"/>
+                                <p:outputLabel value="#{dtECASucursalController.obj.filial}"  />
+                                                               
+                                <p:outputLabel value="Dirección:" style="font-weight: bold"/>
+                                <p:outputLabel value="#{dtECASucursalController.obj.direccion}"  />
+                                
+                                <p:outputLabel value="Telefono" style="font-weight: bold"/>
+                                <p:outputLabel value="#{dtECASucursalController.obj.telefono}"  />
+                                
+                                <p:outputLabel value="Correo" style="font-weight: bold"/>
+                                <p:outputLabel value="#{dtECASucursalController.obj.correo}"  />
+                            </p:panelGrid>    
+                            
+                            <table style="width:100%">
+                                <thead style="background-color: gray;color: white">
+                                    <th>Material</th>
+                                    <th>Cantidad Disponible(Kg)</th>
+                                </thead>
+                                <tbody style="border: 1px solid black">
+                                    <tr>
+                                        <td>Cobre</td>
+                                        <td>1.2332</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Vidrio</td>
+                                        <td>2.332</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Carton</td>
+                                        <td>3.233</td>
+                                    </tr>
+                                    <tr>
+                                        <td>hierro</td>
+                                        <td>12.332</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </p:outputPanel>
+                    </p:gmapInfoWindow>
+                </p:gmap>
+            </c:when>
+            <c:otherwise>
+                <div style="position: absolute;left: 50%;top: 40%;transform: translate(-50%, -50%);-webkit-transform: translate(-50%, -50%);">
+                    <img src="images/marca/logo.png"/>
+                </div>
+                <p:outputPanel id="gmap"/>
+            </c:otherwise>
+        </c:choose>
+    </p:outputPanel>
+                <p:dialog header="Datos del Formulario" id="dlg" widgetVar="dlg" modal="true" width="900" height="600"
+                          draggable="false" resizable="false"  position="center top" >
+                    
+                    <p:tabView  id="TabView" prependId="false">
+                        <p:tab title="Datos del Formulario"  ariaLabel="dasd" >
+                            <p:panelGrid columns="4"  styleClass="ui-panelgrid-blank"   layout="grid" style="width:100%" columnClasses="columna20 columna30 columna20 columna30">
+                                
+                            </p:panelGrid>
+                        </p:tab>
+                    </p:tabView>
+                </p:dialog>            
+                
+</ui:composition>

@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"          
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://java.sun.com/jsf/core"          
+      xmlns:ui="http://java.sun.com/jsf/facelets"       >
+      <script type="text/javascript">
+                function geocode() {
+                    PF('geoMap').geocode(document.getElementById('address').value);
+                }
+                
+                function geocodeDir(direccion) {
+                    //alert(direccion)
+
+                    var map=PF('geoMap').getMap();//PERFECT
+
+                    var address=direccion;//PERFECT
+
+                    var geocoder = new google.maps.Geocoder();//PERFECT
+
+                    geocoder.geocode({'address': address}, function(results, status) {
+
+                        if (status === 'OK') {
+                            map.setCenter(results[0].geometry.location);
+                            var marker = new google.maps.Marker({
+                                map: map,
+                                position: results[0].geometry.location
+                            });
+                        } else {
+                            error.log(status)
+                            alert('CUSTOMIZED ERROR MESSAGE');
+                        }
+                    });
+                }
+        </script>
+        <p:dataTable var="dts" id="dtDatoSubcursal" 
+            paginator="true"
+            style="width: 100% !important;height:100%"
+            paginatorPosition="bottom"
+            paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+            rowsPerPageTemplate="5,10,20,50,100"
+            rows="20"
+            rowIndexVar="rowIndex"
+            value='#{dtMaMaterialesGrupoController.obj.dtmamaterialList}'
+            filteredValue='#{dtMaMaterialesCategoriaController.listFilter}'>
+            <f:facet name="header" >
+               #{uiNavegacionBean.title}
+            </f:facet>
+          
+            <p:ajax  event="rowToggle" global="false" async="true"/>
+            <p:ajax event="filter"  global="false" ignoreAutoUpdate="true"/>
+            <ui:include src="../../param/param_one.xhtml"/>
+            <p:column headerText="No" width="30" >
+                <h:outputText  value="#{rowIndex+1}" />
+            </p:column>
+            <p:column headerText="Referencia" width="100">
+                <h:outputText value="#{dts.codReferencia}" />
+            </p:column>   
+            <p:column headerText="Material" width="100">
+                <h:outputText value="#{dts.material.toUpperCase()}" />
+            </p:column>   
+            <p:column headerText="Dirección" width="150">
+                <h:outputText value='#{dts.unidadMedida.unidadMedida}' />
+            </p:column>   
+            <p:column headerText="Bascula Automática" width="150">
+                <h:outputText value="#{dts.showbascula?'Si':'No'}" />
+            </p:column> 
+            
+            <p:column headerText="Conversión a Kg" width="200">
+                <h:outputText value='#{dts.pesokg}' />
+            </p:column> 
+            <p:column width="20" headerText="ED">
+                <p:commandButton icon="ui-icon-edit" update="@form:pnFormSub" process="@this" title="Editar" action="#{dtMaMaterialesCategoriaController.selectObjec(dts)}">
+                   <ui:include src="../../param/param_one.xhtml"/>
+               </p:commandButton>
+            </p:column>
+        </p:dataTable>
+
+    <p:dialog header="Añadir Presentación por Marca" width="400" modal="true" id="dgPresentacionMarca" widgetVar="dgPresentacionMarca"> 
+            <p:commandButton icon="fa fa-plus-circle " update="@form:dtgMarcaPresentacion @form:pnMaterialMarcaPresentacion"  process="@form:pnMaterialMarcaPresentacion @this" title="añadir marca" action="#{dtMaMaterialesPresentacionController.reinit()}">
+                <p:collector value="#{dtMaMaterialesPresentacionController.obj}" addTo="#{dtMaMaterialesMarcaController.obj.dtmarcasPresentaciones}"  unique="true" />
+                <ui:include src="../../param/param_one.xhtml"/>
+            </p:commandButton>
+            <p:panelGrid  columns="3" id="pnMaterialMarcaPresentacion"  styleClass="ui-panelgrid-blank form-group" columnClasses="columna35, columna40, columna30">
+                <h:panelGroup styleClass="md-inputfield" >
+                    <p:inputText required="true" maxlength="45" value="#{dtMaMaterialesPresentacionController.obj.presentacion}"  />
+                    <label>Presentaciòn</label>
+                </h:panelGroup>
+                <p:selectOneMenu required="true" autoWidth="false" requiredMessage="Valor requerido en unidad medida" id="slUnidadPresentacion"  
+                        filter="true" filterMatchMode="contains"
+                        converter="unidadMedidaConvert" value="#{dtMaMaterialesPresentacionController.obj.idunidadMedida}" >
+                   <f:selectItem itemLabel="Unidad de medida ..."  itemValue="#{null}" noSelectionOption="true"/>
+                   <f:selectItems   value="#{dtMaUnidadMedidaController.list}" var="list" itemLabel="#{list.unidadMedida} - #{list.descripcion}" />
+                </p:selectOneMenu>
+                <h:panelGroup styleClass="md-inputfield" >
+                    <p:inputNumber decimalPlaces="2"  maxlength="45" value="#{dtMaMaterialesPresentacionController.obj.valor}"  />
+                    <label>Valor</label>
+                </h:panelGroup>
+            </p:panelGrid>   
+            <p:dataTable var="prs" id="dtgMarcaPresentacion" 
+                paginator="true"
+                style="width: 100% !important;height:100%"
+                paginatorPosition="bottom"
+                paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                rowsPerPageTemplate="5,10,20,50,100"
+                rows="20"
+                rowIndexVar="rowIndex"
+                value='#{dtMaMaterialesMarcaController.obj.dtmarcasPresentaciones}'
+                filteredValue='#{dtMaMaterialesMarcaController.listFilter}'>
+                <f:facet name="header" >
+                   #{uiNavegacionBean.title}
+                </f:facet>
+                <p:ajax  event="rowToggle" global="false" async="true"/>
+                <p:ajax event="filter"  global="false" ignoreAutoUpdate="true"/>
+                <ui:include src="../../param/param_one.xhtml"/>
+                <p:column headerText="No" width="30" >
+                    <h:outputText  value="#{rowIndex+1}" />
+                </p:column>
+                <p:column headerText="Presentaciòn" width="100">
+                    <h:outputText value="#{prs.presentacion}" />
+                </p:column>   
+                <p:column headerText="Unidad Medida" width="100">
+                    <h:outputText value="#{prs.idunidadMedida.descripcion}" />
+                </p:column>   
+                <p:column headerText="Valor" width="100">
+                    <h:outputText value="#{prs.valor}" />
+                </p:column>   
+                
+                <p:column width="20" headerText="ED">
+                    <p:commandButton icon="ui-icon-edit" update="@form:pnMaterialMarca" process="@this" title="Editar" action="#{dtMaMaterialesMarcaController.selectObjec(prs)}">
+                       <ui:include src="../../param/param_one.xhtml"/>
+                    </p:commandButton>
+                </p:column>
+            </p:dataTable>
+        </p:dialog>
+    
+    
+</ui:composition>
+
+

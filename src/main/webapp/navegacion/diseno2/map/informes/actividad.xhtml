@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"          
+      xmlns:p="http://primefaces.org/ui"          
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
+      
+    
+    
+  
+    <h:form id='formInformeAct'  prependId="false">
+        <p:commandButton value="Imprimir"><p:printer target="informeActividad" /></p:commandButton>
+        <p:graphicImage value="images/marca/logo.png" style="width:300px"/>
+                   
+        <p:outputPanel id="informeActividad" style="width:100%;padding-bottom:20px;">
+            <div id="headerAct">
+                <p:outputPanel style="text-align: center;width:100%;">
+                    <p:outputLabel value="Actividades permitidas en una Dirección específica del municipio" style="width:100%;text-align: center;font-weight:bold"/>
+                </p:outputPanel>
+            </div>   
+            <table columns="2"  id="codigotbAct" style="width:100%;padding-top:20px">
+                <tbody style="border: 0px #ffffff">
+                    <tr>
+                        <td><p:outputLabel value="Código" style="width:100%;font-weight:bold"/></td>
+                        <td><p:outputLabel value="#{mapBean.informe.codConsulta}" style="width:100%;text-align: left;"/></td>
+                    </tr>
+                    <tr>
+                         <td><p:outputLabel value="Fecha" style="width:100%;font-weight:bold"/></td>
+                         <td><p:outputLabel value="#{mapBean.informe.fecha}" style="width:100%;text-align: center;"/></td>
+                    </tr>
+                </tbody>
+            </table>
+            <p:panelGrid id="desActividad2" columns="1" style="width:100%;padding-bottom:20px">
+                <p:outputLabel value="#{mapBean.informe.actividad.descripcion}" style="width:100%;padding-top:100px;text-align: center" />
+            </p:panelGrid>
+            <table columns="2"  id="ubicaciontbAct" style="width:100%;padding-top:20px">
+                <tbody style="border: 0px #ffffff">
+                     <tr>
+                        <td><p:outputLabel value="Código Catastral:" style="width:100%;font-weight:bold"/></td>
+                        <td><p:outputLabel value="#{mapBean.informe.ficha.cedulaCatastral}" style="width:100%;text-align: left;"/></td>
+                    </tr>
+                    <tr>
+                         <td><p:outputLabel  value="Dirección:" style="width:100%;font-weight:bold"/></td>
+                         <td><p:outputLabel value="#{mapBean.informe.ficha.direPred}"  style="width:100%;text-align: center;"/></td>
+                    </tr>
+                     <tr>
+                        <td><p:outputLabel value="Polígono:" style="width:100%;font-weight:bold"/></td>
+                        <td><p:outputLabel value="#{mapBean.informe.ficha.area.tipo}" style="width:100%;text-align: center;"/></td>
+                    </tr>
+                    <tr>
+                        <td><p:outputLabel value="Barrio:" style="width:100%;font-weight:bold"/></td>
+                        <td><p:outputLabel value="#{mapBean.informe.ficha.barrio.barrio}" style="width:100%;text-align: center;"/></td>
+                    </tr>  
+                </tbody>
+            </table>
+            
+            
+            
+            <p:outputPanel id="titleInformacionAct" style="width:100%;padding-bottom:20px;text-align:center">
+                <p:outputLabel value="Información Solicitada" style="width:100%;text-align: center;font-weight:bold"/>
+            </p:outputPanel>
+            
+            
+            
+            <c:if test="#{mapBean.informe.actividadComplement.size() ne 0}">
+                    <p:outputPanel id="titleActUsoComp" style="width:100%;margin-top:20px;padding-bottom:10px;text-align:center">
+                        <p:outputLabel value="Las Actividades de Uso Complementario , deacuerdo al plan de Ordenamiento Territorial puede ejercer en esta Clase de uso son:" style="width:100%;text-align: center;"/>
+                    </p:outputPanel>
+                <p:dataTable var="usc" id="tbActUsoComp" value="#{mapBean.informe.actividadComplement}" style="width:100%;padding-bottom:20px">
+                    <p:column headerText="Código CIIU" width="100">
+                      <h:outputText value="#{usc.codCIUU}" />
+                    </p:column>
+
+                    <p:column headerText="Actividad">
+                        <h:outputText value="#{usc.descripcion}" />
+                    </p:column>
+
+                    <p:column headerText="Descripción">
+                        <h:outputText value="#{usc.descripcion}" />
+                    </p:column>
+                </p:dataTable>
+            </c:if>
+            
+            <c:if test="#{mapBean.informe.actividadPermitido.size() ne 0}">
+                     <p:outputPanel id="titleActUsoPerm" style="width:100%;margin-top:20px;padding-bottom:10px;text-align:center">
+                        <p:outputLabel value="Las Actividades de Uso Permitido , deacuerdo al plan de Ordenamiento Territorial puede ejercer en esta Clase de uso son:" style="width:100%;text-align: center;"/>
+                    </p:outputPanel>
+                    <p:dataTable var="usc" id="tbActUsoPerm" value="#{mapBean.informe.actividadPermitido}" style="width:100%;padding-bottom:20px">
+                        
+                         <p:column headerText="Código CIIU" width="100">
+                             <h:outputText value="#{usc.codCIUU}" />
+                           </p:column>
+
+                           <p:column headerText="Actividad">
+                               <h:outputText value="#{usc.descripcion}" />
+                           </p:column>
+
+                           <p:column headerText="Descripción">
+                               <h:outputText value="#{usc.descripcion}" />
+                           </p:column>
+                    </p:dataTable>
+                </c:if>
+            
+               <c:if test="#{mapBean.informe.actividadRestringi.size() ne 0}">
+                    <p:outputPanel id="titleActUsoRes" style="width:100%;margin-top:20px;padding-bottom:10px;text-align:center">
+                        <p:outputLabel value="Las Actividades de Uso Restringido , deacuerdo al plan de Ordenamiento Territorial puede ejercer en esta Clase de uso son:" style="width:100%;text-align: center;"/>
+                    </p:outputPanel> 
+                   <p:dataTable var="usc" id="tbActUsoRes" value="#{mapBean.informe.actividadRestringi}" style="width:100%;padding-bottom:20px">
+                         <p:column headerText="Código CIIU" width="100">
+                             <h:outputText value="#{usc.codCIUU}" />
+                           </p:column>
+
+                           <p:column headerText="Actividad">
+                               <h:outputText value="#{usc.descripcion}" />
+                           </p:column>
+
+                           <p:column headerText="Descripción">
+                               <h:outputText value="#{usc.descripcion}" />
+                           </p:column>
+                    </p:dataTable>
+                </c:if>
+            
+            
+            
+        </p:outputPanel>
+    
+    </h:form>
+    
+    
+</ui:composition>
+

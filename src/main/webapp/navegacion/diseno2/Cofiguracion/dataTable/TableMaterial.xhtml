@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"          
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://java.sun.com/jsf/core"          
+      xmlns:ui="http://java.sun.com/jsf/facelets"       >
+    
+    <br/>
+    <p:panel header="Materiales"  style="position: relative;">
+        <p:dataTable var="dt" id="dtDatos" 
+              paginator="true"
+              style="width: 100% !important"
+              paginatorPosition="bottom"
+              paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+              rowsPerPageTemplate="5,10,20,50,100"
+              rowIndexVar="rowIndex"
+              value='#{dtMaMaterialesController.findList().stream().filter(x-> x.ecaSucursal.id eq usuarioB.tbUiUsuario.dtecassucursal.id).toList()}'
+              filteredValue='#{dtMaMaterialesController.listFilter}'>
+              <f:facet name="header" > 
+                 #{uiNavegacionBean.title}
+              </f:facet>
+             <p:ajax event="filter"  global="false" ignoreAutoUpdate="true"/>
+             <p:ajax  event="rowToggle" global="false" async="true"/>
+             <ui:include src="../../param/param_one.xhtml"/>
+             <p:column style="width:16px">
+                <p:rowToggler />
+             </p:column>
+              <p:column headerText="No" width="30" >
+                  <h:outputText  value="#{rowIndex+1}" />
+              </p:column>
+              <p:column headerText="Referencia" width="100">
+                  <h:outputText value='#{dt.material.codReferencia}' />
+              </p:column>    
+              <p:column headerText="Material" width="100">
+                  <h:outputText value='#{dt.material.material.toUpperCase()}' />
+              </p:column>    
+              <p:column headerText="Valor compra" width="100">
+                  <h:outputText value="#{dt.valorCompra}" />
+              </p:column> 
+              <p:column headerText="Valor venta" width="100">
+                  <h:outputText value='#{dt.valorVenta}' />
+              </p:column> 
+              <p:column width="20">
+                  <p:commandButton icon="ui-icon-edit" title="Editar" process="@this" update="@form:pnForm" action="#{dtMaMaterialesController.selectObjec(dt)}"><f:param name="name" value="#{param.name}" /><f:param name="path" value="#{param.path}" /></p:commandButton>
+              </p:column>
+               <p:rowExpansion>
+                    <p:panelGrid columns="1" layout="grid">
+                        <p:outputPanel>
+                            <p:dataTable value="#{dt.dtecahistorial}" var="SC">
+                                <ui:include src="../../param/param_one.xhtml"/> 
+                                 <f:facet name="header">
+                                    <h3>Historial de cambios</h3>
+                                </f:facet>
+                                <p:column headerText="Dirección" width="200">
+                                    <h:outputText value='#{SC.fecha}' />
+                                </p:column>
+                                <p:column headerText="Nombre Sucursal" width="200">
+                                    <h:outputText value='#{SC.valorCompra}' />
+                                </p:column>
+                                <p:column headerText="Nombre responsable" width="200">
+                                    <h:outputText value='#{SC.valorVenta}' />
+                                </p:column>
+                                <p:column headerText="usuario" width="200">
+                                    <h:outputText value='#{SC.usuario_id.nombre}' />
+                                </p:column>
+                                
+                            </p:dataTable>
+                        </p:outputPanel>
+                    </p:panelGrid>
+                </p:rowExpansion>
+      </p:dataTable>
+    </p:panel>
+    
+</ui:composition>
+
+

@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"          
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://java.sun.com/jsf/core"          
+      xmlns:ui="http://java.sun.com/jsf/facelets"       
+      xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
+   
+      <p:dataTable var="dt" id="dtDatos" 
+            paginator="true"
+            rows="10"  liveScroll="true" scrollRows="15" scrollHeight="100%"
+            scrollable="true"
+            style="min-height:500px !important"
+            paginatorPosition="bottom"
+            paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown} {Exporters}"
+            rowsPerPageTemplate="5,10,20,50,100"
+            rowIndexVar="rowIndex"  
+            filteredValue="#{dtProcesoMaterialesController.filterProcesos}"
+            value="#{dtProcesoMaterialesController.getListProcesos(['2'])}">
+             <f:facet name="{Exporters}">
+                <div style="float:right;padding-top: 5px;">
+                    <h:commandLink>
+                        <img src="images/excel.png" width="24"/>
+                        <p:dataExporter type="xls" target="dtDatos" fileName="Datos Stock" />
+                        <ui:include src="../../param/param_one.xhtml"/>
+                        <ui:include src="../../param/param_one.xhtml"/>
+                    </h:commandLink>
+                </div>
+            </f:facet>
+            <p:ajax event="filter"  process="@this" global="true" ignoreAutoUpdate="true"/>
+            <ui:include src="../../param/param_one.xhtml"/>
+            <p:column headerText="No" width="5%"  filterBy="#{rowIndex+1}">
+                <h:outputText  value="#{rowIndex+1}" />
+            </p:column>
+            <p:column headerText="Ref." width="40" filterBy="#{dt.material.material.codReferencia}" filterMatchMode="contains">
+                <h:outputText value='#{dt.material.material.codReferencia}' />
+            </p:column> 
+            <p:column headerText="Material" filterBy="#{dt.material.material.material}" filterMatchMode="contains">
+                <h:outputText value='#{dt.material.material.material}' />
+            </p:column> 
+            <p:column headerText="Material Ingresado" width="150" filterBy="#{dt.materialIngresado}" filterMatchMode="contains">
+                <h:outputText value='#{dt.materialIngresado}' />
+            </p:column> 
+            <p:column headerText="Material Procesado" width="150" filterBy="#{dt.materialProcesado}" filterMatchMode="contains">
+                <h:outputText value='#{dt.materialProcesado}' />
+            </p:column>
+            <p:column headerText="Desperdicio Material" width="150" filterBy="#{dt.materialDesperdicio}" filterMatchMode="contains">
+                <h:outputText value='#{dt.materialDesperdicio}' />
+            </p:column>
+            <p:column headerText="Pendiente por Procesar" width="150" filterBy="#{dt.materialIngresado - (dt.materialProcesado+dt.materialDesperdicio)}" filterMatchMode="contains">
+                <h:outputText style='color:#{(dt.materialIngresado - (dt.materialProcesado+dt.materialDesperdicio)) lt 0?"red":"green"}' value='#{dt.materialIngresado - (dt.materialProcesado+dt.materialDesperdicio)}' >
+                    <f:convertNumber maxFractionDigits="2"/>
+                </h:outputText>
+            </p:column>
+            <p:column headerText="Material Venta(salida)" width="150" filterBy="#{dt.cantidadventa}" filterMatchMode="contains">
+                <h:outputText  value='#{dt.cantidadventa}' >
+                    <f:convertNumber maxFractionDigits="2"/>
+                </h:outputText>
+            </p:column>
+            <p:column headerText="Stock para venta" width="150" filterBy="#{dt.materialProcesado-dt.cantidadventa}" filterMatchMode="contains">
+                <h:outputText  style='color:#{(dt.materialProcesado - dt.cantidadventa) lt 0?"red":"green"}' value='#{dt.materialProcesado - dt.cantidadventa}' >
+                    <f:convertNumber maxFractionDigits="2"/>
+                </h:outputText>
+            </p:column>
+      </p:dataTable>
+     
+    
+    
+    <p:dialog header="Detalle por material"  modal="true" id="dgForm" widgetVar="dgProcesos" width="396" height="650">
+        
+    </p:dialog>
+    
+</ui:composition>
+
+

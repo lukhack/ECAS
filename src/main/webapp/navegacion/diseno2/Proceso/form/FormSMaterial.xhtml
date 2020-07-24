@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"          
+      xmlns:p="http://primefaces.org/ui"     
+      xmlns:ui="http://java.sun.com/jsf/facelets"       
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+    
+    
+     
+    <p:outputPanel id="PnAnadir" style="width:100%;text-align:right;position: relative">
+        <p:commandLink process="@form:pnFormDetalle @this" id="btnAnadir"  style="position: absolute;right: 0;top:-10px"  update="@form:dtDatos @form:pnForm formsg:msgs"    title="Añadir" action="#{uiMateriaSeparacion.reinit()}"><i style="font-size:2.8em;color: #607D8B" class="material-icons">playlist_add</i>
+                <p:collector value="#{uiMateriaSeparacion.materialProcesado.obj}" addTo="#{uiMateriaSeparacion.obj.dtmaterialprocesadoCollection}"  unique="true" />
+           <ui:include src="../../param/param_one.xhtml"/>
+        </p:commandLink>
+    </p:outputPanel>
+    
+    <p:defaultCommand target="btnAnadir" />
+    
+     <p:panelGrid  id="pnForm" columns="1"  styleClass="ui-panelgrid-blank"   layout="grid" style="width:100%" columnClasses="columna100">
+        <p:panelGrid  columns="3"  id="pnFormDetalle" styleClass="ui-panelgrid-blank"   layout="grid" style="width:100%" columnClasses="columna40, columna30,columna30">
+            <p:outputLabel value="Material" style="size:16px;font-weight:bold"/>
+            <p:outputLabel value="Peso(Kg)" style="size:16px;font-weight:bold"/>
+            <p:outputLabel value="Estado del material" style="size:16px;font-weight:bold"/>
+            <p:selectOneMenu id="materiales" var="mts" autoWidth="false" style="width:100%" value="#{uiMateriaSeparacion.materialProcesado.obj.dtMaterial_id}"  converter="materialConvert"    filter="true" filterMatchMode="contains">
+                <f:selectItem itemLabel="Material ..." itemValue="#{null}" />
+                <f:selectItems value="#{dtMaMaterialesController.listMaterialEca}"  var="mt" itemValue="#{mt}" itemLabel="#{mt.material.codReferencia} #{mt.material.material}" />
+                <p:column width="100" headerText="Referencia" style="width: 100px">
+                    <h:outputText value="#{mts.material.codReferencia}" />
+                </p:column>
+                <p:column headerText="Material" >
+                    <h:outputText value="#{mts.material.material}" />
+                </p:column>
+                <ui:include src="../../param/param_one.xhtml"/>
+                <p:ajax update="dataMarca"/>
+            </p:selectOneMenu>
+            <h:panelGroup styleClass="md-inputfield">
+                <p:inputNumber id="txtcantidad" decimalPlaces="2"   value="#{uiMateriaSeparacion.materialProcesado.obj.cantidad}" required="true"   maxlength="45"></p:inputNumber>
+                <p:outputLabel for="txtcantidad" value="Peso(Kg)"/>
+            </h:panelGroup>  
+            
+            <p:selectOneMenu id="materialesEstado"  autoWidth="false" required="true" requiredMessage="Debes seleccionar el estado de separado" style="width:100%" value="#{uiMateriaSeparacion.materialProcesado.obj.procesadodeseparacion}"  converter="#{javax.faces.Boolean}"    filter="true" filterMatchMode="contains">
+                <f:selectItem itemValue="#{false}" itemLabel="Separado y procesado" />
+                <f:selectItem itemValue="#{true}" itemLabel="Solo separado" />
+                <f:converter converterId="javax.faces.Boolean"  />
+                <ui:include src="../../param/param_one.xhtml"/>
+                <p:ajax update="dataMarca"/>
+            </p:selectOneMenu>
+            
+            </p:panelGrid>
+            <p:outputPanel id="dataMarca">
+                <p:panel header="Separación del material por Marca" rendered="#{config.TEMPLATE_DISENO eq 'diseno1' and uiMateriaSeparacion.materialProcesado.obj.procesadodeseparacion eq false and uiMateriaSeparacion.materialProcesado.obj.dtMaterial_id.material.dtmamaterialMarcas.size() ne 0}">
+                   <p:panelGrid  columns="3"  id="pnMaterialMarcaPresentacion" styleClass="ui-panelgrid-blank"   layout="grid" style="width:100%" columnClasses="columna40, columna30,columna30">
+                            <p:selectOneMenu required="true" autoWidth="false" style="width:100%" requiredMessage="Valor requerido en marca" id="slUnidadMarca"  
+                                   filter="true" filterMatchMode="contains"
+                                   converter="materiaMarca2Conver" value="#{dtMaMaterialesMarcaController.obj}" >
+                              <f:selectItem itemLabel="Marca ..."  itemValue="#{null}" noSelectionOption="true"/>
+                              <f:selectItems   value="#{uiMateriaSeparacion.materialProcesado.obj.dtMaterial_id.material.dtmamaterialMarcas}" var="list" itemValue="#{list}" itemLabel="#{list.marca}" />
+                              <ui:include src="../../param/param_one.xhtml"/>
+                              <p:ajax  update="@form:slUnidadPresentacion" process="@this"></p:ajax>
+                            </p:selectOneMenu>
+                            <p:selectOneMenu required="true" autoWidth="false" requiredMessage="Valor requerido en marca" id="slUnidadPresentacion"  
+                                            filter="true" filterMatchMode="contains" 
+                                            converter="materiaPresentacionConver" value="#{dtMaFacturacionCotroller.materiaPresentacionController.obj.materialid}" >
+                              <f:selectItem itemLabel="Presentación ..."  itemValue="#{null}" noSelectionOption="true"/>
+                              <f:selectItems   value="#{dtMaMaterialesMarcaController.obj.dtmarcasPresentaciones}" var="prs" itemValue="#{prs}" itemLabel="#{prs.presentacion}" />
+                            </p:selectOneMenu>
+                            <h:panelGroup styleClass="md-inputfield" >
+                                <p:inputText required="true" maxlength="45" value="#{uiMateriaSeparacion.materiaPresentacionController.obj.cantidad}"  />
+                                <label>Cantidad</label>
+                            </h:panelGroup>
+                       </p:panelGrid>   
+
+                       <p:dataTable var="prs" id="dtgMarcaPresentacion" 
+                           paginator="true"
+                           style="width: 100% !important;"
+                           paginatorPosition="bottom"
+                           rowsPerPageTemplate="5,10,20,50,100"
+                           rows="20" scrollHeight="300"
+                           rowIndexVar="rowIndex"
+                           value='#{dtMaFacturacionCotroller.facturaDetalle.obj.dtFacturaDetalle}'
+                           filteredValue='#{dtMaFacturacionCotroller.materiaPresentacionController.listFilter}'>
+                           <f:facet name="header" >
+                              #{uiNavegacionBean.title}
+                              <p:outputPanel style="position: relative;width:100%">
+                                  <p:commandButton style="position: absolute;top:-25px;right:0px;font-size:50px !important" icon="fa fa-plus-circle " update="@form:dtDatos @form:materiales  formsg:msgs @form:dtgMarcaPresentacion @form:pnMaterialMarcaPresentacion"  process="@form:pnMaterialMarcaPresentacion @this" title="añadir marca" action="#{dtMaFacturacionCotroller.reinitDetalleMarterialPresentacion()}">
+                                       <p:collector value="#{uiMateriaSeparacion.materiaPresentacionController.obj}" addTo="#{dtMaFacturacionCotroller.facturaDetalle.obj.dtFacturaDetalle}"  unique="true" />
+                                       <ui:include src="../../param/param_one.xhtml"/>
+                                   </p:commandButton>
+                              </p:outputPanel>
+                           </f:facet>
+                           <p:ajax  event="rowToggle" global="false" async="true"/>
+                           <p:ajax event="filter"  global="false" ignoreAutoUpdate="true"/>
+                           <ui:include src="../../param/param_one.xhtml"/>
+                           <p:column headerText="No" width="30" >
+                               <h:outputText  value="#{rowIndex+1}" />
+                           </p:column>
+                           <p:column headerText="Material" width="100">
+                               <h:outputText value="#{prs.facturaDetalle.materialid.material.material}" />
+                           </p:column>  
+                           <p:column headerText="Presentaciòn" width="100">
+                               <h:outputText value="#{prs.materialid.presentacion}" />
+                           </p:column>   
+                           <p:column headerText="Cantidad" width="100">
+                               <h:outputText value="#{prs.cantidad}" />
+                           </p:column>       
+                           <p:column width="20" headerText="ED">
+                               <p:commandButton icon="ui-icon-edit" update="@form:pnMaterialMarcaPresentacion" process="@this" title="Editar" action="#{dtMaFacturacionCotroller.materiaPresentacionController.selectObjec(prs)}">
+                                  <ui:include src="../../param/param_one.xhtml"/>
+                               </p:commandButton>
+                           </p:column>
+                       </p:dataTable>
+                </p:panel>
+            </p:outputPanel>
+    </p:panelGrid> 
+                     
+</ui:composition>
+

@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"          
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://java.sun.com/jsf/core"          
+      xmlns:ui="http://java.sun.com/jsf/facelets"       >
+    
+      <p:dataTable var="dt" id="dtDatos" 
+            paginator="true"
+            style="width: 100% !important"
+            paginatorPosition="bottom"
+            paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+            rowsPerPageTemplate="5,10,20,50,100"
+            rowIndexVar="rowIndex"
+            value='#{dtMaMaterialesGrupoController.list}'
+            filteredValue='#{dtMaMaterialesGrupoController.listFilter}'>
+            <f:facet name="header" > 
+               #{uiNavegacionBean.title}
+            </f:facet>
+           <p:ajax  event="rowToggle" global="false" async="true"/>
+           <p:ajax event="filter"  global="false" ignoreAutoUpdate="true"/>
+           <ui:include src="../../param/param_one.xhtml"/>
+           <p:column style="width:16px">
+               <p:rowToggler />
+            </p:column>
+            <p:column headerText="No" width="30" >
+                <h:outputText  value="#{rowIndex+1}" />
+            </p:column>
+            <p:column headerText="Nombre grupo" width="200">
+                <h:outputText value='#{dt.nombre}' />
+            </p:column>    
+            <p:column headerText="Descripción" width="400">
+                <h:outputText value="#{dt.nombre.toUpperCase()}" />
+            </p:column> 
+            <p:column headerText="Estado" width="400">
+                <h:outputText value='#{dt.estado?"Activo":"Inactivo"}' />
+            </p:column> 
+            <p:column width="20">
+                <p:commandButton icon="ui-icon-edit" title="Editar" process="@this" update="@form:pnForm" action="#{dtMaMaterialesGrupoController.selectObjec(dt)}"><f:param name="name" value="#{param.name}" /><f:param name="path" value="#{param.path}" /></p:commandButton>
+            </p:column>
+             <p:column width="20">
+                <p:commandButton icon="ui-icon-dvr" title="Añadir sucursal" process="@this" oncomplete="PF('dtSub').show()" update="@form:dtSub" action="#{dtMaMaterialesGrupoController.selectObjec(dt)}"><f:param name="name" value="#{param.name}" /><f:param name="path" value="#{param.path}" /></p:commandButton>
+            </p:column>
+           <p:rowExpansion>
+                <p:panelGrid columns="1" layout="grid">
+                    <p:outputPanel>
+                        <p:dataTable value="#{dt.dtmamaterialList}" var="SC">
+                             <f:facet name="header">
+                                <h3>Materiales</h3>
+                            </f:facet>
+                            <p:column headerText="Material" width="200">
+                                <h:outputText value='#{SC.material.toUpperCase()}' />
+                            </p:column>
+                            <p:column headerText="Unidad medida" width="200">
+                                <h:outputText value='#{SC.unidadMedida.unidadMedida}' />
+                            </p:column>
+                            <p:column headerText="Conversión a Kg" width="200">
+                                <h:outputText value='#{SC.pesokg}' />
+                            </p:column>
+                        </p:dataTable>
+                    </p:outputPanel>
+                </p:panelGrid>
+            </p:rowExpansion>
+    </p:dataTable>
+    
+    
+    <p:dialog modal="true" header="Añadir sucursal" width="1200" height="600" id="dtSub" widgetVar="dtSub">
+        <ui:include src="../actionButton/actionMaterialCategoria.xhtml"/>
+        <ui:include src="../form/FormMaterialCategoria.xhtml"/>
+        <ui:include src="../dataTable/TableMaterialCategoria.xhtml"/>
+    </p:dialog>
+    
+</ui:composition>
+
+

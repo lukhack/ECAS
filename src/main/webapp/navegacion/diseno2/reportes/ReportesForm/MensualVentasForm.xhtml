@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"          
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://java.sun.com/jsf/core"          
+      xmlns:ui="http://java.sun.com/jsf/facelets"   
+      xmlns:pt="http://xmlns.jcp.org/jsf/passthrough"    
+      xmlns:pm="http://primefaces.org/mobile" 
+      xmlns:o="http://omnifaces.org/ui"
+      xmlns:of="http://omnifaces.org/functions"
+      xmlns:pe="http://primefaces.org/ui/extensions"
+      xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
+     
+     <style>
+        .ui-selectonemenu-panel{
+            z-index:999999999 !important;
+        }
+        
+        .black-button{
+           border-radius: 0px 0px 0px 0px !important;
+            -moz-border-radius: 0px 0px 0px 0px !important;
+            -webkit-border-radius: 0px 0px 0px 0px !important;
+            border: 0px none #ffffff !important;
+            background-color: transparent !important;
+            color: #000 !important;
+            -webkit-box-shadow: 0px 0px 0px 0px rgba(0,0,0,0.75)  !important;
+            -moz-box-shadow: 0px 0px 0px 0px rgba(0,0,0,0.75)  !important;
+            box-shadow: 0px 0px 0px 0px rgba(0,0,0,0.75)  !important;
+        }
+        
+        .ui-selectonemenu-panel{
+            z-index: 999999999 !important;
+        }
+        
+        
+        .rcorners1 {
+            text-align: center;
+            vertical-align:middle;
+            border-radius: 100px;
+            background: #73AD21;
+            width: 80px;
+            height: 80px;
+            height: 80px;
+            line-height: 80px;
+            color: #ffffff;
+        }
+          
+        .rcorners1:hover{
+          background: #cccccc !important;
+        }
+        
+        
+        .pnlist2{
+           background: #cccccc !important;
+           color: white
+        }
+        
+        .pnlist2:hover, .pnlist:hover{
+           background: #00ccff !important;
+           color: white;
+        }
+        
+        
+        
+        span {
+            
+          display: inline-block;
+          vertical-align: middle;
+          line-height: normal;
+        }
+        
+        .row{
+            width:30px  !important;
+            padding:0px 0px !important;
+        }
+        
+        .bottom{
+            margin:0px !important;
+            padding:0px !important;
+            width:100px  !important;
+            border-radius:0px !important;
+        }
+        
+        .bottom:hover{
+            background-color: #00ccff !important;
+        }
+        
+        .menu{
+            width: 300px;
+        }
+    </style>
+     
+   <p:outputPanel id="panelReferencia" >
+        <p:panel header="Compras por Mes">
+            <p:panelGrid style="width:100%;border: 1px solid #cccccc;min-height: 100%"  styleClass="ui-panelgrid-blank" layout="grid" columns="2"  >
+                <p:dataTable value="#{prReporteController.reporteMes(2)}" var="cd" scrollHeight="400" 
+                             scrollWidth="98%"
+                                scrollable ="true"   rowIndexVar="index" id="dtperiodo"
+                            paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink}  {LastPageLink} {RowsPerPageDropdown} {Exporters}"
+                            paginator="true" rows="100" rowsPerPageTemplate="100,200,500,1000,2000,5000,1000" style="margin-bottom:20px">
+                    <f:facet name="header">
+                        <p:outputLabel value="Periodo"/> 
+                    </f:facet>
+                    <f:facet name="{Exporters}">
+                        <div style="position: relative">
+                           <h:commandLink title="Exportar a excel" style="position: absolute;right: 0;top: -30px;">
+                               <img src="images/excel.png" width="35"/>
+                               <p:dataExporter type="xls" target="dtperiodo" fileName="Datos_Compras_dia" />
+                               <ui:include src="../../param/param_one.xhtml"/>
+                           </h:commandLink>
+                       </div>
+                    </f:facet>
+                    <p:column headerText="Mes procesado">#{cd.mes}-#{cd.anio}</p:column>
+                    <p:column headerText="Total Comprado(Kg)" width="150" style="width:100px;text-align: right" >
+                        <p:outputLabel value="#{cd.totalmaterial}" style="text-align: right"><f:convertNumber pattern="##,###"  /> </p:outputLabel>
+                    </p:column>
+                    <p:column headerText="Total Comprado($)" width=""  style="text-align: right">
+                            <p:outputLabel value="#{cd.total}"><f:convertNumber pattern="##,###"  /> </p:outputLabel>
+                    </p:column>
+                    <p:column width="100">
+                        <p:menuButton value="Informes"  menuStyleClass="menu"  >
+                            <p:menuitem value="Reporte diario" icon="fa fa-database" iconPos="fa fa-database" action="#{prReporteController.selectFecha(2,cd.mes,cd.anio,2)}" process="@this" update="@form:masterDetail"></p:menuitem>
+                            <p:menuitem value="Reporte por Mes" icon="fa fa-list" title="Compras del Mes por Detalle" action="#{prReporteController.selectReclicladorDetallado(2,cd.mes,cd.anio,3)}" process="@this" update="@form:masterDetail"></p:menuitem>
+                        </p:menuButton>
+                    </p:column>
+                    <p:columnGroup type="footer">
+                                <p:row>
+                                    <p:column style="font-weight: bold !important;font-size:24px;"  colspan="2" footerText="Total Peso(Kg)" />
+                                    <p:column  colspan="3" style="text-align: right" >
+                                        <f:facet name="footer">
+                                            <h:outputText style="font-size:24px;font-weight:bold" value="#{prReporteController.reporteMes(1).stream().map(item->item.totalmaterial).sum()}">
+                                              <f:convertNumber pattern="##,###"  />
+                                          </h:outputText>
+                                        </f:facet>
+                                    </p:column>
+                                </p:row>
+                                <p:row>
+                                    <p:column style="font-weight: bold !important;font-size:24px;"  colspan="2" footerText="Total ($)" />
+                                    <p:column  colspan="3" style="text-align: right" >
+                                        <f:facet name="footer">
+                                            <h:outputText style="font-size:24px;font-weight:bold" value="#{prReporteController.reporteMes(1).stream().map(item->item.total).sum()}">
+                                              <f:convertNumber pattern="##,###"  />
+                                          </h:outputText>
+                                        </f:facet>
+                                    </p:column>
+                                </p:row>
+                        </p:columnGroup>
+                </p:dataTable>
+                <p:chart type="line" model="#{prReporteController.charLineal}" style="height:300px;"/>
+            </p:panelGrid>
+        </p:panel>
+       
+    </p:outputPanel>
+    
+</ui:composition>
+
+

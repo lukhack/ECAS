@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"          
+      xmlns:p="http://primefaces.org/ui"          
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+      
+    <p:panelGrid columns="1"  style="width: 680px !important"  >
+            <p:dataTable var="obj" id="tbestamos" 
+                 paginator="true"
+                 scrollable="true"
+                 widgetVar="tbestamos"
+                 paginatorPosition="bottom"
+                 paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                 rowsPerPageTemplate="#{config.PAG_PAGETEMPLATE}"
+                 scrollHeight="300"
+                 rows="100" 
+                 scrollWidth="false"   
+                 value="#{mapEncuestaBean.maIUInformesEstamos}"  
+                 filteredValue="#{mapEncuestaBean.filterIUInformesEstamos}">
+            <f:facet name="header">
+                <h2>¿Dónde estamos hoy?</h2> 
+                <p:panelGrid columns="2" id="panelBuscar" style="width:100%"  columnClasses="columna80,columna20" styleClass="ui-panelgrid-blank" >
+                    <p:inputText id="globalFilter" styleClass="input-search" style="width:100% !important" placeholder="Buscar Datos"/>
+                    <p:outputPanel>
+                        <p:commandButton onclick="PF('tbestamos').filter();"  process="globalFilter" 
+                                         ajax="true" value="" style='width:30px;height:30px;' icon="fa fa-search"   />
+                        <p:commandButton id="toggler" type="button"  value="" style='width:30px;height:30px;margin-left:3px !important' icon="fa fa-reorder" />
+                                         <p:columnToggler datasource="tbestamos" trigger="toggler" />
+
+                    </p:outputPanel>    
+                </p:panelGrid>
+            </f:facet> 
+             <p:column headerText="Localidad" style="text-align: left" filterBy="#{obj.nomBarrio}"  width="200" visible="true">
+                <f:facet name="filter" ><p:inputText  style="width:95% !important;display:none"><p:ajax event="change"  oncomplete="PF('tbestamos').filter()"/></p:inputText></f:facet>
+                <h:outputText value="#{obj.comuna.descripcion}"  style="text-transform: uppercase"/>
+            </p:column>
+            <p:column headerText="Nombre Barrio" style="text-align: left" filterBy="#{obj.nomBarrio}"  width="200" visible="true">
+                <f:facet name="filter" ><p:inputText  style="width:95% !important;display:none"><p:ajax event="change"  oncomplete="PF('tbestamos').filter()"/></p:inputText></f:facet>
+                <h:outputText value="#{obj.nomBarrio}" />
+            </p:column>
+            <p:column headerText="Pendientes" width="90" filterBy="#{obj.asignada}">
+                 <f:facet name="filter" ><p:inputText  style="width:95% !important;display:none"><p:ajax event="change"  oncomplete="PF('tbestamos').filter()"/></p:inputText></f:facet>
+                 <h:outputText value="#{obj.asignada + obj.descarga + obj.nuevos}" />
+            </p:column>     
+         </p:dataTable>
+     </p:panelGrid>
+</ui:composition>
+

@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"          
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://java.sun.com/jsf/core"          
+      xmlns:ui="http://java.sun.com/jsf/facelets"       >
+    
+    <p:outputPanel style="width:100%;text-align:right;position: relative">
+        <p:commandLink update="@form:dtDatoSubcursal @form:pnFormSub  @form:dtDatos formsg:msgs"   process="@form:pnFormSub @this" id="btnAnadirSub" style="position: absolute;right: 0;top:0"     title="Añadir" action="#{dtClienteController.sucursalController.reinit(dtClienteController.obj)}"><i style="font-size:2.8em;color: #607D8B" class="material-icons">playlist_add</i>
+            <p:collector value="#{dtClienteController.sucursalController.obj}" addTo="#{dtClienteController.obj.dtclientesucursalList}"  unique="true" />
+            <f:param name="name" value="#{param.name}" /><f:param name="path" value="#{param.path}" />
+        </p:commandLink> 
+    </p:outputPanel>
+    <p:defaultCommand target="btnAnadir" />
+</ui:composition>
+
+

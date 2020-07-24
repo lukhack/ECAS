@@ -1,0 +1,31 @@
+
+<!DOCTYPE html>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"          
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://java.sun.com/jsf/core"          
+      xmlns:ui="http://java.sun.com/jsf/facelets"   
+      xmlns:pt="http://xmlns.jcp.org/jsf/passthrough"    
+      xmlns:pm="http://primefaces.org/mobile"
+      xmlns:pe="http://primefaces.org/ui/extensions"
+      xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
+     
+    <p:panelGrid  id="pnForm" columns="1"  styleClass="ui-panelgrid-blank"   layout="grid" style="width:100%" columnClasses="columna100">
+        <p:panelGrid  columns="3"  styleClass="ui-panelgrid-blank form-group" columnClasses="columna35, columna35, columna30">
+            <h:panelGroup styleClass="md-inputfield">
+                <p:inputText value="#{dtClienteController.obj.nit}" maxlength="15" required="true"  />
+                <label>Nit</label>
+            </h:panelGroup>   
+            <h:panelGroup styleClass="md-inputfield" >
+                <p:inputText required="true" maxlength="45" value="#{dtClienteController.obj.cliente}"  />
+                <label>Razon social</label>
+            </h:panelGroup>
+            <h:panelGroup styleClass="md-inputfield">
+                <p:inputText value="#{dtClienteController.obj.responsable}" maxlength="15" required="true" />
+                <label>Ecargado(a)</label>
+            </h:panelGroup>  
+        </p:panelGrid>   
+    </p:panelGrid>
+                      
+</ui:composition>
+

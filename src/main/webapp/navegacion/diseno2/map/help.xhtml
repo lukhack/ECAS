@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"          
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://java.sun.com/jsf/core"          
+      xmlns:ui="http://java.sun.com/jsf/facelets" >
+    
+    <h:form>
+        <p:lightBox id="lighbox3"  widgetVar="lightHelp" >
+             <h:outputLink value="#" title="Help"></h:outputLink>
+             <f:facet name="inline" >
+                   <p:panelGrid columns="2" style="width:400px;padding:50px;background: white" styleClass="ui-panelgrid-blank">
+                       <p:graphicImage value="images/marca/ok.png"  width="200" />
+                       <p:outputPanel id="panelRespuesta" style="background: white;width:700px;padding:50px;max-height:400px;overflow-y: scroll;">
+                               <ui:include src="help/help.xhtml"/>
+                       </p:outputPanel>
+                   </p:panelGrid>
+             </f:facet>  
+             <f:facet name="inline" >
+                 <p:outputPanel style="width:100%;text-align:right;background-color:#d6b46c">
+                     <p:commandLink style="padding:10px;color:#9f2e2e" onclick="PF('lightHelp').hide()">Cerrar</p:commandLink>
+                 </p:outputPanel>
+             </f:facet>    
+        </p:lightBox>
+    </h:form> 
+</ui:composition>
+

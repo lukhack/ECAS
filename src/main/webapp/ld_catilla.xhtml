@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
+    
+    <h:head>
+        <f:facet name="first">
+            <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+            <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+            <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"/>
+            <meta name="apple-mobile-web-app-capable" content="yes" />
+        </f:facet>
+        <title>PrimeFaces Serenity</title>
+        
+        <script type="text/javascript">
+            $(function() {
+                $('#landing-menu-button').on('click', function(e) {
+                    $('#landing-menu').toggleClass('landing-menu-active')
+                    e.preventDefault();
+                });
+                
+                $('#landing-menu').on('click', function() {
+                    $('#landing-menu').removeClass('landing-menu-active')
+                });
+            });
+        </script>
+        <style>
+            .colum1{
+                background-color: white;
+                width: 30%;
+            }
+            
+            .colum50{
+                background-color: white;
+                width: 50%;
+            }
+            .colum2{
+                background-color: white;
+                width: 70%;
+                vertical-align: top !important;
+                padding:20px;
+            }
+            
+            .landing-body #introduction > div {
+               background:none;
+               padding-top: 0px;
+            }
+            
+            .header {
+                background-color: rgba(255, 255, 255, 0.7) !important;
+                
+            }
+            
+            bold, strong {
+                font-weight: 700;
+            }
+            
+            body{
+                background-color: white !important;
+                font: 13px/20px PTSansRegular,Arial,Helvetica,sans-serif !important;
+            }
+            
+            .border-shadow{
+                -webkit-box-shadow: 10px 20px 14px -9px rgba(0,0,0,0.75);
+                -moz-box-shadow: 10px 20px 14px -9px rgba(0,0,0,0.75);
+                box-shadow: 10px 20px 14px -9px rgba(0,0,0,0.75);
+            }
+            .landing-body #header > div #landing-menu {
+                float: right;
+                list-style-type: none;
+                padding: 0;
+                margin: -15px 0 0 0;
+                background-color: green !important;
+                color:white !important;
+                margin-right:0 !important;
+            }
+            .landing-body #header > div #landing-menu > li:hover a {
+                height:50px !important;
+                color: white;
+                border-color: white;
+            }
+            
+            #landing-menu > li li{
+                background-color: rgba(0,204,51,0.8)  !important;
+                color:white !important;
+                
+            }
+            
+            #landing-menu > li li:hover{
+                background-color:  #00cc33 !important;
+                color:white !important;
+                
+            }
+
+            #landing-menu > li{
+                vertical-align: middle !important;
+                height:90px !important;
+                padding: 20px;
+                border: 2px solid white;
+                margin-right:0 !important;
+                background-color: rgba(0,204,51,0.8)  !important;
+                color:white !important;
+            }
+            
+           
+            
+            #landing-menu > li ul li a{
+                vertical-align: middle !important;
+                background-color: none !important;
+                padding: 20px !important;
+                border: none !important;
+                margin:0x !important;
+                font-weight: 400 !important;
+                display: inline-block;
+            }
+            
+            #landing-menu > li a{
+                color:white !important;
+            }
+            
+            #landing-menu{
+                margin-right:0;
+                
+                background-color: rgba(0,204,51,0.8)  !important;
+                color:white !important;
+            }
+            
+            .landing-body #header > div {
+                width: 80%;
+                margin-top:0;
+                margin-right:0;
+                height: 90px;
+                padding: 15px 0;
+            }
+        </style>
+        <link rel="stylesheet" type="text/css" href="css/menu.css"/>
+        <h:outputScript name="js/layout.js" library="serenity-layout" />
+        <h:outputScript name="js/ripple.js" library="serenity-layout" />
+    </h:head>
+
+                 
+    <h:body styleClass="landing-body">
+        
+        <div id="Inicio"/>
+        <div class="landing-wrapper">
+            <ui:include src="navegacion/landing/header.xhtml"/>
+            
+            <div id="introduction" style="width: 100%;margin-top:700px">
+                
+                <ui:include src="navegacion/landing/quienesSomos.xhtml"/>
+                
+            </div>
+             
+            <div id="features" >
+                 <ui:include src="navegacion/landing/cadenaInformacion.xhtml"/>
+          
+            </div>
+            <div id="stats2">
+                <ui:include src="navegacion/landing/Personas.xhtml"/>
+            </div>
+            
+            
+            <div id="clientes" style="text-align: center">
+                <ui:include src="navegacion/landing/clientes.xhtml"/>
+            </div>
+            <div id="productos" style="text-align: center">
+                <div style="position: relative;width:100%;z-index:-2;text-align: center;">
+                    <div style="background-image:url('images/nuestrosProductos.png');width: 100%;height:330px"/>
+                    <p style="text-align: justify;width:70%;margin: auto;position: absolute;top:200px;left:25%;right:25%">
+                        <strong style="color: WHITE;font-size:25px">Normas</strong>
+                    </p>
+                    
+                </div>
+                
+                    <div class="ui-g" style="margin: auto;margin-top:-50px;z-index:1">
+                        <div class="ui-g-12 ui-md-4">
+                            <div class="pricing-basic pricing-box">
+                                <span class="pricing-name"  style="color: white;font-size:20px">ROLLOS PLÁSTICOS</span>
+                                <p:graphicImage name="images/index/rollos-plasticos.png"  width="100%"  library="serenity-layout"  alt="No IMAGEN" title="data" />
+                                <p style="color:gray;font-weight:600; font-size:20px">ROLLOS DE POLIETILENO EN NEGRO ENTRE 1 – 6 MTS PARA LA CONSTRUCCIÓN Y EL AGRO</p>
+                            </div>
+                        </div>
+                        
+                        <div class="ui-g-12 ui-md-4">
+                            <div class="pricing-standard pricing-box">
+                                <span class="pricing-name"  style="color: white;font-size:20px">BOLSAS INDUSTRIALES</span>
+                                <p:graphicImage name="images/index/bolsas-industriales.png"  width="100%"  library="serenity-layout"  alt="No IMAGEN" title="data" />
+                                
+                                <p style="color:gray;font-weight:600; font-size:20px">BOLSA ENSILAJE BOLSA DE BASURA</p>
+                            </div>
+                        </div>
+                        
+                        <div class="ui-g-12 ui-md-4" >
+                            <div class="pricing-standard pricing-box">
+                                <span class="pricing-name" style="color: white;font-size:20px;">CALZADO</span>
+                                <p:graphicImage name="images/index/calzado.png"  width="100%"  library="serenity-layout"  alt="No IMAGEN" title="data" />
+                                
+                                <p style="color:gray;font-weight:600; font-size:20px">BOTELLAS PLASTICAS PARA HACER LOS ZAPATOS 'CHATOS' LIGEROS</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+            </div>
+            
+            
+            
+            
+            <div id="contact">
+                <div>
+                    <h2>CONTACTO</h2>
+                    
+                    <div class="ui-g">
+                        <div class="ui-g-12 ui-md-8 contact-map">
+                            <p:graphicImage name="images/landing/map-contact.png" library="serenity-layout" />
+                        </div>
+                                            
+                        <div class="ui-g-12 ui-md-4 contact-form ui-fluid">
+                            <div class="ui-g-12">
+                                <span class="md-inputfield">
+                                    <p:inputText />
+                                    <label>Nombre</label>
+                                </span>
+                            </div>
+
+                            <div class="ui-g-12">
+                                <span class="md-inputfield">
+                                    <p:inputText />
+                                    <label>Correo</label>
+                                </span>
+                            </div>
+                            
+                            <div class="ui-g-12">
+                                <span class="md-inputfield">
+                                    <p:inputText />
+                                    <label>Mensaje</label>
+                                </span>
+                            </div>
+                            
+                            <p:button outcome="/Admon" styleClass="indigo-btn" value="ENVIAR"/>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div id="footer">
+                <div>
+                    <div class="ui-g">
+                        <div class="ui-g-12 ui-md-4">
+                            <p:graphicImage name="images/index/logo.png" library="serenity-layout" styleClass="footer-logo" />
+                            
+                            <div>
+                                <h4>Sobre Nosotros</h4>
+                                <p>Procesos y servicio</p>    
+                            </div>
+                        </div>
+                        
+                        <div class="ui-g-12 ui-md-4">
+                            <h4>Contacto</h4>
+                            <p>Secreataria de medio ambiente</p>
+                            <p><i class="material-icons">&#xE0CD;</i> +108278 92 728</p>    
+                        </div>
+                        
+                        <div class="ui-g-12 ui-md-4 footer-social">
+                            <h4>SOCIAL</h4>
+                            <a href="#">
+                                <p:graphicImage name="images/landing/icon-twitter.svg" library="serenity-layout" />
+                            </a>
+                            <a href="#">
+                                <p:graphicImage name="images/landing/icon-linkedin.svg" library="serenity-layout" />
+                            </a>
+                            <a href="#">
+                                <p:graphicImage name="images/landing/icon-facebook.svg" library="serenity-layout" />
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <h:outputStylesheet name="css/layout-#{guestPreferences.layout}.css" library="serenity-layout"/>
+    </h:body>
+
+</html>

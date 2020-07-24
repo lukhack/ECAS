@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"          
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://java.sun.com/jsf/core"          
+      xmlns:ui="http://java.sun.com/jsf/facelets"   
+      xmlns:pt="http://xmlns.jcp.org/jsf/passthrough"    
+      xmlns:pm="http://primefaces.org/mobile" 
+      xmlns:o="http://omnifaces.org/ui"
+      xmlns:of="http://omnifaces.org/functions"
+      xmlns:pe="http://primefaces.org/ui/extensions"
+      xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
+     
+     <style>
+        .ui-selectonemenu-panel{
+            z-index:999999999 !important;
+        }
+        
+        .black-button{
+           border-radius: 0px 0px 0px 0px !important;
+            -moz-border-radius: 0px 0px 0px 0px !important;
+            -webkit-border-radius: 0px 0px 0px 0px !important;
+            border: 0px none #ffffff !important;
+            background-color: transparent !important;
+            color: #000 !important;
+            -webkit-box-shadow: 0px 0px 0px 0px rgba(0,0,0,0.75)  !important;
+            -moz-box-shadow: 0px 0px 0px 0px rgba(0,0,0,0.75)  !important;
+            box-shadow: 0px 0px 0px 0px rgba(0,0,0,0.75)  !important;
+        }
+        
+        .ui-selectonemenu-panel{
+            z-index: 999999999 !important;
+        }
+        
+        
+        .emp1 .fc-content {
+            background: orange;
+        }
+        .emp2 .fc-content {
+           background: green;
+         }
+         
+        .emp3 .fc-content {
+           background: graytext;
+         }
+
+         .emp4 .fc-content {
+            background: #607D8B;
+        }
+        
+        .emp5 .fc-content {
+            background: #006de5;
+            color: white;
+        }
+        
+        .emp6 .fc-content {
+            background: green;
+            color: white;
+        }
+    </style>
+     
+    <h:form  id="frmApp"  >
+        <h:messages/>
+        <pe:masterDetail id="masterDetail"  level="#{prReporteController.nivel}" showAllBreadcrumbItems="true" selectLevelListener="1"  showBreadcrumb="true">  
+            <pe:masterDetailLevel level="1" levelLabel="Compras Mes" >  
+                <ui:include src="ReportesForm/DonacionesForm.xhtml"/>
+            </pe:masterDetailLevel>
+            <pe:masterDetailLevel level="2" contextVar="Dia" levelLabel="Donaciones Dia">  
+                <ui:include src="ReportesForm/DiariasForm.xhtml"/>
+            </pe:masterDetailLevel>
+            <pe:masterDetailLevel level="3" contextVar="reciclador" levelLabel="Donaciones por Reciclador y Detallado">
+                <ui:include src="ReportesForm/ResicladorDetalladoForm.xhtml"/>
+            </pe:masterDetailLevel>
+            <pe:masterDetailLevel level="4" contextVar="reciclador" levelLabel="Donaciones por Reciclador y Material Agrupado">
+                <ui:include src="ReportesForm/ResicladorAgrupadoxMaterialForm.xhtml"/>
+            </pe:masterDetailLevel>
+            <pe:masterDetailLevel level="5" contextVar="reciclador" levelLabel="Donaciones por Reciclador Agrupado">
+                <ui:include src="ReportesForm/ResicladorAgrupadoForm.xhtml"/>
+            </pe:masterDetailLevel>
+        </pe:masterDetail>  
+    </h:form>
+</ui:composition>
+
+

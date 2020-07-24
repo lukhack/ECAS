@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
+
+    <h:head>
+        <f:facet name="first">
+            <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+            <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+            <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"/>
+            <meta name="apple-mobile-web-app-capable" content="yes" />
+        </f:facet>
+        <title>#{confController.mapConfig("PAGINA", "TITULO")}</title>
+        <h:outputScript name="js/layout.js" library="serenity-layout" />
+        <h:outputScript name="js/ripple.js" library="serenity-layout" />
+        <style>
+            
+        </style>
+    </h:head>
+    <h:body styleClass="login-body">
+        <div class="background"></div>
+        <ui:include src="./WEB-INF/Diseno/grow.xhtml"/>
+        <ui:include src="./navegacion/#{config.TEMPLATE_DISENO}/login/login.xhtml"/>
+        <h:outputStylesheet name="css/layout-#{guestPreferences.layout}.css" library="serenity-layout" />
+        <c:choose>
+            <c:when  test="#{usuarioB.checkUsuario() eq false}">
+                #{loginB.logout()}
+            </c:when>
+        </c:choose>
+    </h:body>
+</html>

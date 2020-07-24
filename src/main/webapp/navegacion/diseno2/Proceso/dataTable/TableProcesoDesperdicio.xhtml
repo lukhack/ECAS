@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"          
+      xmlns:p="http://primefaces.org/ui"          
+      xmlns:ui="http://java.sun.com/jsf/facelets"       
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:c="http://xmlns.jcp.org/jsp/jstl/core"
+      xmlns:h="http://xmlns.jcp.org/jsf/html">
+    <style>
+        .ui-datepicker{
+            z-index: 999999999 !important;
+        }
+    </style>
+    
+    <p:dataTable var="dt" id="dtDatos" 
+            paginator="true"
+            style="width: 100% !important"
+            paginatorPosition="bottom"
+            paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+            rowsPerPageTemplate="5,10,20,50,100"
+            rows="20"
+            rowIndexVar="rowIndex"
+            value='#{prRecoleccionDesperdiciosController.findList()}'
+            filteredValue='#{prRecoleccionDesperdiciosController.listFilter}'>
+             <f:facet name="header" >
+                #{uiNavegacionBean.title}
+             </f:facet>
+           <p:ajax event="filter"  process="@this" global="true" ignoreAutoUpdate="true">
+               <ui:include src="../../param/param_one.xhtml"/>
+          </p:ajax>
+            <p:column headerText="No" width="30"  filterBy="#{dt.id eq null?rowIndex+1:dt.id}">
+                <h:outputText  value="#{dt.id eq null?rowIndex+1:dt.id}" />
+            </p:column>
+            <p:column headerText="Fecha recolección" width="95%" filterBy="#{dt.fecharecoleccion}" filterMatchMode="contains">
+                <h:outputText value='#{dt.fecharecoleccion}' />
+            </p:column> 
+            <p:column headerText="Peso total(kg)" width="95%" filterBy="#{dt.cantidad}" filterMatchMode="contains">
+                <h:outputText value='#{dt.cantidad}' />
+            </p:column> 
+            <p:column headerText="Placas del vehículo recolector" width="95%" filterBy="#{dt.placavehiculorecolector}" filterMatchMode="contains">
+                <h:outputText value='#{dt.placavehiculorecolector}' />
+            </p:column> 
+            <p:column headerText="Encargado despacho" width="95%" filterBy="#{dt.encargado_id.dtterceronatural.nombres} #{dt.encargado_id.dtterceronatural.apellidos}" filterMatchMode="contains">
+                <h:outputText value='#{dt.encargado_id.dtterceronatural.nombres} #{dt.encargado_id.dtterceronatural.apellidos}' />
+            </p:column> 
+            <p:column headerText="Observaciones" width="95%" filterBy="#{dt.observacion}" filterMatchMode="contains">
+                <h:outputText value='#{dt.observacion}' />
+            </p:column> 
+            <p:column headerText="" width="20">
+                <p:commandButton title="Remove" rendered="#{dt.id eq null}"  style="width: 30px" icon="ui-icon-delete" update="dtDatos" process="@this">
+                    <p:collector value="#{dt}" removeFrom="#{dtMaTipoFacturaController.list}" unique="true"/>
+                    <f:param name="name" value="#{param.name}" /><f:param name="path" value="#{param.path}" />
+                </p:commandButton>
+            </p:column>
+            <p:column headerText="" width="20">
+                <p:commandButton title="Editar" action="#{prRecoleccionDesperdiciosController.selectObjec(dt)}"   icon="ui-icon-edit" update="@form:pnForm" process="@this">
+                   <ui:include src="../../param/param_one.xhtml"/>
+                </p:commandButton>
+            </p:column>
+    </p:dataTable>
+    
+</ui:composition>
+
+

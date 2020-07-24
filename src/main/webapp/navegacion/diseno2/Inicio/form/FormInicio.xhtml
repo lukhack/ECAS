@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"          
+      xmlns:p="http://primefaces.org/ui"          
+      xmlns:ui="http://java.sun.com/jsf/facelets"       >
+     
+    
+    <p:panelGrid  id="pnForm" columns="1"  styleClass="ui-panelgrid-blank"   layout="grid" style="width:100%" columnClasses="columna100">
+        <p:panelGrid  columns="3"  styleClass="ui-panelgrid-blank form-group" columnClasses="columna35, columna40, columna25">
+            <h:panelGroup styleClass="md-inputfield">
+                <p:inputText id="txtTipo" value="#{dtMaTipodocumento.obj.tipoDocumento}" required="true"   maxlength="10"/>
+                <p:outputLabel for="txtTipo" value="Documento Cc"/>
+            </h:panelGroup>   
+            <h:panelGroup styleClass="md-inputfield" >
+                <p:inputText  maxlength="45" value="#{dtMaTipodocumento.obj.descripcion}" required="true" requiredMessage="Valor requerido en Nombre o Razon social"/>
+                 <p:outputLabel for="txtTipo" value="Descripción"/>
+            </h:panelGroup>
+            
+        </p:panelGrid>
+    </p:panelGrid> 
+                      
+</ui:composition>
+

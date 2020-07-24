@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"          
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://java.sun.com/jsf/core"          
+      xmlns:ui="http://java.sun.com/jsf/facelets">
+     
+    
+    <p:panelGrid  id="pnFormClienteEcas" columns="4"  styleClass="ui-panelgrid-blank"   layout="grid" style="width:100%" columnClasses="columna25, columna25, columna25,columna25">
+        <p:outputLabel  for="ECAS" value="ECAS - sucursal"  title="Eca sucursal"/>
+        <p:selectOneMenu  id="ECAS" required="true"   editable="false"                                     
+                          value="#{dtECASucursalController.obj}" converter="sucursalConvert"   style="width: 95%">
+            <f:selectItem itemLabel="Seleccione sucursal..." itemValue="#{null}"  />                                
+            <f:selectItems value="#{dtECASucursalController.list}" var="dtS" itemLabel="#{dtS.dtEcaid.nombre} - #{dtS.filial}" itemValue="#{dtS}"/>
+        </p:selectOneMenu>
+    </p:panelGrid> 
+                     
+</ui:composition>
+

@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"          
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://java.sun.com/jsf/core"          
+      xmlns:ui="http://java.sun.com/jsf/facelets"       >
+    
+    <div>
+        <p:commandLink update="@form:dgFactura formsg:msgs" oncomplete="PF('dgFactura').show()"  id="btnDialogPrinter"   title="Imprimir" action="#{dtMaFacturacionCotroller.reinitDetalle()}"><i style="font-size:2.8em;color: #607D8B" class="material-icons">print</i>
+          
+        </p:commandLink>
+        <p:commandLink process="@form:PnAnadir @form:slEcas @form:slTransporte @form:pnTotales @this" update="formsg:msgs" oncomplete="PF('dataFacturacionDialog').hide()"  action='#{prRecoleccionController.addFactura(dtMaFacturacionCotroller.obj)}'  style="margin:0px;padding: 0px"  title="Añadir a la solicitud de recolecciòn"><i style="font-size:2.8em;color: #607D8B" class="material-icons">&#xE161;</i>
+           
+        </p:commandLink>
+       <p:commandLink process="@form:materiales @form:txtCantidad @form:txtValor @form:txtValor @form:clasificacion @form:txtdescripcionDetalle @this" id="btnAnadir2"  update="@form:dtDatos @form:pnTotales @form:materiales  formsg:msgs"    title="Añadir" action="#{dtMaFacturacionCotroller.reinitDetalle()}"><i style="font-size:2.8em;color: #607D8B" class="material-icons">playlist_add</i>
+           <p:collector value="#{dtMaFacturacionDetalleController.obj}" addTo="#{dtMaFacturacionCotroller.obj.dtfacturadetalleList}"  unique="true" />
+          
+       </p:commandLink>
+    </div>
+    <p:outputPanel id="PnAnadir" style="width:100%;text-align:right;position: relative">
+       
+    </p:outputPanel>
+    
+    <p:defaultCommand target="btnAnadir2" />
+    
+</ui:composition>
+
+

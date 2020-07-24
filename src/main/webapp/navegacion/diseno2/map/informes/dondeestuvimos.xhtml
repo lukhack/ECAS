@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"          
+      xmlns:p="http://primefaces.org/ui"          
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
+      
+    <p:panelGrid columns="1"  style="width: 680px !important"  >
+            <p:dataTable var="obj" id="tbestuvimos" 
+                 paginator="true"
+                 scrollable="true"
+                 widgetVar="tbestuvimos"
+                 paginatorPosition="bottom"
+                 paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                 rowsPerPageTemplate="#{config.PAG_PAGETEMPLATE}"
+                 scrollHeight="300"
+                 rows="100" 
+                 scrollWidth="false"   
+                 value="#{mapEncuestaBean.maIUInformesEstuvimos}"  
+                 filteredValue="#{mapEncuestaBean.filterIUInformesEstuvimos}">
+            <f:facet name="header">
+                <h2>¿En dónde hemos estado?</h2>
+                <p:panelGrid columns="2" id="panelBuscar" style="width:100%"  columnClasses="columna80,columna20" styleClass="ui-panelgrid-blank" >
+                    <p:inputText id="globalFilter" styleClass="input-search" style="width:100% !important" placeholder="Buscar Datos"/>
+                    <p:outputPanel>
+                        <p:commandButton onclick="PF('tbestuvimos').filter();"  process="globalFilter" 
+                                         ajax="true" value="" style='width:30px;height:30px;' icon="fa fa-search"   />
+                        <p:commandButton id="toggler" type="button"  value="" style='width:30px;height:30px;margin-left:3px !important' icon="fa fa-reorder" />
+                                         <p:columnToggler datasource="tbestuvimos" trigger="toggler" />
+
+                    </p:outputPanel>    
+                </p:panelGrid>
+            </f:facet> 
+            <p:column headerText="Nombre Barrio" style="text-align: left" filterBy="#{obj.nomBarrio}"  width="200" visible="true">
+                <f:facet name="filter" ><p:inputText  style="width:95% !important;display:none"><p:ajax event="change"  oncomplete="PF('tbestuvimos').filter()"/></p:inputText></f:facet>
+                <h:outputText value="#{obj.nomBarrio}" />
+            </p:column>
+            <p:column headerText="Finalizadas" width="90"  filterBy="#{obj.realizada}"  >
+                 <f:facet name="filter" ><p:inputText  style="width:95% !important;display:none"><p:ajax event="change"  oncomplete="PF('tbestuvimos').filter()"/></p:inputText></f:facet>
+                 <h:outputText value="#{obj.realizada}" />
+            </p:column> 
+                
+            <p:column headerText="% Ejecución" width="90"  filterBy="#{obj.realizada}"  >
+                 <f:facet name="filter" ><p:inputText  style="width:95% !important;display:none"><p:ajax event="change"  oncomplete="PF('tbestuvimos').filter()"/></p:inputText></f:facet>
+                 <h:outputText value="#{mapEncuestaBean.porcentajeEjecucion(obj)} %" />
+            </p:column> 
+         </p:dataTable>
+     </p:panelGrid>
+</ui:composition>
+

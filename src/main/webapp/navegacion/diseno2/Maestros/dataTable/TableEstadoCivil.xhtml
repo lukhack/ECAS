@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"          
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://java.sun.com/jsf/core"          
+      xmlns:ui="http://java.sun.com/jsf/facelets"       >
+    
+     <p:dataTable var="dt" id="dtDatos" 
+        paginator="true"
+        scrollable="true"
+        scrollHeight="230"
+        style="width: 100% !important"
+        paginatorPosition="bottom"
+        paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+        rowsPerPageTemplate="5,10,20,50,100"
+        rows="20"
+        rowIndexVar="rowIndex"
+        value='#{dtMaEstadoCivil.list}'
+        filteredValue='#{dtMaEstadoCivil.listFilter}'>
+        <f:facet name="header" >
+           #{uiNavegacionBean.title}
+        </f:facet>
+       <p:ajax event="filter"  process="@this" global="true" ignoreAutoUpdate="true"/>
+        <ui:include src="../../param/param_one.xhtml"/>
+        <p:column headerText="No" width="5%"  filterBy="#{rowIndex+1}">
+            <h:outputText  value="#{rowIndex+1}" />
+        </p:column>
+        <p:column headerText="descripción" width="50%" filterBy="#{dt.descripcion}" filterMatchMode="contains">
+            <h:outputText value="#{dt.estadocivil}" />
+        </p:column> 
+        <p:column headerText="Action" width="5%">
+            <p:commandButton title="Remove" rendered="#{dt.id eq null}"  style="width: 30px" icon="ui-icon-delete" update="dtDatos" process="@this">
+                <p:collector value="#{dt}" removeFrom="#{dtMaEstadoCivil.list}" unique="true"/>
+                 <ui:include src="../../param/param_one.xhtml"/>
+            </p:commandButton>
+        </p:column>
+        <p:column headerText="Editar" width="5%">
+            <p:commandButton title="Editar" action="#{dtMaEstadoCivil.selectObjec(dt)}"   icon="ui-icon-edit" update="@form:pnForm" process="@this">
+                <ui:include src="../../param/param_one.xhtml"/>
+            </p:commandButton>
+        </p:column>
+    </p:dataTable>
+    
+</ui:composition>
+
+

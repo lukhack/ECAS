@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-configuration PUBLIC "-//Hibernate/Hibernate Configuration DTD 3.0//EN" "http://hibernate.sourceforge.net/hibernate-configuration-3.0.dtd">
+<hibernate-configuration>
+  <session-factory>
+    <!--
+    
+    <property name="hibernate.connection.url">jdbc:postgresql://localhost:5434/db_ecas</property>
+    <property name="hibernate.dialect">org.hibernate.spatial.dialect.postgis.PostgisDialect</property>
+    <property name="hibernate.connection.username">postgres</property>
+    <property name="hibernate.connection.password">2345</property>
+    
+    <property name="hibernate.connection.url">jdbc:postgresql://10.1.222.198:5344/dbecas</property>
+    <property name="hibernate.dialect">org.hibernate.spatial.dialect.postgis.PostgisDialect</property>
+    <property name="hibernate.connection.username">app_ecas</property>
+    <property name="hibernate.connection.password">DBecas2020*</property>
+    
+    -->
+    <property name="session_factory_name">hibernate/HibernateFactory</property>
+    <property name="hibernate.connection.datasource">java:/datasources/ecas-ds</property>
+    <property name="hibernate.dialect">org.hibernate.spatial.dialect.postgis.PostgisDialect</property>    
+    <property name="hibernate.show_sql">true</property>
+    <property name="hibernate.enable_lazy_load_no_trans">true</property>
+    <property name="hibernate.current_session_context_class">thread</property>    
+    <property name="hibernate.bytecode.use_reflection_optimizer">false</property>
+    <property name="hibernate.id.new_generator_mappings">true</property>
+    
+    <property name="hibernate.c3p0.acquire_increment">1</property> 
+    <property name="hibernate.c3p0.idle_test_period">10</property>
+    <property name="hibernate.c3p0.max_size">15</property> 
+    <property name="hibernate.c3p0.max_statements">200</property> 
+    <property name="hibernate.c3p0.min_size">3</property> 
+    <property name="hibernate.c3p0.timeout">100</property>
+    
+    <!-- usuarios -->
+    
+    <mapping class="co.com.lk.Entity.Dtformulario"/>
+    <mapping class="co.com.lk.Entity.Dtformulariovalidaciones"/>
+    <mapping class="co.com.lk.Entity.Dtgrupo"/>
+    <mapping class="co.com.lk.Entity.Dtlista"/>
+    <mapping class="co.com.lk.Entity.Dtlistadetalle"/>
+    <mapping class="co.com.lk.Entity.Dtrespuestaform"/>
+    <mapping class="co.com.lk.Entity.Dtrespuestaz"/>
+    <mapping class="co.com.lk.Entity.Dtrespuestadetalle"/>
+    <mapping class="co.com.lk.Entity.Dtsubgrupo"/>
+    <mapping class="co.com.lk.Entity.Dttipocampo"/>
+    
+    
+    
+    <mapping class="co.com.lk.Entity.DtrespuestazPK"/>
+    <mapping class="co.com.lk.Entity.DtrespuestadetallePK"/>
+    
+    
+    <mapping class="co.com.lk.Entity.Master.UiMaEstadoTarea"/>
+    <mapping class="co.com.lk.Entity.Master.Mapatameter"/>
+    <mapping class="co.com.lk.Entity.Master.Mapatametertipo"/>
+    <mapping class="co.com.lk.Entity.Master.Madepartamento"/>
+    <mapping class="co.com.lk.Entity.Master.Mamunicipio"/>
+    <mapping class="co.com.lk.Entity.Master.Macomuna"/>
+    <mapping class="co.com.lk.Entity.Master.Mabarrio"/>
+    
+    <mapping class="co.com.lk.Entity.Master.TbUiRol"/>
+    <mapping class="co.com.lk.Entity.Master.IUConfig"/>
+    <mapping class="co.com.lk.Entity.Master.IUConfigForm"/>
+    <mapping class="co.com.lk.Entity.Master.IUConfigTipoCampo"/>
+    <mapping class="co.com.lk.Entity.Master.TbUiModulo"/>
+    
+    <mapping class="co.com.lk.Entity.Master.TbUiUsuario"/>
+    <mapping class="co.com.lk.Entity.Master.TbUiUsuarioModulo"/>
+    <mapping class="co.com.lk.Entity.Master.TbUiMensajes"/>
+    <mapping class="co.com.lk.Entity.Master.IUBitacora"/>
+    
+    
+    
+    <mapping class="co.com.lk.Entity.Master.Uitercero"/>
+    <mapping class="co.com.lk.Entity.Master.Uitercerotipo"/>
+    <mapping class="co.com.lk.Entity.ma.Dteca"/>
+    <mapping class="co.com.lk.Entity.ma.Dtecassucursal"/>
+    <mapping class="co.com.lk.Entity.ma.Dttercero"/>
+    <mapping class="co.com.lk.Entity.ma.Dttercerojuridico"/>
+    <mapping class="co.com.lk.Entity.ma.Dtterceronatural"/>
+    <mapping class="co.com.lk.Entity.ma.Dttercerotipo"/>
+
+    
+    <mapping class="co.com.lk.Entity.ma.Dtmacondicionsocial"/>
+    <mapping class="co.com.lk.Entity.ma.Dtmaestadocivil"/>
+    <mapping class="co.com.lk.Entity.ma.Dtmaestrato"/>
+    <mapping class="co.com.lk.Entity.ma.Dtmamediotransporte"/>
+    <mapping class="co.com.lk.Entity.ma.Dtmatipodocumento"/>
+    <mapping class="co.com.lk.Entity.ma.Dtmacondiciontercero"/>
+    
+    <mapping class="co.com.lk.Entity.ma.Dtmamaterialgrupo"/>
+    <mapping class="co.com.lk.Entity.ma.Dtmamaterial"/>
+    <mapping class="co.com.lk.Entity.ma.DtmamaterialMarca"/>
+    <mapping class="co.com.lk.Entity.ma.DtmamaterialMarcaPresentacion"/>
+    <mapping class="co.com.lk.Entity.ma.Dtecamaterial"/>
+    <mapping class="co.com.lk.Entity.history.Dtecamateriahisotirall"/>
+    
+    
+    <mapping class="co.com.lk.Entity.ma.Dtmaunidadmedida"/>
+    
+    
+    <mapping class="co.com.lk.Entity.ma.Dtmaparameter"/>
+    <mapping class="co.com.lk.Entity.ma.Dtmatipofactura"/>
+    
+    
+    <mapping class="co.com.lk.Entity.dt.Dtfactura"/>
+    <mapping class="co.com.lk.Entity.dt.Dtfacturadetalle"/>
+    <mapping class="co.com.lk.Entity.dt.Dtmaestadofactura"/>
+    
+    <mapping class="co.com.lk.Entity.ma.Dtterceroruta"/>
+    <mapping class="co.com.lk.Entity.ma.Dttercerorutacoordenada"/>
+    <mapping class="co.com.lk.Entity.ma.Dtmaterialprocesado"/>
+    
+    
+    
+    <mapping class="co.com.lk.Entity.view.ViewMaterialProcesado"/>
+    <mapping class="co.com.lk.Entity.view.ViewMaterialComprado"/>
+    <mapping class="co.com.lk.Entity.PK.ViewMaterialCompradoPK"/>
+    
+    
+    <mapping class="co.com.lk.Entity.dt.Dtmaterialrecoleccion"/>
+    <mapping class="co.com.lk.Entity.dt.Dtmaterialseparacion"/>
+    <mapping class="co.com.lk.Entity.dt.DtfacturaImagenes"/>
+    <mapping class="co.com.lk.Entity.dt.Dtfacturadetallematerial"/>
+    
+    <mapping class="co.com.lk.Entity.pr.PrRecoleccionDesperdicio"/>
+    
+    <mapping class="co.com.lk.Entity.rp.PrComprasDia"/>
+    <mapping class="co.com.lk.Entity.rp.PrComprasMes"/>
+    <mapping class="co.com.lk.Entity.rp.Prfacturadetalle"/>
+    <mapping class="co.com.lk.Entity.view.v_ecasconsolidado"/>
+    
+  </session-factory>
+</hibernate-configuration>

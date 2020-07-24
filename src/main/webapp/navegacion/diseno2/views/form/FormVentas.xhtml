@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"          
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://java.sun.com/jsf/core"          
+      xmlns:ui="http://java.sun.com/jsf/facelets"       
+      xmlns:h="http://xmlns.jcp.org/jsf/html">
+    
+    <p:remoteCommand  name="rc" process="@this" actionListener="#{dtMaFacturacionCotroller.lectorQR}" update="@form:tercero formsg:msgs"/>
+     <p:panelGrid  id="pnForm" columns="1"  styleClass="ui-panelgrid-blank"   layout="grid" style="width:100%" columnClasses="columna100">
+        <p:panelGrid   columns="3" id="pnTercero"  styleClass="ui-panelgrid-blank"   layout="grid" style="width:100%" columnClasses="columna25, columna50, columna10">
+            <p:outputLabel for="tercero" value="Tercero:" />
+            <p:selectOneMenu id="tercero" widgetVar="slTercero"  required="true" requiredMessage="Se requiere un valor en tercero"    var="tcr" value="#{dtMaFacturacionCotroller.obj.tercero}"  
+                converter="terceroConvert"    filter="true" filterMatchMode="contains">
+                <f:selectItem itemLabel="Select tercero" itemValue="#{null}" />
+                <f:selectItems value="#{dtTerceroNaturalController.listTerceros()}"  var="tcS" itemValue="#{tcr}" itemLabel="#{tcS.documento} #{tcS.dtterceronatural.nombres} #{tcS.dtterceronatural.apellidos}" />
+                <p:column width="100" headerText="Documento">
+                    <h:outputText value="#{tcr.documento}" />
+                </p:column>
+                <p:column headerText="Nombres y Apellidos">
+                    <h:outputText value="#{tcr.dtterceronatural.nombres} #{tcr.dtterceronatural.apellidos}" />
+                </p:column>
+                <ui:include src="../../param/param_one.xhtml"/>
+                <p:ajax update="pnRuta"/>
+            </p:selectOneMenu>
+            <p:commandButton oncomplete="PF('dgQR').show()" process="@this"  update="@form:dgQR" icon="ui-icon-camera-alt" title="Lector de codigo QR">
+            </p:commandButton>
+        </p:panelGrid> 
+         <p:outputPanel id="pnRuta">
+             <p:panelGrid   columns="3"  rendered="#{dtMaFacturacionCotroller.obj.tercero.dttercerorutaList.size() > 0}"  styleClass="ui-panelgrid-blank"   layout="grid" style="width:100%" columnClasses="columna25, columna50">
+               <p:outputLabel for="tercero" value="Ruta:" />
+               <p:selectOneMenu id="ruta" widgetVar="slRuta"  converter="terceroRutaConvert" required="true" value="#{dtMaFacturacionCotroller.obj.terceroRuta}" requiredMessage="Se requiere un valor en la ruta"     
+                      filter="true" filterMatchMode="contains">
+                   <f:selectItem itemLabel="Select tercero" itemValue="#{null}" />
+                   <f:selectItems value="#{dtMaFacturacionCotroller.obj.tercero.dttercerorutaList}"  var="rut" itemValue="#{rut}" itemLabel="#{rut.ruta}" />
+                   <ui:include src="../../param/param_one.xhtml"/>
+               </p:selectOneMenu>
+           </p:panelGrid>
+        </p:outputPanel>
+        <p:panelGrid  id="pnFacturaDetalle"  columns="3"  styleClass="ui-panelgrid-blank"   layout="grid" style="width:100%" columnClasses="columna50, columna25, columna25">
+            <p:selectOneMenu id="materiales" var="mts" value="#{dtMaFacturacionCotroller.facturaDetalle.obj.materialid}"  converter="materialConvert"    filter="true" filterMatchMode="contains">
+                <f:selectItem itemLabel="Material ..." itemValue="#{null}" />
+                <f:selectItems value="#{dtMaMaterialesController.list}"  var="mt" itemValue="#{mt}" itemLabel="#{mt.material.codReferencia} #{mt.material.material}" />
+                <p:column width="100" headerText="Referencia" style="width: 100px">
+                    <h:outputText value="#{mts.material.codReferencia}" />
+                </p:column>
+                <p:column headerText="Material">
+                    <h:outputText value="#{mts.material.material}" />
+                </p:column>
+                <p:ajax listener="#{dtMaFacturacionCotroller.onSelectMaterialCompra}"  update="@form:pnValor"/>
+                <ui:include src="../../param/param_one.xhtml"/>
+            </p:selectOneMenu>
+            <h:panelGroup styleClass="md-inputfield">
+                <p:inputNumber id="txtCantidad" decimalPlaces="2"   value="#{dtMaFacturacionCotroller.facturaDetalle.obj.cantidad}" required="true"   maxlength="45"></p:inputNumber>
+                <p:outputLabel for="txtCantidad" value="Cantidad"/>
+            </h:panelGroup>  
+            <h:panelGroup  id="pnValor" styleClass="md-inputfield">
+                <p:inputNumber id="txtValor"  decimalPlaces="2" value="#{dtMaFacturacionCotroller.facturaDetalle.obj.valor}" required="true"   maxlength="45"/>
+                <p:outputLabel for="txtValor" value="Valor"/>
+            </h:panelGroup>   
+        </p:panelGrid> 
+    
+        
+    </p:panelGrid> 
+                     
+</ui:composition>
+

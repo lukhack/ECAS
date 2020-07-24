@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"          
+      xmlns:p="http://primefaces.org/ui"          
+      xmlns:ui="http://java.sun.com/jsf/facelets"       
+      xmlns:c="http://xmlns.jcp.org/jsp/jstl/core"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+    
+    <p:outputPanel style="width: 100%"   id="table-#{codPreg2}" >
+       <table role="grid" style="width:100% !important" id="table-#{codPreg2}" >
+                    <thead class="ui-datatable-header ui-widget-header ui-corner-top ui-datatable-scrollable-theadclone">
+                        <tr role="row" class="ui-datatable-header ui-widget-header " >
+                            <th class="ui-datatable-header ui-widget-header " style="width:#{uidataheader.peso}%" >Id</th>
+                            <c:forEach items="#{uiFormularioProcessManager.getListFormularioDetalle(panel.dtformularioCollection,codPreg2)}" var="uidataheader">
+                                <th class="ui-datatable-header ui-widget-header " style="width:#{uidataheader.peso}%" >#{uidataheader.pregunta}</th>
+                            </c:forEach>
+                        </tr>
+                    </thead>    
+                    <tbody>
+                        <ui:repeat   value="#{uiRespuestasFormManager.getListMapFormulario(codPreg2)}" var="datamaps2" varStatus="loop" >
+                          <tr  role="row" >
+                              <ui:repeat  var="entrys" value="#{datamaps2.entrySet().toArray()}">
+                                  <td>#{uiFormularioProcessManager.traslateList(uiFormularioProcessManager.uiFormulario.formulario,entrys.key,entrys.value)}</td> 
+                              </ui:repeat>
+                          </tr>    
+                      </ui:repeat>
+                    </tbody>
+              </table>
+    </p:outputPanel>        
+       
+      
+    
+    
+</ui:composition>
+

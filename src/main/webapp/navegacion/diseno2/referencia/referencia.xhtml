@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"          
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://java.sun.com/jsf/core"          
+      xmlns:ui="http://java.sun.com/jsf/facelets"   
+      xmlns:pt="http://xmlns.jcp.org/jsf/passthrough"    
+      xmlns:pm="http://primefaces.org/mobile"
+      xmlns:pe="http://primefaces.org/ui/extensions"
+      xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
+    
+     <style>
+        .ui-selectonemenu-panel{
+            z-index:999999999 !important;
+        }
+    </style>
+    
+    <f:param name="params" value="0"/>    
+    <h:form id="frmReferencia">
+        <p:outputPanel id="panelReferencia">
+            <div class="ui-g ui-fluid">
+                <div class="ui-g-12" >
+                  <div class="card" style="min-height:270px;">
+                    <div class="card-w-title">
+                        <p:toolbar style="background-color: transparent;border:none;box-shadow: none">
+                            <f:facet name="left">
+                                <p:commandButton title="Guardar" icon="ui-icon-save" update="formsg:msgs pnReferencia" process="pnReferencia @this" action='#{uiReferenciaManager.save(uiReferenciaManager.obj,["update;frmReferencia"])}' />
+                                <p:commandButton  title="Nuevo" icon="ui-icon-note-add" process="@this" update="pnReferencia" action="#{uiReferenciaManager.newObejc(uiReferenciaManager.obj)}"  />
+                                <p:commandButton type="button" title="Delete" icon="ui-icon-delete" />
+                            </f:facet>
+                        </p:toolbar>
+                    </div>
+                    <p:panelGrid  columns="1"  styleClass="ui-panelgrid-blank" layout="grid" style="width:100%">
+                          <p:panelGrid  id="pnReferencia" columns="4" styleClass="ui-panelgrid-blank" columnClasses="columna25,columna25,columna25,columna25" layout="grid" style="width:100%">
+                              <h:panelGroup styleClass="md-inputfield">
+                                  <p:inputText id="referencia" maxlength="10" required="true" requiredMessage="Valor requerido en referencia"  style="width: 100% !important" value="#{uiReferenciaManager.obj.codReferncia}"/>
+                                  <label>Referencia</label>
+                              </h:panelGroup>
+                              <h:panelGroup styleClass="md-inputfield">
+                                  <p:inputText id="descripcion" placeholder="" maxlength="100" required="true" requiredMessage="Valor requerido en descripción" style="width: 100% !important" value="#{uiReferenciaManager.obj.descripcion}"/>
+                                  <label>descripción</label>
+                              </h:panelGroup>
+                              <h:panelGroup styleClass="md-inputfield">
+                                  <p:inputNumber id="valor" maxlength="10" required="true" requiredMessage="Valor requerido en Valor" maxValue="9999999999"   decimalPlaces="2" style="width: 100% !important" value="#{uiReferenciaManager.obj.valor}"></p:inputNumber>
+                                  <label>Valor</label>
+                              </h:panelGroup>
+                              
+                          </p:panelGrid>
+                          <p:panelGrid columns="1" styleClass="ui-panelgrid-blank" layout="grid" style="width:100%">
+                              <p:dataTable var="dt" id="tbtipolayers" 
+                               paginator="true"
+                               scrollable="true"
+                               scrollHeight="230"
+                               paginatorPosition="bottom"
+                               paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                               rowsPerPageTemplate="5,10,20,50,100"
+                               scrollWidth="true"
+                               rows="20"
+                               rowIndexVar="rowIndex"
+                               value="#{uiReferenciaManager.findList()}">
+                                  <f:facet name="header" >
+                                     Referencias
+                                  </f:facet>
+
+                                  <p:column headerText="No" width="30" >
+                                      <h:outputText  value="#{rowIndex+1}" />
+                                  </p:column>
+                                  <p:column headerText="Referncia" width="200">
+                                      <h:outputText value="#{dt.codReferncia}" />
+                                  </p:column> 
+                                  <p:column headerText="Descripción" width="100">
+                                      <h:outputText value="#{dt.descripcion}" />
+                                  </p:column>    
+                                  <p:column headerText="Valor" width="100">
+                                      <h:outputText value="#{dt.valor}" >
+                                          <f:convertNumber groupingUsed="true" type="number"  minFractionDigits="0"  />
+                                      </h:outputText>
+                                  </p:column>     
+                                  <p:column headerText="Valor Costo" width="100">
+                                      <h:outputText value="#{uiReferenciaCostoManager.sumValCosto(dt.uirefernciacostoCollection)}" >
+                                          <f:convertNumber groupingUsed="true" type="number"  minFractionDigits="0"  />
+                                      </h:outputText>
+                                  </p:column>
+                                  
+                                  <p:column style="width:25px;padding:0 !important" colspan="3"  selectRow="false"  >
+                                      <p:commandButton style="width:100%;margin:0px !important;border-radius:0 !important;"  process="@this"  update=":frmReferencia:pnReferencia"  action="#{uiReferenciaManager.selectObjec(dt)}"  icon="ui-icon-edit" title="editar referencia"></p:commandButton>
+                                  </p:column>
+                                  <p:column style="width:25px;padding:0 !important" selectRow="false"  >
+                                      <p:commandButton style="width:100%;margin:0px !important;border-radius:0 !important;"  process="@this"   action="#{uiReferenciaManager.selectObjec(dt)}" onclick="PF('dlg').show()"  update="frmCosto" icon="ui-icon-attach-money" title="Añadir costos">
+                                          <f:param name="params"  value="1"/>
+                                          <f:param name="title" value="Costos x Referencia"/>
+                                      </p:commandButton>
+                                  </p:column>
+                                  <p:column style="width:25px;padding:0 !important" selectRow="false"  >
+                                      <p:commandButton style="width:100%;margin:0px !important;border-radius:0 !important;"  process="@this"   action="#{uiReferenciaManager.selectObjec(dt)}" onclick="PF('dlgD').show()"  update="pnCaracteristicas" icon="ui-icon-extension" title="Añadir Carasteristicas">
+                                          <f:param name="params"  value="2"/> 
+                                          <f:param name="title" value="Detalle referencia"/>
+                                      </p:commandButton>
+                                  </p:column>
+                                  <p:ajax event="page">
+                                      <f:param name="params"  value="2"/> 
+                                  </p:ajax>
+                              </p:dataTable>
+                        </p:panelGrid>
+                    </p:panelGrid>
+                  </div>
+                </div>
+            </div>
+             
+        </p:outputPanel>  
+        
+    </h:form> 
+    
+    <p:dialog header="Referencia" modal="true" position="center center" widgetVar="dlg" width="850" height="600" resizable="false"  
+              draggable="false" responsive="true" hideEffect="scale">
+        <p:outputPanel style="max-width: 98%">
+            <h:form id="frmCosto">
+                <ui:include src="referenciaCosto.xhtml"/>
+            </h:form>
+        </p:outputPanel>
+        <p:ajax event="close" update="frmReferencia:tbtipolayers" />
+    </p:dialog>
+    
+    <p:dialog header="Caracteristicas" modal="true" width="800" height="500"  widgetVar="dlgD" resizable="true"  
+              style="max-width:800px !important;width:100% !important;"  
+              draggable="false"  responsive="true" hideEffect="scale">
+        <p:outputPanel id="pnCaracteristicas"   style="max-height:300px !important" > 
+            <h:form id="frmDetalle">
+                <f:facet name="footer">
+                    <p:commandButton value="Login" type="button" onclick="PF('dlg').hide()" style="width:auto" icon="ui-icon-person"/>
+                </f:facet> 
+            </h:form>
+            <ui:include src="referenciaDetalle.xhtml"/>   
+        </p:outputPanel> 
+        <p:ajax event="close" update="frmReferencia:tbtipolayers" />
+    </p:dialog>
+    
+    
+    <p:dialog modal="true" showHeader="false"  showEffect="fade" styleClass="statusBarProcess" widgetVar="statusDialog2"  draggable="false" closable="false">
+        <p:graphicImage value="/images/ajaxloadingbar.gif" width="200" style="width:100%;max-width:300px;"  />
+    </p:dialog>
+    
+    
+    
+   
+</ui:composition>
+
+

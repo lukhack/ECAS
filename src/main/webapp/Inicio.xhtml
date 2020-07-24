@@ -1,0 +1,114 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                template="./WEB-INF/#{config.TEMPLATE_TEMA}.xhtml"
+                xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
+    <ui:define name="title">#{confController.mapConfig("PAGINA", "TITULO")}</ui:define>
+    <ui:define name="head">
+        <ui:include src="WEB-INF/body/head/head.xhtml"/>  
+        <h:outputScript name="js/instascan.min.js" library="serenity-layout" />
+            
+        <style rel="stylesheet" type="text/css" > 
+            @media print {
+                header, footer, nav, aside {
+                    display: none !important;
+                }
+                
+                html, body {
+                  width: 148mm;
+                  height: 210mm;
+                   color: red !important;
+                }
+                body{
+                    background-color: #cccccc !important;
+                    -webkit-print-color-adjust: exact; 
+                 }
+                 table, .header-factura {
+                     background-color: #cccccc !important
+                          -webkit-print-color-adjust: exact; ;
+                 }
+
+                 table th{
+                     background-color: #cccccc !important;
+                      -webkit-print-color-adjust: exact; 
+                 }
+
+            
+            }
+            
+            .ui-panel-titlebar{
+                background: white !important;
+                font-size: 11px;
+                margin: 0;
+                color: gray !important;
+                border-bottom: 0.2px solid #f4f4f4 !important;
+                border-top: 2px solid #cccccc !important;
+                padding:5px;
+            }
+            
+            .detalle .ui-panel-titlebar{
+                border-top: 2px solid #2ebcfc !important;
+            }
+            
+            .ui-widget-content{
+            }
+            
+            .columna{
+                padding:0px !important;
+                margin:0px !important;
+            }
+            
+            .layout-breadcrumb-options{
+                position: fixed  !important;
+                z-index:2  !important;
+                top:69px  !important;
+                right:0px  !important;
+                
+            }
+            
+            .layout-breadcrumb  .ui-panelgrid-content {
+                margin:0px !important;
+                padding:0px !important;
+            }
+            
+            .layout-breadcrumb {
+                position: fixed  !important;
+                z-index:1  !important;
+                top:65px  !important;
+            }
+            
+            .layout-breadcrumb .ui-panelgrid .ui-panelgrid-cell{
+                padding:0px !important;
+            }
+            
+            .ui-panelgrid-content{
+                padding:0px !important;
+            }
+            
+            .ui-datatable button{
+                border:0px solid transparent !important;
+                background: transparent !important;
+                box-shadow:  none !important;
+                color: black !important;
+            }
+            
+           
+        </style>
+        
+    </ui:define>
+    <ui:define name="breadcrumb">
+        <h1 style="color:black;margin:0px !important;padding:0px !important"> <i class="#{param.icon}"></i> <li style="color:black">#{param.form}</li></h1>
+    </ui:define>
+    <ui:define name="content" >
+        
+        <c:choose>
+            <c:when  test='#{usuarioB.tbUiUsuario.uiRol.id eq 3 and usuarioB.tbUiUsuario.dtclienteSucursal.id ne null}' >
+                <ui:include src="navegacion/diseno1/reportes/Cliente.xhtml"/>
+            </c:when>
+            <c:otherwise>
+            </c:otherwise>
+        </c:choose> 
+    </ui:define>
+</ui:composition>

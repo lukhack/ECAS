@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"          
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://java.sun.com/jsf/core"          
+      xmlns:ui="http://java.sun.com/jsf/facelets"       >
+    
+    <p:dataTable var="dtpe" id="dtDatosParamterEcas" 
+        paginator="true"
+        style="width: 100% !important"
+        paginatorPosition="bottom"
+        paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+        rowsPerPageTemplate="5,10,20,50,100"
+        rows="20"
+        rowIndexVar="rowIndex"
+        value='#{dtECASController.obj.dtmaparameterList}'
+        filteredValue='#{dtParameterController.listFilter}'>
+         <f:facet name="header" >
+            #{uiNavegacionBean.title}
+         </f:facet>
+        <p:ajax event="filter"  process="@this" global="true" ignoreAutoUpdate="true"/>
+        <f:param name="name" value="#{param.name}" />
+        <f:param name="path" value="#{param.path}" />
+        <p:column headerText="No" width="5%"  filterBy="#{dtpe.id eq null?rowIndex+1:dtpe.id}">
+            <h:outputText  value="#{dtpe.id eq null?rowIndex+1:dtpe.id}" />
+        </p:column>
+        <p:column headerText="Prefijo" width="10%" filterBy="#{dtpe.prefijo}" filterMatchMode="contains">
+            <h:outputText value='#{dtpe.prefijo}' />
+        </p:column>    
+        <p:column headerText="Con. Ini" width="10%" filterBy="#{dtpe.consInicial}" filterMatchMode="contains">
+            <h:outputText value='#{dtpe.consInicial}' />
+        </p:column>    
+        <p:column headerText="Con. Final" width="10%" filterBy="#{dtpe.consInicial}" filterMatchMode="contains">
+            <h:outputText value='#{dtpe.consFinal}' />
+        </p:column>    
+        <p:column headerText="Con. Actual" width="10%" filterBy="#{dtpe.consActual}" filterMatchMode="contains">
+            <h:outputText value='#{dtpe.consActual}' />
+        </p:column>     
+        <p:column headerText="Resolución" width="10%" filterBy="#{dtpe.resolucion}" filterMatchMode="contains">
+            <h:outputText value='#{dtpe.resolucion}' />
+        </p:column>     
+        <p:column headerText="F. Resolu" width="10%" filterBy="#{dtpe.fechaResolucio}" filterMatchMode="contains">
+            <h:outputText value='#{dtpe.fechaResolucio}' />
+        </p:column>     
+        <p:column headerText="Vigente" width="10%" filterBy="#{dtpe.consActual}" filterMatchMode="Activo">
+            <h:outputText value='#{dtpe.vigente?"Si":"No"}' />
+        </p:column>     
+        <p:column headerText="Tipo" width="10%" filterBy="#{dtpe.dtTipoFacturaid.tipo}" filterMatchMode="Activo">
+            <h:outputText value='#{dtpe.dtTipoFacturaid.tipo}' />
+        </p:column> 
+        <p:column headerText="Action" width="5%">
+            <p:commandButton title="Remove" rendered="#{dtpe.id eq null}"  style="width: 30px" icon="ui-icon-delete" update="dtDatosParamterEcas @form:dtDatos" process="@this">
+                <p:collector value="#{dtpe}" removeFrom="#{dtECASController.obj.dtmaparameterList}" unique="true"/>
+                <f:param name="name" value="#{param.name}" />
+                <f:param name="path" value="#{param.path}" />
+            </p:commandButton>
+        </p:column>
+        <p:column headerText="Editar" width="5%">
+            <p:commandButton title="Editar" action="#{dtParameterController.selectObjec(dtpe)}"   icon="ui-icon-edit" update="@form:pnFormParameter" process="@this">
+                <f:param name="name" value="#{param.name}" />
+                <f:param name="path" value="#{param.path}" />
+            </p:commandButton>
+        </p:column>
+    </p:dataTable>
+    
+</ui:composition>
+
+

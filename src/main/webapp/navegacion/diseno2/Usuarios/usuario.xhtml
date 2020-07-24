@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"          
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://java.sun.com/jsf/core"          
+      xmlns:ui="http://java.sun.com/jsf/facelets"   
+      xmlns:pt="http://xmlns.jcp.org/jsf/passthrough"    
+      xmlns:pm="http://primefaces.org/mobile"
+      xmlns:pe="http://primefaces.org/ui/extensions"
+      xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
+      
+    <h:form id="formapp">
+        
+        
+        <div class="ui-g ui-fluid">
+            
+            <div class="ui-g-12 ui-lg-6">
+                <div class="card">
+                    <h1>Datos Principales</h1>
+                    <p:panelGrid columns="2" layout="grid" style="border:0px !important; background:none;" styleClass="ui-panelgrid-blank">
+                        
+                        <p:outputLabel value="" title=""/>
+                        <p:outputLabel value="" title=""/>
+                        
+                        
+                        <p:outputLabel for="nombre"   value="Nombre Usuario" title="Nombre del usuario encargado"/>
+                        <p:inputText id="nombre" required="true"  value="#{uiUsuarioBean.uiUsuario.nombre}" placeholder="Nombre"/>
+                        
+                        <p:outputLabel for="usuairo" value="Login" title="Usuario de ingreso al sistema"/>
+                        <p:inputText id="usuairo" required="true"     value="#{uiUsuarioBean.uiUsuario.usuario}" placeholder="Usuario"/>
+
+                        <p:outputLabel for="correo" value="Correo"  title="correo electrónico"/>
+                        <p:inputText id="correo" required="true" validatorMessage="Ingresa el correo electornico"  value="#{uiUsuarioBean.uiUsuario.correo}" placeholder="Correo"/>                            
+                        
+                        <p:outputLabel for="telefono" value="Télefono"  title="teléfono"/>
+                        <p:inputText id="telefono"  value="#{uiUsuarioBean.uiUsuario.telefono}" placeholder="Teléfono"/>                            
+
+                        <p:outputLabel for="roles" value="Roles"  title="Rol"/>
+                        <p:selectOneMenu id="roles" required="true"   editable="false"                                     
+                                         value="#{uiUsuarioBean.uiUsuario.uiRol}" converter="rolConvert"   style="width: 95%">
+                            <f:selectItem itemLabel="Seleccione..." itemValue="#{null}"  />                                
+                            <f:selectItems value="#{maDatosMaestroBean.uiRols}" var="obj" itemLabel="#{obj.rol}" itemValue="#{obj}"/>
+                            <p:ajax  process="@this" />
+                        </p:selectOneMenu>
+                        
+                        
+                        
+                        <p:outputLabel  for="ECAS" value="ECA sucursal"  title="Rol"/>
+                        <p:selectOneMenu  id="ECAS" editable="false"                                     
+                                         value="#{uiUsuarioBean.uiUsuario.dtecassucursal}" converter="sucursalConvert"   style="width: 95%">
+                            <f:selectItem itemLabel="Seleccione sucursal de Eca..." itemValue="#{null}"  />                                
+                            <f:selectItems value="#{dtECASucursalController.list}" var="dtS" itemLabel="#{dtS.dtEcaid.nombre} - #{dtS.filial}" itemValue="#{dtS}"/>
+                        </p:selectOneMenu>
+                        
+                        
+                        <p:outputLabel  for="clienteSucursaldt" value="Cliente - Pagre"  title="Rol" rendered="#{config.TEMPLATE_DISENO eq 'diseno1'}"/>
+                        <p:selectOneMenu  id="clienteSucursaldt" editable="false"  rendered="#{config.TEMPLATE_DISENO eq 'diseno1'}"                                   
+                                          value="#{uiUsuarioBean.uiUsuario.dtclienteSucursal}" converter="clienteSucursalConvert"   style="width: 95%">
+                            <f:selectItem itemLabel="Seleccione sucursal..." itemValue="#{null}"  />                                
+                            <f:selectItems value="#{dtClienteSucursalController.list}" var="dtC" itemLabel="#{dtC.nombre}" itemValue="#{dtC}"/>
+                        </p:selectOneMenu>
+                        
+                        
+                        <p:outputLabel  value="Si es administrador de ECAS"  style="font-weight:bold" title="Rol"/>
+                        <p:separator/>
+                        
+                        <p:outputLabel  for="Ecasdt" value="ECA Principal"  title="Rol"/>
+
+                        <p:selectOneMenu  id="Ecasdt" editable="false"                                     
+                                          value="#{uiUsuarioBean.uiUsuario.dtEcaPadre}" converter="ecasConvert"   style="width: 95%">
+                            <f:selectItem itemLabel="Seleccione Eca..." itemValue="#{null}"  />                                
+                            <f:selectItems value="#{dtECASController.list}" var="dtE" itemLabel="#{dtE.nombre}" itemValue="#{dtE}"/>
+                        </p:selectOneMenu>
+                        
+                        
+                        <p:outputLabel  for="Clientesdt" value="Cliente - Padre"  title="Rol" rendered="#{config.TEMPLATE_DISENO eq 'diseno1'}"/>
+                        <p:selectOneMenu  id="Clientesdt" editable="false"  rendered="#{config.TEMPLATE_DISENO eq 'diseno1'}"                                   
+                                          value="#{uiUsuarioBean.uiUsuario.dtClientePadre}" converter="clienteConvert"   style="width: 95%">
+                            <f:selectItem itemLabel="Seleccione Cliente..." itemValue="#{null}"  />                                
+                            <f:selectItems value="#{dtClienteController.list}" var="dtCl" itemLabel="#{dtCl.cliente}" itemValue="#{dtCl}"/>
+                        </p:selectOneMenu>
+                        
+                        
+                        
+                        <p:outputLabel for="theme"  value="Diseño Aplicación"/>
+                        <p:selectOneMenu id="theme" value="#{uiUsuarioBean.uiUsuario.theme}">
+                            <f:selectItem itemLabel='amber' itemValue='amber'/>
+                            <f:selectItem itemLabel='blue' itemValue='blue'/>
+                            <f:selectItem itemLabel='bluegrey' itemValue='bluegrey'/>
+                            <f:selectItem itemLabel='brown' itemValue='brown'/>
+                            <f:selectItem itemLabel='cyan' itemValue='cyan'/>
+                            <f:selectItem itemLabel='deeporange' itemValue='deeporange'/>
+                            <f:selectItem itemLabel='deeppurple' itemValue='deeppurple'/>
+                            <f:selectItem itemLabel='green' itemValue='green'/>
+                            <f:selectItem itemLabel='grey' itemValue='grey'/>
+                            <f:selectItem itemLabel='indigo' itemValue='indigo'/>
+                            <f:selectItem itemLabel='lightblue' itemValue='lightblue'/>
+                            <f:selectItem itemLabel='lightgreen' itemValue='lightgreen'/>
+                            <f:selectItem itemLabel='lime' itemValue='lime'/>
+                            <f:selectItem itemLabel='orange' itemValue='orange'/>
+                            <f:selectItem itemLabel='pink' itemValue='pink'/>
+                            <f:selectItem itemLabel='purple' itemValue='purple'/>
+                            <f:selectItem itemLabel='teal' itemValue='teal'/>
+                            <f:selectItem itemLabel='yellow' itemValue='yellow'/>
+                        </p:selectOneMenu>
+                        <p:outputLabel for="layout"  value="Diseño Aplicación Menu"/>
+                            <p:selectOneMenu id="layout" value="#{usuarioB.tbUiUsuario.layout}">
+                                <f:selectItem itemLabel='medellin' itemValue='medellin'/>
+                                <f:selectItem itemLabel='moody' itemValue='moody'/>
+                                <f:selectItem itemLabel='reflection' itemValue='reflection'/>
+                                <f:selectItem itemLabel='cityscape' itemValue='cityscape'/>
+                                <f:selectItem itemLabel='storm' itemValue='storm'/>
+                                <f:selectItem itemLabel='palm' itemValue='palm'/>
+                                <f:selectItem itemLabel='flatiron' itemValue='flatiron'/>
+                                <f:selectItem itemLabel='panaroma' itemValue='panaroma'/>
+                                <f:selectItem itemLabel='horizon' itemValue='horizon'/>
+
+                                <f:selectItem itemLabel='amber' itemValue='amber'/>
+                                <f:selectItem itemLabel='blue' itemValue='blue'/>
+                                <f:selectItem itemLabel='bluegrey' itemValue='bluegrey'/>
+                                <f:selectItem itemLabel='brown' itemValue='brown'/>
+                                <f:selectItem itemLabel='cyan' itemValue='cyan'/>
+                                <f:selectItem itemLabel='deeporange' itemValue='deeporange'/>
+                                <f:selectItem itemLabel='deeppurple' itemValue='deeppurple'/>
+                                <f:selectItem itemLabel='green' itemValue='green'/>
+                                <f:selectItem itemLabel='grey' itemValue='grey'/>
+                                <f:selectItem itemLabel='indigo' itemValue='indigo'/>
+                                <f:selectItem itemLabel='lightblue' itemValue='lightblue'/>
+                                <f:selectItem itemLabel='lightgreen' itemValue='lightgreen'/>
+                                <f:selectItem itemLabel='lime' itemValue='lime'/>
+                                <f:selectItem itemLabel='orange' itemValue='orange'/>
+                                <f:selectItem itemLabel='pink' itemValue='pink'/>
+                                <f:selectItem itemLabel='purple' itemValue='purple'/>
+                                <f:selectItem itemLabel='teal' itemValue='teal'/>
+                                <f:selectItem itemLabel='yellow' itemValue='yellow'/>
+                        </p:selectOneMenu>
+                        <p:commandButton value="Cancelar"   update="masterDetail"  actionListener="#{uiUsuarioBean.setNivel(0)}"  process="@this" immediate="true" >
+                        </p:commandButton>
+                        <p:commandButton  value="Guardar"  update="formsg:msgs formapp" ajax="false"   action="#{uiUsuarioController.save()}" >
+                        </p:commandButton>
+                    </p:panelGrid>
+                   
+                </div>
+                <div class="card" >
+                    <h1>Cambio de Contraseña</h1>
+                    <p:panelGrid  columns="2"  layout="grid" style="border:0px !important; background:none;" styleClass="ui-panelgrid-blank">
+                        <p:outputLabel for="sipass" rendered="#{uiUsuarioBean.process eq config.EDIT}" value="Cambiar Contraseña"/>
+                        <p:selectBooleanButton id="sipass" rendered="#{uiUsuarioBean.process eq config.EDIT}" value="#{uiUsuarioBean.changePasswordListen}"   onLabel="Si" offLabel="No" style="width:60px"/>
+                        <p:outputLabel for="pass1" value="Contraseña" title="Contraseña"/>
+                        <p:password feedback="true" autocomplete="false" required="#{uiUsuarioBean.process eq config.NEW}"  id="pass1" value="#{uiUsuarioBean.uiUsuario.pass1}" placeholder="Contraseña" inline="true" />
+
+                        <p:outputLabel for="pass2"  value="Confirmación de contraseña" title="Confirmación de contraseña"/>
+                        <p:password  id="pass2" autocomplete="false" required="#{uiUsuarioBean.process eq config.NEW}" value="#{uiUsuarioBean.uiUsuario.pass2}" placeholder="Contraseña" inline="true" />
+                    </p:panelGrid>
+                </div>
+            </div>
+            <div class="ui-g-12 ui-lg-6"  style="min-height:400px">
+                <div class="card"  style="min-height:400px">
+                    <h1>Modulos Permisos</h1>
+                    
+                    <p:panelGrid  id="modulos" columns="1" columnClasses="col1,col2" style="-webkit-box-shadow:none;-moz-box-shadow:none;box-shadow:none;border:0 none;" styleClass="ui-panelgrid-blank" >
+                        <p:tree value="#{uiUsuarioBean.root}" dynamic="true" var="doc" id="tree"
+                                selectionMode="checkbox" selection="#{uiUsuarioBean.selectedNodes}"  styleClass="ui-panelgrid-blank">
+                            <p:treeNode  >
+                                <h:outputText value="#{doc.nomModulo}"/>
+                            </p:treeNode>
+                       </p:tree>
+                    </p:panelGrid> 
+               
+
+
+
+                  </div>
+            </div>
+        </div>
+              
+    </h:form> 
+                      
+</ui:composition>
+

@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"          
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://java.sun.com/jsf/core"          
+      xmlns:ui="http://java.sun.com/jsf/facelets"   
+      xmlns:pt="http://xmlns.jcp.org/jsf/passthrough"    
+      xmlns:pm="http://primefaces.org/mobile"
+      xmlns:pe="http://primefaces.org/ui/extensions"
+      xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
+     
+        <p:outputPanel style="width:100%;text-align:right;position: relative" >
+            <p:commandLink process="@form:pnForm @this" id="btnAnadir" style="position: absolute;right: 0;top:0"  update="@form:dtDatos @form:pnForm formsg:msgs"    title="Añadir" action="#{dtTerceroNaturalController.reinit(1)}"><i style="font-size:2.8em;color: #607D8B" class="material-icons">playlist_add</i>
+               <p:collector value="#{dtTerceroNaturalController.addObj(dtTerceroNaturalController.obj)}" addTo="#{dtTerceroNaturalController.list}"  unique="true" />
+               <ui:include src="../../param/param_one.xhtml"/>
+            </p:commandLink>
+        </p:outputPanel>
+        <p:defaultCommand target="btnAnadir" />
+        <p:panelGrid  id="pnForm" columns="1"   styleClass="ui-panelgrid-blank"   layout="grid" style="width:100%" columnClasses="columna100">
+        <p:panelGrid  columns="3"  styleClass="ui-panelgrid-blank form-group" style="width:100%"  columnClasses="columna25, columna25, columna25, columna25">
+                <p:selectOneMenu required="true" autoWidth="false" style="max-width:100%" requiredMessage="Valor requerido en Municipio" id="sdTipoDocumento"  
+                                 filter="true" filterMatchMode="contains" 
+                                 converter="tipoDocumentoConvert" value="#{dtTerceroNaturalController.obj.dttercero.dtmatipodocumentoId}" >
+                    <f:selectItem itemLabel="Selección Tipo documento ..."  itemValue="#{null}" noSelectionOption="true"/>
+                    <f:selectItems  value="#{dtMaTipodocumento.list.stream().filter(x->x.tipoDocumento ne 'NIT').toList()}" var="tpc" itemLabel="#{tpc.tipoDocumento} - #{tpc.descripcion}" itemValue="#{tpc}" />
+                </p:selectOneMenu>
+                <h:panelGroup styleClass="md-inputfield">
+                    <p:inputText value="#{dtTerceroNaturalController.obj.dttercero.documento}" maxlength="15" required="true"  requiredMessage="Valor requerido en Nit"/>
+                    <label>Cc</label>
+                </h:panelGroup>   
+            </p:panelGrid>
+            <p:panelGrid  columns="3"  styleClass="ui-panelgrid-blank form-group" style="width: 100%" columnClasses="columna25,columna15,columna25,columna35">
+                
+                <h:panelGroup styleClass="md-inputfield" >
+                    <p:inputText required="true" maxlength="45" value="#{dtTerceroNaturalController.obj.nombres}"  requiredMessage="Valor requerido en Nombre o Razon social"/>
+                    <label>Nombres</label>
+                </h:panelGroup>
+                <h:panelGroup styleClass="md-inputfield" >
+                    <p:inputText required="true" maxlength="45" value="#{dtTerceroNaturalController.obj.apellidos}"  requiredMessage="Valor requerido en Nombre o Razon social"/>
+                    <label>Apellidos</label>
+                </h:panelGroup>
+                <h:panelGroup styleClass="md-inputfield" >
+                    <p:inputText value="#{dtTerceroNaturalController.obj.dttercero.telefono}" maxlength="10"/>
+                    <label>Telefono 1</label>
+                </h:panelGroup>
+                <h:panelGroup styleClass="md-inputfield">
+                    <p:inputText value="#{dtTerceroNaturalController.obj.dttercero.direccion}" maxlength="100"/>
+                    <label>Direccion</label>
+                </h:panelGroup>
+                <h:panelGroup styleClass="md-inputfield">
+                    <p:inputText value="#{dtTerceroNaturalController.obj.dttercero.correo}" maxlength="100"/>
+                    <label>Correo</label>
+                </h:panelGroup> 
+                <p:selectOneMenu required="true" autoWidth="false" style="width:100%" requiredMessage="Valor requerido en Municipio" id="slMunicipio"  
+                                 filter="true" filterMatchMode="contains"
+                                 converter="municipioConvert" value="#{dtTerceroNaturalController.obj.dttercero.idmunicipio}" >
+                    <f:selectItem itemLabel="Selección Municipio ..."  itemValue="#{null}" noSelectionOption="true"/>
+                    <f:selectItems  value="#{maMunicipioManager.list}" var="mup" itemLabel="#{mup.municipio} (#{mup.idDepartamento.departamento})" />
+                </p:selectOneMenu>
+                <p:selectOneMenu required="true" autoWidth="false" style="width:100%" requiredMessage="Valor requerido en Medio transporte" id="slMedioTransporte"  
+                                 filter="true" filterMatchMode="contains"
+                                 converter="medioTransporteConver" value="#{dtTerceroNaturalController.obj.dttercero.dtmamediotransporteId}" >
+                    <f:selectItem itemLabel="Selección Medio Transporte..."  itemValue="#{null}" noSelectionOption="true"/>
+                    <f:selectItems  value="#{dtMaMedioTransporte.list}" var="mt" itemLabel="#{mt.mediotransporte}" />
+                </p:selectOneMenu>
+                <p:selectOneMenu required="true" autoWidth="false" style="width:100%" requiredMessage="Valor requerido en condición social" id="slCondicionSocial"  
+                                 filter="true" filterMatchMode="contains"
+                                 converter="condicionSocialConvert" value="#{dtTerceroNaturalController.obj.dtmacondicionsocialId}" >
+                    <f:selectItem itemLabel="Selección Condición social..."  itemValue="#{null}" noSelectionOption="true"/>
+                    <f:selectItems  value="#{dtMaCodicionSocial.list}" var="cs" itemLabel="#{cs.condicionSocial}" />
+                </p:selectOneMenu>
+                <p:selectOneMenu required="true" autoWidth="false" style="width:100%" requiredMessage="Valor requerido en condición Reciclador" id="slCondicionTercero"  
+                                 filter="true" filterMatchMode="contains"
+                                 converter="condicionTerceroConvert" value="#{dtTerceroNaturalController.obj.dtmacondicionrecicladorId}" >
+                    <f:selectItem itemLabel="Selección Condición Reciclador..."  itemValue="#{null}" noSelectionOption="true"/>
+                    <f:selectItems  value="#{dtMaCodicionTercero.list}" var="ct" itemLabel="#{ct.condicion}" />
+                </p:selectOneMenu>
+                <p:selectOneMenu required="true" autoWidth="false" style="width:100%" requiredMessage="Valor requerido en estado civil" id="slEstadocivil"  
+                                 filter="true" filterMatchMode="contains"
+                                 converter="estadoCivilConvert" value="#{dtTerceroNaturalController.obj.dtmaestadocivilId}" >
+                    <f:selectItem itemLabel="Selección Estado civil..."  itemValue="#{null}" noSelectionOption="true"/>
+                    <f:selectItems  value="#{dtMaEstadoCivil.list}" var="ec" itemLabel="#{ec.estadocivil}" />
+                </p:selectOneMenu>
+                <p:selectOneMenu  autoWidth="false" style="width:100%" requiredMessage="Valor requerido en estrato" id="slEstrato"  
+                                 filter="true" filterMatchMode="contains"
+                                 converter="estratoConvert" value="#{dtTerceroNaturalController.obj.dtmaestratoId}" >
+                    <f:selectItem itemLabel="Selección estrato..."  itemValue="#{null}" noSelectionOption="true"/>
+                    <f:selectItems  value="#{dtMaEstrato.list}" var="es" itemLabel="#{es.estrato}" />
+                </p:selectOneMenu>
+            </p:panelGrid>
+            <h:inputHidden converter="terceroTipoConvert" value="#{dtTerceroNaturalController.obj.dttercerotipo}"  />
+        </p:panelGrid> 
+    
+                      
+</ui:composition>
+

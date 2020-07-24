@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"          
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://java.sun.com/jsf/core"          
+      xmlns:ui="http://java.sun.com/jsf/facelets">
+    <p:panelGrid  id="pnFormParameterSucural" columns="4"  styleClass="ui-panelgrid-blank"   layout="grid" style="width:100%" columnClasses="columna25, columna25, columna25,columna25">
+        <h:panelGroup styleClass="md-inputfield">
+            <p:inputText id="txtPrefijoSub" style="text-transform: uppercase"  value="#{dtParameterController.obj.prefijo}" required="true"   maxlength="5"/>
+            <p:outputLabel for="txtPrefijoSub" value="Prefijo"/>
+        </h:panelGroup>    
+        <h:panelGroup styleClass="md-inputfield">
+            <p:inputText id="txtSimboloSuh" style="text-transform: uppercase"  value="#{dtParameterController.obj.simbSeparacion}" required="true"   maxlength="5"/>
+            <p:outputLabel for="txtSimboloSuh" value="Simbolo Separación"/>
+        </h:panelGroup> 
+        <h:panelGroup styleClass="md-inputfield">
+            <p:inputNumber id="txtconsFinalSub" value="#{dtParameterController.obj.consInicial}" required="true" decimalPlaces="0"   />
+            <p:outputLabel for="txtconsFinalSub" value="Consecutivo Inicial"/>
+        </h:panelGroup> 
+        <h:panelGroup styleClass="md-inputfield">
+            <p:inputNumber id="txtconFinalSub" value="#{dtParameterController.obj.consFinal}" required="true"   decimalPlaces="0"/>
+            <p:outputLabel for="txtconFinalSub" value="Consecutivo Final"/>
+        </h:panelGroup>  
+        <h:panelGroup styleClass="md-inputfield">
+            <p:inputNumber id="txtConsActualSub" value="#{dtParameterController.obj.consActual}" required="true"  decimalPlaces="0" />
+            <p:outputLabel for="txtConsActualSub" value="Consecutivo Actual"/>
+        </h:panelGroup>  
+        <h:panelGroup styleClass="md-inputfield">
+            <p:inputText id="txtResolucionSub" value="#{dtParameterController.obj.resolucion}"    />
+            <p:outputLabel for="txtResolucionSub" value="Resolución"/>
+        </h:panelGroup> 
+        <h:panelGroup styleClass="md-inputfield">
+            <p:calendar id="txtfResolucionSub" locale="es" pattern="dd/mm/yyyy" value="#{dtParameterController.obj.fechaResolucio}" showButtonPanel="true"    />
+            <p:outputLabel for="txtfResolucionSub" value="Fecha Resolución"/>
+        </h:panelGroup>   
+        <h:panelGroup styleClass="md-inputfield">
+            <p:inputText id="txtDescripcionSub" value="#{dtParameterController.obj.descripcion}" />
+            <p:outputLabel for="txtDescripcionSub" value="Descripción"/>
+        </h:panelGroup> 
+        <p:selectOneMenu id="SelectTipoFacturaSub" value="#{dtParameterController.obj.dtTipoFacturaid}" required="true" requiredMessage="Se requeire un valor en Tipo de factura" converter="tipoFacturaConvert">
+            <f:selectItem  itemValue="#{null}" itemLabel="Seleccione Tipo Factura" noSelectionOption="true"/>
+            <f:selectItems  value="#{dtMaTipoFacturaController.list}" var="tf" itemLabel="#{tf.tipo}" itemValue="#{tf}" />
+            <f:param name="name" value="#{name}"/>
+        </p:selectOneMenu>
+        <h:panelGroup >
+            <p:selectBooleanCheckbox id="chVigenteec" value="#{dtParameterController.obj.vigente}" label="Vigente" />
+            <p:outputLabel value=" Vigente" for="chVigenteec"/>
+        </h:panelGroup>
+    </p:panelGrid> 
+</ui:composition>
+

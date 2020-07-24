@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"                    
+                xmlns:ui="http://java.sun.com/jsf/facelets"       
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:f="http://xmlns.jcp.org/jsf/core">
+    <style>
+        .ui-expanded-row-content .ui-state-default{
+            background-color: #E0E0E0  !important;
+            
+        }
+        .ui-row-editing{
+            background-color: #81c3f8 !important;
+            color:black !important;
+        }
+        
+        .ui-row-editing .ui-inputfield{
+            background-color: white !important;
+            color: black !important;
+        }
+        .rowSpan{
+            text-align: center !important;
+        }
+        
+        .numberRight{
+            text-align: right !important;
+        }
+        
+        .numberLeft{
+            text-align: left !important;
+        }
+    </style>
+    <p:panelGrid columns="1" styleClass="ui-panelgrid-blank" layout="grid" style="width:100%">
+                                    <p:dataTable var="rd" id="tbtipolayers" 
+                                     paginator="true"
+                                     scrollable="true"
+                                     scrollHeight="230"
+                                     paginatorPosition="bottom"
+                                     paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                                     rowsPerPageTemplate="5,10,20,50,100"
+                                     scrollWidth="true"
+                                     rows="20"
+                                     rowIndexVar="rowIndex"
+                                     value="#{uiReferenciaManager.obj.uireferenciadetallesCollection}">
+                                        <f:facet name="header" >
+                                           Color x referencia
+                                        </f:facet>
+                                        <p:column style="width:16px">
+                                            <p:rowToggler  />
+                                        </p:column>
+                                        <p:column headerText="No." width="30" >
+                                            <h:outputText  value="#{rowIndex+1}" />
+                                        </p:column>
+                                        <p:column headerText="Color" width="100">
+                                            <h:outputText value="#{rd.color.color}" />
+                                        </p:column>   
+                                        <p:column headerText="Stock" width="100" id="stockRow" >
+                                            <h:outputText id="stocRow" value="#{uiInvetarioManager.totalStock(rd)}" />
+                                        </p:column>  
+                                        <p:rowExpansion id="expancion" styleClass="rowSpan">
+                                            <p:dataTable id="table" style="width:100%;max-width:400px !important;margin:auto"  var="tl"  
+                                                         value="#{uiInvetarioManager.listTallajexReferencia(rd.idreferencia.uireferenciagrupotallaCollection)}" 
+                                                        rowIndexVar="rowIndex2" tableStyle="inline" editable="true">
+                                                
+                                                <f:attribute name="idReferenciaDetalle" value="#{rd.id}" />
+                                                <f:attribute name="update" value="update;frmDetalle:tbtipolayers:#{rowIndex}:table " />
+                                                <p:ajax event="rowEdit" update=":formsg:msgs frmDetalle:tbtipolayers:#{rowIndex}:stocRow" global="false"  listener="#{uiInvetarioManager.onRowEdit}" />
+                                                <p:ajax event="rowEditCancel" global="false" listener="#{uiInvetarioManager.onRowCancel}" update=":formsg:msgs" />
+ 
+       
+                                                <p:column headerText="Talla"    width="50" >
+                                                    <h:outputText value="#{tl.talla}"/> 
+                                                </p:column>
+                                                <p:column width="50" headerText="Stock" >
+                                                    <f:facet name="Stock">  
+                                                        <h:outputText value="Subject" styleClass="numberLeft"/>  
+                                                    </f:facet>  
+                                                    <p:cellEditor>  
+                                                        <f:facet name="output">  
+                                                            <h:outputText styleClass="numberRight" value="#{uiInvetarioManager.searchStock(tl, rd)}"/>  
+                                                        </f:facet>  
+                                                        <f:facet name="input">  
+                                                            <h:outputText styleClass="numberRight" value="#{uiInvetarioManager.searchStock(tl, rd)}"/>  
+                                                            <p:inputNumber  styleClass="numberRight" value="#{uiInvetarioManager.valorStock}" decimalPlaces="0" style="width:96%"/>  
+                                                        </f:facet>  
+                                                    </p:cellEditor>
+                                                </p:column>
+                                                <p:column style="width:6%" exportable="false">  
+                                                    <p:rowEditor  />  
+                                                </p:column>  
+                                            </p:dataTable>
+                                        </p:rowExpansion>
+                                    </p:dataTable>
+                              </p:panelGrid>
+                        
+</ui:composition>
+
+

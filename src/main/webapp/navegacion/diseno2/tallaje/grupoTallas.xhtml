@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"          
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://java.sun.com/jsf/core"          
+      xmlns:ui="http://java.sun.com/jsf/facelets"   
+      xmlns:pt="http://xmlns.jcp.org/jsf/passthrough"    
+      xmlns:pm="http://primefaces.org/mobile"
+      xmlns:pe="http://primefaces.org/ui/extensions"
+      xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
+    
+     <style>
+        .ui-selectonemenu-panel{
+            z-index:999999999 !important;
+        }
+    </style>
+    
+    <f:param name="params" value="0"/>    
+    <h:form id="frmGrupo">
+        <p:outputPanel id="panelReferencia">
+            <div class="ui-g ui-fluid">
+                <div class="ui-g-12" >
+                  <div class="card" style="min-height:270px;">
+                    <div class="card-w-title">
+                        <p:toolbar style="background-color: transparent;border:none;box-shadow: none">
+                            <f:facet name="left">
+                                <p:commandButton title="Guardar" icon="ui-icon-save" update="formsg:msgs pn" process="pn @this" action='#{uiTallajeGrupoManager.save(uiTallajeGrupoManager.obj,["update;tabDetalle:frmGrupo"])}' />
+                                <p:commandButton  title="Nuevo" icon="ui-icon-note-add" process="@this" update="pn" action="#{uiTallajeGrupoManager.newObejc(uiTallajeGrupoManager.obj)}"  />
+                                <p:commandButton type="button" title="Delete" icon="ui-icon-delete" />
+                            </f:facet>
+                        </p:toolbar>
+                    </div>
+                    <p:panelGrid  columns="2"  styleClass="ui-panelgrid-blank" layout="grid" style="width:100%" columnClasses="columna50,columna50">
+                        <p:panelGrid  columns="1"  styleClass="ui-panelgrid-blank" layout="grid" style="width:100%">
+                            <p:panelGrid  id="pn" columns="4" styleClass="ui-panelgrid-blank" columnClasses="columna25,columna25,columna25,columna25" layout="grid" style="width:100%">
+                                <h:panelGroup styleClass="md-inputfield">
+                                    <p:inputText id="referencia"   maxlength="10" required="true" requiredMessage="Valor requerido en referencia"  style="width: 100% !important;text-transform: uppercase;" value="#{uiTallajeGrupoManager.obj.descripcion}"/>
+                                    <label>Nombre</label>
+                                </h:panelGroup>
+                                 <h:panelGroup  styleClass="md-inputwrapper-focus">
+                                   <label>Activo</label>
+                                   <p:inputSwitch value="#{uiTallajeGrupoManager.obj.activo}"  onLabel="Si" offLabel="No" />
+                              </h:panelGroup>
+                              </p:panelGrid>
+                              <p:panelGrid columns="1" styleClass="ui-panelgrid-blank" layout="grid" style="width:100%">
+                                  <p:dataTable var="dtsx" id="tbtipolayers" 
+                                   paginator="true"
+                                   scrollable="true"
+                                   scrollHeight="230"
+                                   paginatorPosition="bottom"
+                                   paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                                   rowsPerPageTemplate="5,10,20,50,100"
+                                   scrollWidth="true"
+                                   rows="20"
+                                   rowIndexVar="rowIndex"
+                                   value="#{uiTallajeGrupoManager.findList()}"   >
+                                    <f:facet name="header" >
+                                       Referencias
+                                    </f:facet>
+
+                                    <p:column headerText="No" width="30" >
+                                        <h:outputText  value="#{rowIndex+1}" />
+                                    </p:column>
+                                    <p:column headerText="Nombre" width="100">
+                                        <h:outputText value="#{dtsx.descripcion}" />
+                                    </p:column>  
+                                    <p:column headerText="Activo" width="100"> 
+                                      <h:outputText value='#{dtsx.activo?"Activo":"Inactivo"}' />
+                                    </p:column>       
+                                    <p:column style="width:25px;padding:0 !important" colspan="3"  selectRow="false"  >
+                                        <p:commandButton style="width:100%;margin:0px !important;border-radius:0 !important;"  process="@this"   action="#{uiTallajeGrupoManager.selectObjec(dtsx)}"  update="tabDetalle:frmGrupo:pn tabDetalle:frmGrupo:dataDualList" icon="ui-icon-edit" title="editar referencia">
+                                            <f:actionListener binding="#{uiTallajeGrupoManager.selectDualTallajes(dtsx)}"/>
+                                        </p:commandButton>
+                                    </p:column>
+                                </p:dataTable>
+                            </p:panelGrid>
+                        </p:panelGrid>
+                        <p:panelGrid  columns="1" id="dataDualList"  styleClass="ui-panelgrid-blank" layout="grid" style="width:100%">
+                           <p:pickList id="pickList" value="#{uiTallajeGrupoManager.dualTallaje}" var="un" itemLabel="#{un.talla} #{un.descripcion}" itemValue="#{un}"
+                                        showSourceControls="true" showTargetControls="true" showSourceFilter="true" showTargetFilter="true" responsive="true"
+                                        converter="tallaConvert">
+                                <f:facet name="sourceCaption">Tallas</f:facet>
+                                <f:facet name="targetCaption">Tallas por Grupo</f:facet>
+                                <p:ajax event="transfer" listener="#{uiTallajeGrupoDetalleManager.onTransfer}" update="formsg:msgs" />
+                            </p:pickList>
+                        </p:panelGrid>
+                    </p:panelGrid>
+                  </div>
+                </div>
+            </div>
+        </p:outputPanel>  
+    </h:form> 
+    
+    
+</ui:composition>
+
+

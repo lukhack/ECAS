@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"          
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://java.sun.com/jsf/core"          
+      xmlns:ui="http://java.sun.com/jsf/facelets"   
+      xmlns:pt="http://xmlns.jcp.org/jsf/passthrough"    
+      xmlns:pm="http://primefaces.org/mobile"
+      xmlns:pe="http://primefaces.org/ui/extensions"
+      xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
+    <style type="text/css">
+        .label {
+            width:15%;
+            padding:4px;
+        }
+
+        .value {
+            width:90%;
+            padding:4px;
+        }
+        
+        .label2 {
+            width:15%;
+            padding:4px;
+        }
+
+        .value2 {
+            width:40%;
+            padding:4px;
+        }
+
+        .grid {
+            width:100%;
+        }
+
+        .error {
+            color: red;
+        }
+
+        .outputLabel {
+            font-weight: bold;
+        }
+
+        .grid {
+            width:33%;
+            padding:4px;
+        }
+        
+        .ui-wizard-navbar button{
+            max-width: 150px; 
+            text-align: center;
+        }
+    </style>
+    <script type="text/javascript" >
+        function nextTab() {
+                var $tabs = jQuery('.ui-tabs:eq(0)').tabs();
+                $tabs.select($tabs.tabs('option', 'selected')+1);
+            }
+    </script>
+    
+    <p:remoteCommand name="rc" update="formsg:msgs" global="false" action="#{remoteCommandView.execute}" />
+    
+    
+    <p:growl id="growl" sticky="true" showDetail="true" />
+    <p:tabView  activeIndex="#{uiFormularioProcessManager.activeIndex}"   id="TabView" prependId="false">
+        <c:forEach items="#{uiFormularioManager.list}" var="form" varStatus="loop"> 
+            <p:tab id="#{form.idCampo}"  title="#{form.grupo}"  ariaLabel="dasd" >
+                
+                
+                
+                <c:forEach items="#{form.dtsubgrupoCollection}" var="panel"> 
+                    <p:panel  header="#{panel.subgrupo}" toggleable="true" style="width: 100%">
+                        <p:panelGrid columns="#{panel.detalle  ? '1':panel.columna}" id="#{panel.idSub}"  layout="grid" style="border:0px !important; background:none;width:100% "  styleClass="ui-panelgrid-blank form-group">
+                           
+                            <c:forEach items="#{uiFormularioProcessManager.getListFormulario(panel.dtformularioCollection)}" var="component"> 
+                                <c:choose>
+                                    <c:when test="#{component.tipo eq 'Text'}">
+                                        <ui:include src="componente/formInputText.xhtml">
+                                            <ui:param name="codPreg" value="#{component.codPreg}"/>
+                                            <ui:param name="vlrMaximo" value="#{component.vlrMaximo}"/>
+                                            <ui:param name="ncodPreg" value="#{component.NCodPreg}"/>
+                                            <ui:param name="pregunta" value="#{component.pregunta}"/>
+                                            <ui:param name="obligatorio" value="#{component.obligatorio}"/>
+                                            <ui:param name="visible" value="#{component.visible}"/>
+                                        </ui:include>
+                                    </c:when>
+                                    <c:when test="#{component.tipo eq 'TextArea'}">
+                                        <ui:include src="componente/formInputTextArea.xhtml">
+                                            <ui:param name="codPreg" value="#{component.codPreg}"/>
+                                            <ui:param name="vlrMaximo" value="#{component.vlrMaximo}"/>
+                                            <ui:param name="pregunta" value="#{component.pregunta}"/>
+                                            <ui:param name="obligatorio" value="#{component.obligatorio}"/>
+                                        </ui:include>
+                                    </c:when>
+                                    <c:when test="#{component.tipo eq 'List'}">
+                                        <ui:include src="componente/formList.xhtml">
+                                            <ui:param name="codPreg" value="#{component.codPreg}"/>
+                                            <ui:param name="vlrMaximo" value="#{component.vlrMaximo}"/>
+                                            <ui:param name="pregunta" value="#{component.pregunta}"/>
+                                            <ui:param name="ncodPreg" value="#{component.NCodPreg}"/>
+                                            <ui:param name="opcResp" value="#{component.opcResp}"/>
+                                            <ui:param name="obligatorio" value="#{component.obligatorio}"/>
+                                            <ui:param name="tieneValidacion" value="#{component.tieneValidacion}"/>
+                                        </ui:include>
+                                    </c:when>
+                                    <c:when test="#{component.tipo eq 'CheckList'}">
+                                        <ui:include src="componente/formCheckList.xhtml">
+                                            <ui:param name="codPreg" value="#{component.codPreg}"/>
+                                            <ui:param name="vlrMaximo" value="#{component.vlrMaximo}"/>
+                                            <ui:param name="pregunta" value="#{component.pregunta}"/>
+                                            <ui:param name="ncodPreg" value="#{component.NCodPreg}"/>
+                                            <ui:param name="opcResp" value="#{component.opcResp}"/>
+                                            <ui:param name="obligatorio" value="#{component.obligatorio}"/>
+                                            <ui:param name="tieneValidacion" value="#{component.tieneValidacion}"/>
+                                        </ui:include>
+                                    </c:when>
+                                    <c:when test="#{component.tipo eq 'Number'}">
+                                        <ui:include src="componente/formInputNumber.xhtml">
+                                            <ui:param name="codPreg" value="#{component.codPreg}"/>
+                                            <ui:param name="vlrMaximo" value="#{component.vlrMaximo}"/>
+                                            <ui:param name="ncodPreg" value="#{component.NCodPreg}"/>
+                                            <ui:param name="pregunta" value="#{component.pregunta}"/>
+                                            <ui:param name="opcResp" value="#{component.opcResp}"/>
+                                            <ui:param name="obligatorio" value="#{component.obligatorio}"/>
+                                        </ui:include>
+                                    </c:when>
+                                    <c:when test="#{component.tipo eq 'Detalle'}">
+                                        <ui:include src="componente/formDetalle.xhtml">
+                                            <ui:param name="codPreg2" value="#{component.codPreg}"/>
+                                            <ui:param name="vlrMaximo2" value="#{component.vlrMaximo}"/>
+                                            <ui:param name="pregunta2" value="#{component.pregunta}"/>
+                                            <ui:param name="removeDetalle" value="#{component.remove}"/>
+                                        </ui:include>
+                                    </c:when>
+                                    <c:when test="#{component.tipo eq 'Fecha'}">
+                                        <ui:include src="componente/formFechaText.xhtml">
+                                            <ui:param name="codPreg" value="#{component.codPreg}"/>
+                                            <ui:param name="vlrMaximo" value="#{component.vlrMaximo}"/>
+                                            <ui:param name="pregunta" value="#{component.pregunta}"/>
+                                            <ui:param name="removeDetalle" value="#{component.remove}"/>
+                                            <ui:param name="parameter" value="#{component.parameter}"/>
+                                            <ui:param name="ncodPreg" value="#{component.NCodPreg}"/>
+                                        </ui:include>
+                                    </c:when>
+                                    <c:when test="#{component.tipo eq 'ListM'}">
+                                        <c:choose>
+                                            <c:when test="#{component.opcResp eq 'ListTableBarrio'}">
+                                                <ui:include src="componente/formListBarrio.xhtml">
+                                                    <ui:param name="codPreg" value="#{component.codPreg}"/>
+                                                    <ui:param name="vlrMaximo" value="#{component.vlrMaximo}"/>
+                                                    <ui:param name="ncodPreg" value="#{component.NCodPreg}"/>
+                                                    <ui:param name="pregunta" value="#{component.pregunta}"/>
+                                                    <ui:param name="obligatorio" value="#{componentdet.obligatorio}"/>
+                                                </ui:include>
+                                            </c:when>
+                                            <c:when test="#{component.opcResp eq 'ListTableComuna'}">
+                                                <ui:include src="componente/formListComuna.xhtml">
+                                                    <ui:param name="codPreg" value="#{component.codPreg}"/>
+                                                    <ui:param name="vlrMaximo" value="#{component.vlrMaximo}"/>
+                                                    <ui:param name="ncodPreg" value="#{component.NCodPreg}"/>
+                                                    <ui:param name="pregunta" value="#{component.pregunta}"/>
+                                                    <ui:param name="obligatorio" value="#{componentdet.obligatorio}"/>
+                                                </ui:include>
+                                            </c:when>
+                                            <c:when test="#{component.opcResp eq 'ListTableMunicipio'}">
+                                                <ui:include src="componente/formListMunicipio.xhtml">
+                                                    <ui:param name="codPreg" value="#{component.codPreg}"/>
+                                                    <ui:param name="vlrMaximo" value="#{component.vlrMaximo}"/>
+                                                    <ui:param name="ncodPreg" value="#{component.NCodPreg}"/>
+                                                    <ui:param name="pregunta" value="#{component.pregunta}"/>
+                                                    <ui:param name="obligatorio" value="#{componentdet.obligatorio}"/>
+                                                </ui:include>
+                                            </c:when>
+                                            <c:when test="#{component.opcResp eq 'ListTableDepartamento'}">
+                                                <ui:include src="componente/formListDepartamento.xhtml">
+                                                    <ui:param name="codPreg" value="#{component.codPreg}"/>
+                                                    <ui:param name="vlrMaximo" value="#{component.vlrMaximo}"/>
+                                                    <ui:param name="ncodPreg" value="#{component.NCodPreg}"/>
+                                                    <ui:param name="pregunta" value="#{component.pregunta}"/>
+                                                    <ui:param name="obligatorio" value="#{componentdet.obligatorio}"/>
+                                                </ui:include>
+                                            </c:when>
+                                        </c:choose>
+                                    </c:when>
+                                </c:choose>
+                            </c:forEach>    
+                        </p:panelGrid>
+                    </p:panel>
+                </c:forEach>
+                
+                <c:choose>
+                    <c:when test="#{uiFormularioManager.list.size() eq (loop.index)+1}">
+                        <table>
+                            <tr>
+                                <td><p:commandButton process="#{form.idCampo}" value="Atras"   icon="ui-icon-navigate-before" action="#{uiFormularioProcessManager.nextTabView(loop.index-1)}"  update="TabView formsg:msgs" title="Atras"/></td>
+                                <td><p:commandButton process="@form @this"    icon="ui-icon-save"  update="@form:panelReferencia formsg:msgs" action='#{uiFormularioProcessManager.save("")}' value="Guardar" title="Guardar"/></td>
+                             </tr>
+                        </table>
+                    </c:when>  
+                    <c:when test="#{loop.index eq 0}">
+                         <table>
+                                <tr>
+                                    <td><p:commandButton action="#{uiFormularioProcessManager.nextTabView(loop.index+1)}" value="Siguiente"  icon="ui-icon-navigate-next"  update="TabView formsg:msgs" process="#{form.idCampo}" title="Siguiente"/></td>
+                                </tr>
+                            </table>
+                    </c:when> 
+                    <c:when test="#{loop.index ne 0}">
+                            <table>
+                                <tr>
+                                    <td><p:commandButton process="#{form.idCampo}" value="Atras"   icon="ui-icon-navigate-before" action="#{uiFormularioProcessManager.nextTabView(loop.index-1)}"  update="TabView formsg:msgs" title="Atras"/></td>
+                                    <td><p:commandButton process="#{form.idCampo}" value="Siguiente"  icon="ui-icon-navigate-next" action="#{uiFormularioProcessManager.nextTabView(loop.index+1)}" update="TabView formsg:msgs"  title="Siguiente"/></td>
+                                </tr>
+                            </table>
+                    </c:when>  
+                </c:choose>
+                
+            </p:tab>
+            
+            
+        </c:forEach>
+        
+            
+    </p:tabView> 
+    
+    
+
+</ui:composition>
+

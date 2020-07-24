@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"          
+      xmlns:p="http://primefaces.org/ui"          
+      xmlns:ui="http://java.sun.com/jsf/facelets" >
+     
+    
+    <p:panelGrid  id="pnForm" columns="1"  styleClass="ui-panelgrid-blank"   layout="grid" style="width:100%" columnClasses="columna100">
+        <p:panelGrid  columns="3"  styleClass="ui-panelgrid-blank form-group" columnClasses="columna35, columna40, columna25">
+            <h:panelGroup styleClass="md-inputfield">
+                <p:inputText id="txtTipo" value="#{dtMaMedioTransporte.obj.mediotransporte}" required="true"   maxlength="100"/>
+                <p:outputLabel for="txtTipo" value="Medio Transporte"/>
+            </h:panelGroup>   
+           <h:panelGroup styleClass="md-inputfield">
+                <p:selectBooleanCheckbox value="#{dtMaMedioTransporte.obj.placavehiculo}" />
+                <label><p:spacer width="15" height="0" />Requiere Placas de vehículo</label>
+            </h:panelGroup>   
+        </p:panelGrid>
+    </p:panelGrid> 
+                      
+</ui:composition>
+

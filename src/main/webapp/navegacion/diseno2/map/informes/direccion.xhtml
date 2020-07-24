@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"          
+      xmlns:p="http://primefaces.org/ui"          
+      xmlns:ui="http://java.sun.com/jsf/facelets"       
+      xmlns:c="http://xmlns.jcp.org/jsp/jstl/core"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+      
+    <style>
+        #left {
+            width: 150px;
+            float: left;
+            background-color: #f00;
+            
+        }
+    </style>
+    
+  
+    <h:form id='formInforme'  prependId="false">
+        <p:commandButton value="Imprimir"><p:printer target="informedireccion" /></p:commandButton>
+            
+        <p:outputPanel id="informedireccion" style="width:100%;padding-bottom:20px;">
+            
+            <p:graphicImage value="images/marca/logo.png" style="width:300px"/>
+            
+            <div id="headerDir">
+                <p:outputPanel style="text-align: center;width:100%;">
+                    <p:outputLabel value="CONSULTA ACTIVIDAD ECONÓMICA EN UNA DIRECCIÓN DETERMINADA" style="width:100%;text-align: center;font-weight:bold"/>
+                </p:outputPanel>
+            </div>    
+            <div >
+                <table columns="2"  id="codigotb" style="width:100%;padding-top:20px">
+                    <tbody style="border: 0px #ffffff">
+                        <tr>
+                            <td><p:outputLabel value="Código" style="width:100%;font-weight:bold"/></td>
+                            <td><p:outputLabel value="#{mapBean.informe.codConsulta}" style="width:100%;text-align: left;"/></td>
+                        </tr>
+                        <tr>
+                             <td><p:outputLabel value="Fecha" style="width:100%;font-weight:bold"/></td>
+                             <td><p:outputLabel value="#{mapBean.informe.fecha}" style="width:100%;text-align: center;"/></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <p:outputPanel id="desActividad" style="text-align: center;width:100%;">
+             <p:outputLabel value="#{mapBean.informe.actividad.descripcion}" style="width:100%;padding-top:20px;text-align: center" />
+            </p:outputPanel>
+
+              <table columns="2"  id="ubicaciontb" style="width:100%;padding-top:10px">
+                    <tbody style="border: 0px #ffffff">
+                    <tr>
+                        <td><p:outputLabel value="Código Catastral:" style="width:100%;font-weight:bold;"/></td>
+                        <td><p:outputLabel value="#{mapBean.informe.ficha.cedulaCatastral}" style="width:100%;text-align: center;"/></td>
+                    </tr>
+                    <tr>
+                        <td><p:outputLabel value="Dirección:" style="width:100%;font-weight:bold"/></td>
+                        <td><p:outputLabel value="#{mapBean.informe.ficha.direPred}" style="width:100%;text-align: center;"/></td>
+                    </tr>
+                    <tr>            
+                        <td><p:outputLabel value="Polígono:" style="width:100%;font-weight:bold"/></td>
+                        <td><p:outputLabel value="#{mapBean.informe.ficha.area.tipo}" style="width:100%;text-align: center;"/></td>
+                    </tr>
+                    <tr>
+                        <td><p:outputLabel value="Barrio:" style="width:100%;font-weight:bold"/></td>
+                        <td><p:outputLabel value="#{mapBean.informe.ficha.barrio.barrio}" style="width:100%;text-align: center;"/></td>
+                    </tr>
+                     </tbody>
+                </table>
+
+                <p:outputPanel id="titleInformacion" style="width:100%;padding-bottom:20px;text-align:center">
+                    <p:outputLabel value="Información Solicitada" style="width:100%;text-align: center;font-weight:bold"/>
+                </p:outputPanel>
+
+            <table columns="2"  id="informaciontb" style="width:100%;padding-top:10px">
+                <tbody style="border: 0px #ffffff">
+                    <tr>
+                        <td><p:outputLabel value="Uso principal: " style="width:100%;font-weight:bold"/></td>
+                        <td><p:outputLabel value="#{mapBean.informe.usos.idTipouso.desTipoUso}" style="width:100%;text-align: center;"/></td>
+                    </tr>
+                    <tr>
+                        <td><p:outputLabel value="Uso Solicitado:" style="width:100%;font-weight:bold"/></td>
+                        <td><p:outputLabel value="#{mapBean.informe.actividad.descripcion}" style="width:100%;text-align: center;"/></td>
+                    </tr>
+                    <tr>
+                        <td><p:outputLabel value="Código POT:" style="width:100%;font-weight:bold"/></td>
+                        <td><p:outputLabel value="#{mapBean.informe.usos.codpot}" style="width:100%;text-align: center;"/></td>
+                    </tr>
+                    <tr>
+                        <td><p:outputLabel value="Clase de Uso:" style="width:100%;font-weight:bold"/></td>
+                        <td><p:outputLabel value="#{config.TIPOUSOCLASE}" style="width:100%;text-align: center;"/></td>
+                    </tr>
+                    <tr>
+                        <td><p:outputLabel value="ID Clase Uso" style="width:100%;font-weight:bold"/></td>
+                        <td><p:outputLabel value="#{config.TIPOUSOID}" style="width:100%;text-align: center;"/></td>
+                    </tr>
+                   
+                </tbody>
+            </table>
+            
+            <c:if test="#{mapBean.informe.actividad.maIUNormaCIIUCollection.size() != 0}">
+                
+                   <div id="normausoSuelo">
+                        <p:outputPanel id="usoSueloInf" style="width:100%;margin-top:20px;padding-bottom:10px;text-align:center">
+                            <p:outputLabel value="La Normatividad Vigente que reglamenta los Usos del Suelo para la dirección #{mapBean.informe.ficha.direPred}"  style="width:100%;text-align: center;font-weight:bold"/>
+                         </p:outputPanel>
+                        <p:dataTable var="usc"   id="usoSueloTb"  value="#{mapBean.informe.actividad.maIUNormaCIIUCollection}" style="width:100%;padding-bottom:20px">
+                               <p:column headerText="Tipo Norma" width="100">
+                                <h:outputText value="#{usc.idtiponorma.destiponorma}" />
+                               </p:column>
+                                <p:column headerText="Tipo Norma" width="100" visible="false">
+                                 <h:outputText value="#{usc.idtiponorma.destiponorma}" />
+                               </p:column>
+                               <p:column headerText="Nro.">
+                                   <h:outputText value="#{usc.nroDecreto.nroDecreto}" />
+                               </p:column>
+
+                               <p:column headerText="Fecha ">
+                                   <h:outputText value="" />
+                               </p:column>
+
+                               <p:column headerText="Título ">
+                                   <h:outputText value="#{usc.nroDecreto.documento}" />
+                               </p:column>
+
+
+                            <p:column headerText="Cobertura " width="150">
+                                   <h:outputText value="#{usc.nroDecreto.idCobertura.desCobertura}" />
+                               </p:column>
+
+                               <p:column headerText="Entidad">
+                                   <h:outputText value="#{usc.nroDecreto.idEntidad.nomEntidad}" />
+                               </p:column>
+                                
+                                
+                               <p:column headerText="Desc">
+                                   <p:link  href="${usc.nroDecreto.rutaDoc}" target="_blank"><img src="images/pdf.png" width="30" /></p:link>
+                               </p:column>
+                        </p:dataTable>
+                     </div>
+           </c:if>    
+           
+            <c:if test="#{mapBean.informe.ficha.barrio.maUINormaBarrios.size() != 0}">
+                <p:outputPanel id="dirBarrioInf" style="width:100%;margin-top:20px; padding-bottom:20px;text-align:center">
+                    <p:outputLabel value="La Normatividad Vigente que reglamenta los Usos del Suelo para la dirección en el Barrio: #{mapBean.informe.ficha.barrio.barrio}"  style="width:100%;text-align: center;font-weight:bold"/>
+                </p:outputPanel>
+                <p:dataTable var="nbr" id="dirBarrioTb" value="#{mapBean.informe.ficha.barrio.maUINormaBarrios}" style="width:100%;padding-bottom:20px">
+
+                        <p:column headerText="Tipo Norma ">
+                         <h:outputText value="#{nbr.idtiponorma.destiponorma}" />
+                       </p:column>
+                       <p:column headerText="Tipo Norma" width="100" visible="false">
+                             <h:outputText value="#{usc.idtiponorma.destiponorma}" />
+                        </p:column>
+                       <p:column headerText="Nro.">
+                           <h:outputText value="#{nbr.nroDecreto.nroDecreto}" />
+                       </p:column>
+
+                       <p:column headerText="Fecha ">
+                           <h:outputText value="" />
+                       </p:column>
+
+                       <p:column headerText="Título ">
+                           <h:outputText value="#{nbr.nroDecreto.documento}" />
+                       </p:column>
+
+
+                       <p:column headerText="Cobertura  ">
+                           <h:outputText value="#{nbr.nroDecreto.idCobertura.desCobertura}" />
+                       </p:column>
+
+                       <p:column headerText="Entidad">
+                           <h:outputText value="#{nbr.nroDecreto.idEntidad.nomEntidad}" />
+                       </p:column>
+                        <p:column headerText="Desc">
+                            <p:link  href="${nbr.nroDecreto.rutaDoc}" target="_blank"><img src="images/pdf.png" width="30" /></p:link>
+                        </p:column>
+                </p:dataTable>
+            </c:if>    
+             
+            <c:if test="#{mapBean.informe.ficha.area.maUINormaAreas.size() != 0}">
+                <p:outputPanel id="calseUsoInf" style="width:100%;margin-top:10px;padding-bottom:10px;text-align:center">
+                    <p:outputLabel value="La Normatividad Vigente que reglamenta esta clase de uso"  style="width:100%;text-align: center;font-weight:bold"/>
+                </p:outputPanel>
+                <p:dataTable var="nbr"  id="calseUsoTb" value="#{mapBean.informe.ficha.area.maUINormaAreas}" style="width:100%;padding-bottom:20px">
+                            <p:column headerText="Tipo Norma " width="100" >
+                                <h:outputText value="#{nbr.idtiponorma.destiponorma}" />
+                            </p:column>
+                            <p:column headerText="Tipo Norma" width="100" visible="false">
+                                 <h:outputText value="#{nbr.idtiponorma.destiponorma}" />
+                            </p:column>
+                            <p:column headerText="Nro." width="50">
+                                <h:outputText value="#{nbr.nroDecreto.nroDecreto}" />
+                            </p:column>
+                            <p:column headerText="Fecha " width="70">
+                                <h:outputText value="" />
+                            </p:column>
+
+                           <p:column headerText="Título ">
+                               <h:outputText value="#{nbr.nroDecreto.documento}" />
+                           </p:column>
+
+
+                           <p:column headerText="Cobertura" width="70">
+                               <h:outputText value="#{nbr.nroDecreto.idCobertura.desCobertura}" />
+                           </p:column>
+
+                           <p:column headerText="Entidad">
+                               <h:outputText value="#{nbr.nroDecreto.idEntidad.nomEntidad}" />
+                           </p:column>
+                           
+                            <p:column headerText="Desc">
+                               <p:link  href="${nbr.nroDecreto.rutaDoc}" target="_blank"><img src="images/pdf.png" width="30" /></p:link>
+                           </p:column>
+                    </p:dataTable>
+                
+                </c:if>  
+        </p:outputPanel>
+    </h:form>
+    
+    
+</ui:composition>
+

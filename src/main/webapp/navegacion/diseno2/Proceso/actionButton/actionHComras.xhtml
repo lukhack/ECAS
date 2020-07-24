@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"          
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://java.sun.com/jsf/core"          
+      xmlns:ui="http://java.sun.com/jsf/facelets"       >
+    
+    <div class="layout-breadcrumb-options"   >
+        <p:commandLink process="@form:tercero @form:PnAnadir @form:pnTotales @this" update="@form panelReferencia formsg:msgs"  action='#{dtMaFacturacionCotroller.save(dtMaFacturacionCotroller.obj,["update;frmApp"],"1")}'  style="margin:0px;padding: 0px"  title="Guardar"><i style="font-size:2.8em;color: #607D8B" class="material-icons">&#xE161;</i>
+            <ui:include src="../../param/param_one.xhtml"/>
+        </p:commandLink>
+        <p:commandLink update="@form"  process="@this" style="margin:0px;padding: 0px" title="Nuevo" action="#{dtMaFacturacionCotroller.newObejc(dtMaFacturacionCotroller.obj)}"><i style="font-size:2.8em;color: #607D8B" class="material-icons">insert_drive_file</i>
+            <ui:include src="../../param/param_one.xhtml"/>
+        </p:commandLink>
+        <p:commandLink update="@form"   style="margin:0px;padding: 0px" action="#{dtMaFacturacionCotroller.stop()}" title="Cancelar"><i style="font-size:2.8em;color: red" class="material-icons">&#xE5C9;</i>
+            <ui:include src="../../param/param_one.xhtml"/>
+        </p:commandLink>
+    </div>
+    <p:outputPanel id="PnAnadir" style="width:100%;text-align:right;position: absolute;top:10px;right:0px">
+        <p:commandLink update="@form:dgFactura formsg:msgs" oncomplete="PF('dgFactura').show()"  id="btnDialogPrinter" style="position: absolute;right: 50px;top:-10px"   title="Imprimir" action="#{dtMaFacturacionCotroller.reinitDetalle()}"><i style="font-size:2.8em;color: #607D8B" class="material-icons">print</i>
+           <ui:include src="../../param/param_one.xhtml"/>
+        </p:commandLink>
+        <p:commandLink process="@form:materiales @form:txtCantidad @form:txtValor @this" id="btnAnadir" style="position: absolute;right: 0;top:-10px"  update="@form:dtDatos @form:pnTotales @form:materiales  formsg:msgs"    title="Añadir" action="#{dtMaFacturacionCotroller.reinitDetalle()}"><i style="font-size:2.8em;color: #607D8B" class="material-icons">playlist_add</i>
+           <p:collector value="#{dtMaFacturacionDetalleController.obj}" addTo="#{dtMaFacturacionCotroller.obj.dtfacturadetalleList}"  unique="true" />
+           <ui:include src="../../param/param_one.xhtml"/>
+       </p:commandLink>
+    </p:outputPanel>
+    
+    <p:defaultCommand target="btnAnadir" />
+    
+</ui:composition>
+
+

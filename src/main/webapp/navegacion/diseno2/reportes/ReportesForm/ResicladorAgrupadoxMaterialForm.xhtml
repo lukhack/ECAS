@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"          
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://java.sun.com/jsf/core"          
+      xmlns:ui="http://java.sun.com/jsf/facelets"   
+      xmlns:pt="http://xmlns.jcp.org/jsf/passthrough"    
+      xmlns:pm="http://primefaces.org/mobile" 
+      xmlns:o="http://omnifaces.org/ui"
+      xmlns:of="http://omnifaces.org/functions"
+      xmlns:pe="http://primefaces.org/ui/extensions"
+      xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
+     
+     <style>
+        .ui-selectonemenu-panel{
+            z-index:999999999 !important;
+        }
+        
+        .black-button{
+           border-radius: 0px 0px 0px 0px !important;
+            -moz-border-radius: 0px 0px 0px 0px !important;
+            -webkit-border-radius: 0px 0px 0px 0px !important;
+            border: 0px none #ffffff !important;
+            background-color: transparent !important;
+            color: #000 !important;
+            -webkit-box-shadow: 0px 0px 0px 0px rgba(0,0,0,0.75)  !important;
+            -moz-box-shadow: 0px 0px 0px 0px rgba(0,0,0,0.75)  !important;
+            box-shadow: 0px 0px 0px 0px rgba(0,0,0,0.75)  !important;
+        }
+        
+        .ui-selectonemenu-panel{
+            z-index: 999999999 !important;
+        }
+        
+        
+        .rcorners1 {
+            text-align: center;
+            vertical-align:middle;
+            border-radius: 100px;
+            background: #73AD21;
+            width: 80px;
+            height: 80px;
+            height: 80px;
+            line-height: 80px;
+            color: #ffffff;
+        }
+          
+        .rcorners1:hover{
+          background: #cccccc !important;
+        }
+        
+        
+        .pnlist2{
+           background: #cccccc !important;
+           color: white
+        }
+        
+        .pnlist2:hover, .pnlist:hover{
+           background: #00ccff !important;
+           color: white;
+        }
+        
+        
+        
+        span {
+            
+          display: inline-block;
+          vertical-align: middle;
+          line-height: normal;
+        }
+    </style>
+     
+    <p:outputPanel id="panelReferenciaReciclador" >
+        <p:panel  menuTitle="Compras" closeTitle="Compras">
+            <p:panelGrid style="width:100%;border: 1px solid #cccccc"  styleClass="ui-panelgrid-blank" layout="grid" columns="1" >
+                <p:panel header="Compras del Mes #{prReporteController.mes} por Recilador">
+                    <p:dataTable value="#{prReporteController.prfacturasDetalle}" id="tbl" filteredValue="#{prReporteController.prfacturasDetallefilter}"  var="dt"
+                        paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink}  {LastPageLink} {RowsPerPageDropdown} {Exporters}"
+                        paginator="true" rows="100" rowsPerPageTemplate="100,200,500,1000,2000,5000,1000,#{prReporteController.prfacturasDetalle.size()}" style="margin-bottom:20px">
+                        
+                        <f:facet name="{Exporters}">
+                            <div style="float:right;padding-top: 5px;">
+                                <h:commandLink>
+                                    <img src="images/excel.png" width="24"/>
+                                    <p:dataExporter type="xls" target="tbl" fileName="Datos" />
+                                </h:commandLink>
+                            </div>
+                        </f:facet>
+                        
+                        <p:ajax event="filter"  global="false" ignoreAutoUpdate="true" />
+                         <p:column headerText="" width="30" filterBy="#{index+1}" filterMatchMode="contains" >
+                            <p:outputLabel value="#{index+1}"/>
+                        </p:column>
+                        <p:column headerText="Num. Documento" filterBy="#{dt.tercero.documento}" filterMatchMode="contains" >
+                            <p:outputLabel value="#{dt.tercero.documento}"/>
+                        </p:column>
+                        <p:column headerText="Recolector" filterBy="#{dt.tercero.dtterceronatural.nombres} #{dt.tercero.dtterceronatural.apellidos}" filterMatchMode="contains">
+                            <p:outputLabel value="#{dt.tercero.dtterceronatural.nombres} #{dt.tercero.dtterceronatural.apellidos}"/>
+                        </p:column>
+                       <p:column headerText="Material Id" width="80" filterBy="#{dt.materialid.material.dtmagrupomaterial.id}" filterMatchMode="contains">
+                            <h:outputText value='#{dt.materialid.material.dtmagrupomaterial.id}' />
+                        </p:column>
+
+                        <p:column headerText="Material Grupo" width="80" filterBy="#{dt.materialid.material.dtmagrupomaterial.nombre.toUpperCase()}" filterMatchMode="contains">
+                            <h:outputText value='#{dt.materialid.material.dtmagrupomaterial.nombre.toUpperCase()}' />
+                        </p:column>
+
+                        <p:column headerText="Material" width="80" filterBy="#{dt.materialid.material.material.toUpperCase()}" filterMatchMode="contains">
+                            <h:outputText value='#{dt.materialid.material.material.toUpperCase()}' />
+                        </p:column>
+
+                        <p:column headerText="Cantidad Total" filterBy="#{dt.cantidad}" filterMatchMode="contains">
+                            <p:outputLabel value="#{dt.cantidad}"><f:convertNumber  /> </p:outputLabel>
+                        </p:column>
+                        <p:columnGroup type="footer">
+                                <p:row>
+                                    <p:column style="font-weight: bold !important;font-size:24px;"  colspan="2" footerText="Total Peso(Kg)" />
+                                    <p:column  colspan="3" style="text-align: right" >
+                                        <f:facet name="footer">
+                                            <h:outputText style="font-size:24px;font-weight:bold" value="#{prReporteController.prfacturasDetalle.stream().map(item->item.cantidad).sum()}">
+                                              <f:convertNumber pattern="##,###"  />
+                                          </h:outputText>
+                                        </f:facet>
+                                    </p:column>
+                                </p:row>
+                        </p:columnGroup>
+                        
+                        <f:facet name="footer" >
+                            Total de registros #{prReporteController.prfacturasDetalle.size()}
+                        </f:facet>
+                    </p:dataTable>
+                </p:panel>
+            </p:panelGrid>
+        </p:panel>
+    </p:outputPanel>
+</ui:composition>
+
+

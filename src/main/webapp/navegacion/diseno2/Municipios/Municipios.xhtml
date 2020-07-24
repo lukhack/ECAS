@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"          
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://java.sun.com/jsf/core"          
+      xmlns:ui="http://java.sun.com/jsf/facelets"   
+      xmlns:pt="http://xmlns.jcp.org/jsf/passthrough"    
+      xmlns:pm="http://primefaces.org/mobile"
+      xmlns:pe="http://primefaces.org/ui/extensions"
+      xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
+    
+     <style>
+        .ui-selectonemenu-panel{
+            z-index:999999999 !important;
+        }
+        
+        .black-button{
+           border-radius: 0px 0px 0px 0px !important;
+            -moz-border-radius: 0px 0px 0px 0px !important;
+            -webkit-border-radius: 0px 0px 0px 0px !important;
+            border: 0px none #ffffff !important;
+            background-color: transparent !important;
+            color: #000 !important;
+            -webkit-box-shadow: 0px 0px 0px 0px rgba(0,0,0,0.75)  !important;
+            -moz-box-shadow: 0px 0px 0px 0px rgba(0,0,0,0.75)  !important;
+            box-shadow: 0px 0px 0px 0px rgba(0,0,0,0.75)  !important;
+        }
+    </style>
+    
+    <h:form id="frmApp">
+        <div class="layout-breadcrumb-options" style="position: fixed;z-index:999998;top:110px;right:15px "  >
+          <p:commandLink process="@form"  update="panelReferencia formsg:msgs" action='#{maMunicipioManager.save(maMunicipioManager.obj,["udpate;frmApp:panelReferencia"])}'  style="margin:0px;padding: 0px"  title="Guardar"><i style="font-size:2.8em;color: #607D8B" class="material-icons">&#xE161;</i></p:commandLink>
+          <p:commandLink update="@form"  style="margin:0px;padding: 0px" title="Cancelar" action="#{maMunicipioManager.newObejc(maMunicipioManager.obj)}"><i style="font-size:2.8em;color: red" class="material-icons">&#xE5C9;</i></p:commandLink>
+        </div>
+        <p:outputPanel id="panelReferencia">
+            <div class="ui-g ui-fluid">
+                <div class="ui-g-12" >
+                    <div class="card" style="min-height:270px;">
+                        <ui:include src="form/formMunicipio.xhtml"/> 
+                         
+                        <p:panelGrid  columns="1"  styleClass="ui-panelgrid-blank"   layout="grid" style="width:100%" columnClasses="columna100">
+                            
+                        </p:panelGrid> 
+                    </div>
+                </div>
+            </div>
+        </p:outputPanel>  
+    </h:form> 
+    
+    
+</ui:composition>
+
+

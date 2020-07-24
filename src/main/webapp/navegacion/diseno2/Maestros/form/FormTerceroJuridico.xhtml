@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"          
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://java.sun.com/jsf/core"          
+      xmlns:ui="http://java.sun.com/jsf/facelets"   
+      xmlns:pt="http://xmlns.jcp.org/jsf/passthrough"    
+      xmlns:pm="http://primefaces.org/mobile"
+      xmlns:pe="http://primefaces.org/ui/extensions"
+      xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
+     
+   <p:outputPanel style="width:100%;text-align:right;position: relative">
+        <p:commandLink process="@form" id="btnAnadir" style="position: absolute;right: -10px;top:-10px"  update="@form:dtDatos @form:pnForm formsg:msgs"    title="Añadir" action="#{dtTerceroJuridicoController.reinit}"><i style="font-size:2.8em;color: #607D8B" class="material-icons">playlist_add</i>
+           <p:collector value="#{dtTerceroJuridicoController.obj}" addTo="#{dtTerceroJuridicoController.list}"  unique="true" />
+           <ui:include src="../../param/param_one.xhtml"/>
+       </p:commandLink>
+    </p:outputPanel>
+    
+    <p:defaultCommand target="btnAnadir" />
+    
+    <p:panelGrid  id="pnForm" columns="1"  styleClass="ui-panelgrid-blank"   layout="grid" style="width:100%" columnClasses="columna100">
+        <p:panelGrid  columns="3"  styleClass="ui-panelgrid-blank form-group" style="width:100%"  columnClasses="columna25, columna25, columna5, columna40">
+            <p:selectOneMenu required="true" autoWidth="false" requiredMessage="Valor requerido en Municipio" id="sdTipoDocumento"  
+                             filter="true" filterMatchMode="contains" 
+                             converter="tipoDocumentoConvert" value="#{dtTerceroJuridicoController.obj.dttercero.dtmatipodocumentoId}" >
+                <f:selectItem itemLabel="Selección Tipo documento ..."  itemValue="#{null}" noSelectionOption="true"/>
+                <f:selectItems  value="#{dtMaTipodocumento.list}" var="tpc" itemLabel="#{tpc.tipoDocumento} - #{tpc.descripcion}" itemValue="#{tpc}" />
+            </p:selectOneMenu>
+            <h:panelGroup styleClass="md-inputfield">
+                <p:inputText value="#{dtTerceroJuridicoController.obj.dttercero.documento}" maxlength="15" required="true"  requiredMessage="Valor requerido en Nit"/>
+                <label>Nit o Cc</label>
+            </h:panelGroup>   
+            <h:panelGroup styleClass="md-inputfield">
+                <p:inputNumber value="#{dtTerceroJuridicoController.obj.dv}" decimalPlaces="0" maxlength="1"/>
+                <label>DV</label>
+            </h:panelGroup>   
+        </p:panelGrid>
+        <p:panelGrid  columns="3"  styleClass="ui-panelgrid-blank form-group" style="width: 100%" columnClasses="columna25,columna15,columna25,columna35">
+            <h:panelGroup styleClass="md-inputfield" >
+                <p:inputText required="true" maxlength="45" value="#{dtTerceroJuridicoController.obj.razonSocial}"  requiredMessage="Valor requerido en Nombre o Razon social"/>
+                <label>Nombre o Razon Social</label>
+            </h:panelGroup>
+            <h:panelGroup styleClass="md-inputfield">
+                <p:inputText value="#{dtTerceroJuridicoController.obj.dttercero.direccion}" maxlength="100"/>
+                <label>Direccion</label>
+            </h:panelGroup>
+            <h:panelGroup styleClass="md-inputfield" >
+                <p:inputText value="#{dtTerceroJuridicoController.obj.dttercero.telefono}" maxlength="10"/>
+                <label>Telefono 1</label>
+            </h:panelGroup>
+            <h:panelGroup styleClass="md-inputfield">
+                <p:inputText value="#{dtTerceroJuridicoController.obj.dttercero.correo}" maxlength="100"/>
+                <label>Correo</label>
+            </h:panelGroup> 
+            
+            <p:selectOneMenu required="true" autoWidth="false" requiredMessage="Valor requerido en Municipio" id="slMunicipio"  
+                             filter="true" filterMatchMode="contains"
+                             converter="municipioConvert" value="#{dtTerceroJuridicoController.obj.dttercero.idmunicipio}" >
+                <f:selectItem itemLabel="Selección Municipio ..."  itemValue="#{null}" noSelectionOption="true"/>
+                <f:selectItems  value="#{maMunicipioManager.list}" var="mup" itemLabel="#{mup.municipio} (#{mup.idDepartamento.departamento})" />
+            </p:selectOneMenu>
+            
+            <p:selectOneMenu required="true" autoWidth="false" requiredMessage="Valor requerido en Municipio" id="slMedio"  
+                             filter="true" filterMatchMode="contains"
+                             converter="medioTransporteConver" value="#{dtTerceroJuridicoController.obj.dttercero.dtmamediotransporteId}" >
+                <f:selectItem itemLabel="Selección Medio Transporte..."  itemValue="#{null}" noSelectionOption="true"/>
+                <f:selectItems  value="#{dtMaMedioTransporte.list}" var="mt" itemLabel="#{mt.mediotransporte}" />
+            </p:selectOneMenu>
+            
+            
+            
+        </p:panelGrid>
+    </p:panelGrid> 
+                      
+</ui:composition>
+

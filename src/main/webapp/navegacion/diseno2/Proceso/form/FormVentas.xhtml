@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"          
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://java.sun.com/jsf/core"          
+      xmlns:ui="http://java.sun.com/jsf/facelets"       
+      xmlns:h="http://xmlns.jcp.org/jsf/html">
+     
+    <p:panel styleClass="detalle" id="pnFacturaDetalle" class="detalle" header="Detalles de la venta" style="position: relative">
+        <p:commandButton id="tasksButton" type="button" icon="ui-icon-menu" styleClass="secondary-btn" style="position: absolute;top:5px;right:5px"/>
+        <p:menu overlay="true" trigger="tasksButton" my="left top" at="left bottom">
+            <p:menuitem title="Scanner de factura" value="Scanner de factura"  onclick="PF('dgSf').show()" process="@this" update="@form:dgSf" icon="ui-icon-camera-alt" url="#" />
+        </p:menu> 
+        <p:panelGrid  id="pnForm" columns="1"   styleClass="ui-panelgrid-blank"   layout="grid" style="width:100%" columnClasses="columna100">
+            <p:panelGrid   columns="5" id="pnTercero"  style="width:100%">
+                <p:outputLabel  value="No. Factura Física" style="font-weight: bold"/>
+                <p:outputLabel  value="Tercero*" style="font-weight: bold"/>
+                <p:outputLabel  value="Material" style="font-weight: bold"/>
+                <p:outputLabel  value="Cantidad" style="font-weight: bold"/>
+                <p:outputLabel  value="Costo" style="font-weight: bold"/>
+
+                <h:panelGroup   styleClass="md-inputfield">
+                    <p:inputText id="txtFactura"   value="#{dtMaFacturacionCotroller.obj.consManual}" style="max-width: 100px" maxlength="15"/>
+                </h:panelGroup>
+                <p:selectOneMenu id="tercero" widgetVar="slTercero"  var="vts" required="true" requiredMessage="Se requiere un valor en tercero"    value="#{dtMaFacturacionCotroller.obj.tercero}"  
+                    converter="terceroConvert"    filter="true" filterMatchMode="contains">
+                    <f:selectItem itemLabel="Select tercero" itemValue="#{null}" />
+                    <f:selectItems value="#{dtTerceroJuridicoController.findList()}"  var="tcj" itemValue="#{tcj.dttercero}" itemLabel="#{tcj.dttercero.documento} #{tcj.razonSocial}" />
+                    <p:column width="100" headerText="Nit o documento" style="width: 100px">
+                        <h:outputText value="#{vts.documento}" />
+                    </p:column>
+                    <p:column headerText="Nombre o Razon social">
+                        <h:outputText value="#{vts.dttercerojuridico.razonSocial}" />
+                    </p:column>
+                    <ui:include src="../../param/param_one.xhtml"/>
+                </p:selectOneMenu>
+                <p:selectOneMenu id="materiales" var="mts" value="#{dtMaFacturacionCotroller.facturaDetalle.obj.materialid}"  converter="materialConvert"    filter="true" filterMatchMode="contains">
+                    <f:selectItem itemLabel="Material ..." itemValue="#{null}" />
+                    <f:selectItems value="#{dtMaMaterialesController.list.stream().filter(x-> x.ecaSucursal.id eq usuarioB.tbUiUsuario.dtecassucursal.id).toList()}"  var="mt" itemValue="#{mt}" itemLabel="#{mt.material.codReferencia} #{mt.material.material}" />
+                    <p:column width="100" headerText="Referencia" style="width: 100px">
+                        <h:outputText value="#{mts.material.codReferencia}" />
+                    </p:column>
+                    <p:column headerText="Material">
+                        <h:outputText value="#{mts.material.material}" />
+                    </p:column>
+                    <p:ajax listener="#{dtMaFacturacionCotroller.onSelectMaterialCompra}"  update="@form:pnValor"/>
+                    <ui:include src="../../param/param_one.xhtml"/>
+                </p:selectOneMenu>
+                <h:panelGroup styleClass="md-inputfield">
+                    <p:inputNumber id="txtCantidad" decimalPlaces="2"   value="#{dtMaFacturacionCotroller.facturaDetalle.obj.cantidad}" required="true"   maxlength="45"></p:inputNumber>
+                </h:panelGroup>  
+                <h:panelGroup  id="pnValor" styleClass="md-inputfield">
+                    <p:inputNumber id="txtValor"  decimalPlaces="2" value="#{dtMaFacturacionCotroller.facturaDetalle.obj.valor}" required="true"   maxlength="45"/>
+                </h:panelGroup>
+            </p:panelGrid> 
+        </p:panelGrid> 
+    </p:panel>
+                     
+</ui:composition>
+

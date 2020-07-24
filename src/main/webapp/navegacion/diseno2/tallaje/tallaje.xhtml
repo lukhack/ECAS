@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"          
+      xmlns:p="http://primefaces.org/ui"          
+      xmlns:ui="http://java.sun.com/jsf/facelets"       >
+    <p:tabView id="tabDetalle" style="padding:0px !important">
+        <p:tab title="Tallaje" id="tabTallaje">
+            <ui:include src="talla.xhtml" />
+        </p:tab>
+        <p:tab title="Grupo de tallas" id='tabGrupo'>
+            <ui:include src="grupoTallas.xhtml" />
+        </p:tab>
+    </p:tabView>
+</ui:composition>
+
+

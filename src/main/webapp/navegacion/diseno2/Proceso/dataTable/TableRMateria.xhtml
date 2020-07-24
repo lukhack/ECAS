@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"          
+      xmlns:p="http://primefaces.org/ui"          
+      xmlns:ui="http://java.sun.com/jsf/facelets"       >
+   
+     <p:dataTable var="dt" id="dtDatos" 
+            paginator="true"
+            rows="10"  liveScroll="true" scrollRows="15" scrollHeight="50%"
+            scrollable="true"
+            style="min-height:500px !important"
+            paginatorPosition="bottom"
+            paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+            rowsPerPageTemplate="5,10,20,50,100"
+            rowIndexVar="rowIndex"  
+            filteredValue="#{uiMateriaRecoleccionManager.listFilter}"
+            value='#{uiMateriaRecoleccionManager.list}'>
+            <p:ajax event="filter"  process="@this" global="true" ignoreAutoUpdate="true"/>
+            <ui:include src="../../param/param_one.xhtml"/>
+           
+            <p:column headerText="No" width="50"  filterBy="#{rowIndex+1}">
+                <h:outputText  value="#{rowIndex+1}" />
+            </p:column>
+            <p:column headerText="Entrega" width="100" filterBy="#{dt.dttercero.dtterceronatural.nombres} #{dt.dttercero.dtterceronatural.apellidos}" filterMatchMode="contains">
+                <h:outputText value='#{dt.dttercero.dtterceronatural.nombres} #{dt.dttercero.dtterceronatural.apellidos}' />
+            </p:column> 
+            <p:column headerText="Ruta" width="100" filterBy="#{dt.dtterceroruta.ruta}" filterMatchMode="contains">
+                <h:outputText value='#{dt.dtterceroruta.ruta}' />
+            </p:column>
+            <p:column headerText="Peso (Kg)" width="80" filterBy="#{dt.peso}" filterMatchMode="contains">
+                <h:outputText value='#{dt.peso}' />
+            </p:column> 
+            <p:column headerText="Cantidad de sacos" width="80" filterBy="#{dt.cantidadSacos}" filterMatchMode="contains">
+                <h:outputText value='#{dt.cantidadSacos}' />
+            </p:column> 
+            <p:column headerText="Descripción" width="100" filterBy="#{dt.descripcion}" filterMatchMode="contains">
+                <h:outputText value='#{dt.descripcion}' />
+            </p:column>
+            <p:column headerText="Action" width="5%">
+                <p:commandButton title="Remove" rendered="#{dt.id eq null}"  style="width: 30px" icon="ui-icon-delete" update="dtDatos" process="@this">
+                    <p:collector value="#{dt}" removeFrom="#{uiMateriaRecoleccionManager.list}" unique="true"/>
+                    <ui:include src="../../param/param_one.xhtml"/>
+                </p:commandButton>
+            </p:column>
+    </p:dataTable>
+    
+    
+</ui:composition>
+
+

@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"          
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://java.sun.com/jsf/core"          
+      xmlns:ui="http://java.sun.com/jsf/facelets"   
+      xmlns:pt="http://xmlns.jcp.org/jsf/passthrough"    
+      xmlns:pm="http://primefaces.org/mobile"
+      xmlns:pe="http://primefaces.org/ui/extensions"
+      xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
+   
+    <p:outputLabel value="#{ncodPreg }. #{pregunta}" for="#{codPreg}" />  
+    <h:panelGroup> 
+        <p:selectBooleanCheckbox  id="#{codPreg}"   >
+            <p:ajax global="false" update="#{tieneValidacion eq 'true'?panel.idSub.concat(' ').concat('sub-').concat(codPreg):''}"  listener="#{uiFormularioProcessManager.onCheckList}" />
+            <f:attribute  name="codPreg" value="#{codPreg}"/>
+        </p:selectBooleanCheckbox>
+
+        <p:outputPanel id="sub-#{codPreg}">
+            <c:forEach items="#{uiFormularioProcessManager.getListFormularioDetalle(panel.dtformularioCollection,codPreg)}" var="componentdetS">
+                <c:choose>
+                    <c:when  test="#{componentdetS.tipo eq 'Text'}">
+                        <h:panelGroup  rendered='#{componentdetS.visible?"true":"false"}' styleClass="md-inputfield"> 
+                            <p:inputText  id="#{componentdetS.codPreg}" required="#{componentdetS.obligatorio}" requiredMessage="valor requerido en #{componentdetS.pregunta}"   maxlength="#{componentdetS.vlrMaximo}"    />
+                            <label>#{componentdetS.pregunta}</label>
+                            <p:message for="#{componentdetS.codPreg}" />  
+                        </h:panelGroup>
+                    </c:when>
+                </c:choose>
+            </c:forEach>
+        </p:outputPanel>
+    </h:panelGroup> 
+</ui:composition>
+

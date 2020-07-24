@@ -1,0 +1,38 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"    
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:h="http://java.sun.com/jsf/html">
+    <h:form  id='formsg'>
+        <style>
+            .ui-growl{
+                z-index: 999999999 !important;
+            }
+        </style>
+            <p:growl id="msgs" showDetail="false" life="8000" class="zindex"   />
+            
+        <!--<p:ajaxStatus styleClass="ui-widget-conten-estatud" id="estatusbar" style="display:block;margin-bottom:2em;height:24px;z-index:999999999 !important;">
+            <f:facet name="default">
+                <h:outputText  />
+            </f:facet>
+
+            <f:facet name="start">
+               <h:outputText style="font-size:2em;font-weight: bold;z-index:999999999 !important;"/>
+            </f:facet>
+
+            <f:facet name="complete">
+                <h:outputText />
+            </f:facet>
+        </p:ajaxStatus>-->
+        <p:ajaxStatus onstart="PF('statusDialog').show()" onsuccess="PF('statusDialog').hide()" />
+        <p:dialog widgetVar="statusDialog" style="border: none !important;-webkit-box-shadow:none !important;-moz-box-shadow:none;box-shadow:none !important; background:transparent !important;text-align: center; " modal="true" draggable="false" closable="false" resizable="false" showHeader="false">
+           <img data-html2canvas-ignore="true" src="images/preloader.gif" />
+        </p:dialog>
+        <div data-html2canvas-ignore="true">
+            <p:dialog widgetVar="statusDialog2"  style="border: none !important;-webkit-box-shadow:none !important;-moz-box-shadow:none;box-shadow:none !important; background:transparent !important;text-align: center; " modal="false" draggable="false" closable="false" resizable="false" showHeader="false">
+                <img data-html2canvas-ignore="true" src="images/preloader.gif" />
+            </p:dialog>
+        </div>
+    </h:form>
+</ui:composition>
+

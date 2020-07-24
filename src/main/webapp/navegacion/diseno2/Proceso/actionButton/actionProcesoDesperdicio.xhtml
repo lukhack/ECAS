@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"          
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://java.sun.com/jsf/core"          
+      xmlns:ui="http://java.sun.com/jsf/facelets"       >
+    
+    <div class="layout-breadcrumb-options" style="position: fixed;z-index:999998;top:110px;right:15px "  >
+        <p:commandLink process="@form:pnForm @this"  update="@form:pnForm @form:dtDatos formsg:msgs" action='#{prRecoleccionDesperdiciosController.save(prRecoleccionDesperdiciosController.obj)}'  style="margin:0px;padding: 0px"  title="Guardar"><i style="font-size:2.8em;color: #607D8B" class="material-icons">&#xE161;</i>
+            <ui:include src="../../param/param_one.xhtml"/>
+        </p:commandLink>
+        <p:commandLink update="@form"  style="margin:0px;padding: 0px" title="Cancelar"><i style="font-size:2.8em;color: red" class="material-icons">&#xE5C9;</i>
+            <ui:include src="../../param/param_one.xhtml"/>
+        </p:commandLink>
+    </div>
+    
+</ui:composition>
+
+

@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"          
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://java.sun.com/jsf/core"          
+      xmlns:ui="http://java.sun.com/jsf/facelets">
+    
+    <script type="text/javascript">
+        function geocodec(direccion) {
+            PF('geoMap').geocode(direccion);
+        }
+    </script>
+    
+    <p:dataTable var="dt" id="dtDatos" 
+          paginator="true"
+          style="width: 100% !important"
+          paginatorPosition="bottom"
+          paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+          rowsPerPageTemplate="5,10,20,50,100"
+          rowIndexVar="rowIndex"
+          value='#{dtECASController.list}'
+          filteredValue='#{dtECASController.listFilter}'>
+          <f:facet name="header" >
+             #{uiNavegacionBean.title}
+          </f:facet>
+        <ui:include src="../../param/param_one.xhtml"/>
+         <p:ajax  event="rowToggle" global="false" async="true"/>
+         <p:ajax event="filter"  global="false" ignoreAutoUpdate="true"/>
+         <p:column style="width:16px">
+             <p:rowToggler />
+          </p:column>
+          <p:column headerText="No" width="30" >
+              <h:outputText  value="#{rowIndex+1}" />
+          </p:column>
+          <p:column headerText="Nit" width="200">
+              <h:outputText value='#{dt.nit}' />
+          </p:column>    
+          <p:column headerText="nombre" width="400">
+              <h:outputText value="#{dt.nombre}" />
+          </p:column> 
+          <p:column width="10">
+              <p:commandButton icon="ui-icon-edit" title="Editar" process="@this" update="@form:pnForm" action="#{dtECASController.selectObjec(dt)}"><ui:include src="../../param/param_one.xhtml"/></p:commandButton>
+          </p:column>
+          <p:column width="10">
+              <p:commandButton icon="ui-icon-add-location" title="Añadir sucursal" process="@this" oncomplete="PF('dtSubEca').show()" update="@form:dtSubEca" action="#{dtECASController.selectObjec(dt)}"><ui:include src="../../param/param_one.xhtml"/></p:commandButton>
+          </p:column>
+          <p:column width="10">
+              <p:commandButton icon="ui-icon-apps" title="Añadir Consecutivo" oncomplete="PF('dtParamEca').show()" update="@form:dtParamEca"  process="@this" action="#{dtECASController.selectObjec(dt)}"><f:param name="name" value="#{param.name}" /><ui:include src="../../param/param_one.xhtml"/></p:commandButton>
+          </p:column>
+          <p:rowExpansion>
+              <p:panelGrid columns="1" layout="grid">
+                  <p:outputPanel>
+                      <p:dataTable value="#{dt.dtecassucursalList}" var="SC">
+                           <f:facet name="header">
+                              <h3>Sucursales</h3>
+                          </f:facet>
+                          <p:column headerText="Dirección" width="200">
+                              <h:outputText value='#{SC.direccion}' />
+                          </p:column>
+                          <p:column headerText="Filial" width="200">
+                              <h:outputText value='#{SC.filial}' />
+                          </p:column>
+                          <p:column headerText="Filial" width="200">
+                              <h:outputText value='#{SC.telefono}' />
+                          </p:column>
+                          <p:column headerText="Consecutivo Heredado" width="100">
+                              <h:outputText value='#{SC.parameterGlobal?"Si":"No"}' />
+                          </p:column>
+                          <p:column headerText="Municipio" width="200">
+                              <h:outputText value='#{SC.mamunicipioId.municipio}' />
+                          </p:column>
+                      </p:dataTable>
+                  </p:outputPanel>
+
+                  <p:outputPanel>
+                      <p:dataTable value="#{dt.dtmaparameterList}" var="prs">
+                          <f:facet name="header">
+                              <h3>Consecutivo</h3>
+                          </f:facet>
+                          <p:column headerText="Inicial" width="200">
+                              <h:outputText value='#{prs.consInicial}' />
+                          </p:column>
+                          <p:column headerText="Final" width="200">
+                              <h:outputText value='#{prs.consFinal}' />
+                          </p:column>
+                          <p:column headerText="Actual" width="200">
+                              <h:outputText value='#{prs.consActual}' />
+                          </p:column>
+                          <p:column headerText="Descripción" width="100">
+                              <h:outputText value='#{prs.descripcion}' />
+                          </p:column>
+                          <p:column headerText="Tipo" width="200">
+                              <h:outputText value='#{prs.dtTipoFacturaid.tipo}' />
+                          </p:column>
+                      </p:dataTable>
+                  </p:outputPanel>
+              </p:panelGrid>
+          </p:rowExpansion>
+    </p:dataTable>
+    
+    <p:dialog modal="true" header="Añadir sucursal" width="1200" height="600" id="dtSubEca" widgetVar="dtSubEca">
+        <ui:include src="../actionButton/actionECASucursal.xhtml"/>
+        <ui:include src="../form/FormECASucursal.xhtml"/>
+        <ui:include src="../dataTable/TableECASucursal.xhtml"/>
+    </p:dialog>
+    
+    <p:dialog modal="true" style="padding:20px;max-width:1200px !important" header="Añadir consecutivo(ECA)" width="1200" height="600" id="dtParamEca" widgetVar="dtParamEca">
+        <p:outputPanel style="padding:10px" >
+            <p:outputPanel style="width:100%;text-align:right;position: relative">
+                <p:commandLink process="@form:pnFormParameter @this" id="btnAnadirParameter" style="position: absolute;right: 0;top:0"  update="@form:dtDatos @form:dtDatosParamterEcas @form:pnFormParameter formsg:msgs"    title="Añadir" action="#{dtParameterController.reinit()}"><i style="font-size:2.8em;color: #607D8B" class="material-icons">playlist_add</i>
+                    <p:collector value="#{dtParameterController.obj}" addTo="#{dtECASController.obj.dtmaparameterList}"  unique="true" />
+                    <f:param name="name" value="#{param.name}" />
+                    <f:param name="path" value="#{param.path}" />
+                </p:commandLink> 
+            </p:outputPanel>
+            <ui:include src="../form/FormParametro.xhtml"/>
+            <ui:include src="../dataTable/TableParametroEcas.xhtml"/>
+        </p:outputPanel>
+    </p:dialog>
+    
+</ui:composition>
+
+
